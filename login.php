@@ -32,17 +32,27 @@
 			$adminSession->setCurrentUser( $user );
 			$adminSession->setCurrentUserID( $verify );
 			$adminSession->renew(); 
-			//user Update 
 			$admin = $admin->load( $verify );
 			
-			if( is_object( $admin ) ){
-				$admin->setLast_login(   $adminSession->getStartTime() );
-				$admin->setLast_session( $adminSession->getSessionID() );	
-				$saved = $admin->save();
-				logMessage( $user." logged in successfully");
-				header("Location: admin.php");
+			if( is_object( $admin ) ){  
+				//check if enabled, if not, kill it!
+				
+				if( $admin->getEnabled() ){
+			
+					$admin->setLast_login(   $adminSession->getStartTime() );
+					$admin->setLast_session( $adminSession->getSessionID() );	
+					$saved = $admin->save();
+					logMessage( $user." logged in successfully");
+					header("Location: admin.php");
+					exit;
+				}else{
+					echo '<h1>Your account is disabled. Please contact an administrator</h1>';
+					logMessage( $user." is disabled and tried to login");
+					$adminSession->destroy();
+					$admin = array();
+				}
 			}
-			exit;
+			
 		}else{
 			echo "<p>Incorrect Username or Password</p>";
 			logMessage( $_SESSION['currentUser']." logged un-successfully");

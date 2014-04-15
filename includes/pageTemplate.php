@@ -2,8 +2,7 @@
 	error_reporting(E_ALL);
 
 	function pageHeader($pageTitle = ""){
-		session_start();
-		
+		//session_start();
 		$adminSession = new adminSession();
 
 		if( $adminSession->getExpired() ){
@@ -12,7 +11,22 @@
 			header("Location: /login.php?youTimedOut");
 		}else{
 			$adminSession->renew();
-		
+			$userID = $adminSession->getCurrentUserID();
+			$admin = new administrator( getConnection() );
+			$admin = $admin->load( $userID );
+			if( is_object( $admin ) ){  
+				if( $admin->getEnabled() ){
+					//smooth sailing
+					
+				}else{
+					$adminSession->destroy();
+					$admin = array();
+					header("Location: /login.php?yourAccountisDisabled");
+				}
+			}else{
+				$adminSession->destroy();
+				header("Location: /login.php?couldNotLoadProfile");
+			}
 		}
 		
 		ob_clean();
@@ -55,7 +69,9 @@
 		<?php
 		
 		//pa( $adminSession );
-		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)</p>";
+		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a href='/administration/admin/index.php'>Admin Functions</a>" : "")."</p>";
+		
+		
 	}
 	
 		function pageHeaderShow($pageTitle = ""){
