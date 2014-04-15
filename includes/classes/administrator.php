@@ -8,6 +8,15 @@
 		private $enabled;
 		private $connection;
 		
+		private $type;
+		private $last_login;
+		private $last_session;
+		
+		function setConnection( $conn ){
+			$this->connection = $conn;
+		}
+		
+		
 		function __construct($dbc=null) {
 			$this->connection = $dbc;
 		}
@@ -35,11 +44,48 @@
 		
 		function save(){
 			if( $this->connection ){
+				$email = $this->getEmail();
+				$enabled = $this->getEnabled();
+				$lastlogin = $this->getLast_login();
+				$lastSession = $this->getLast_session();
+				$type = $this->getType();
+				$id = $this->id;
 			
 				if( $this->id != "" ){
-					//update
+				
+					$query = $this->connection->prepare("UPDATE `videotour`.`administrators` SET  `email` = :email, `enabled` = :enabled, `last_login` = :lastlogin, `last_session` = :lastSession, `type` = :type WHERE `administrators`.`id` = :id;");
+					$query->bindParam(':email', $email);
+					$query->bindParam(':enabled', $enabled);
+					$query->bindParam(':lastlogin', $lastlogin);
+					$query->bindParam(':lastSession', $lastSession);
+					$query->bindParam(':type', $type);
+					$query->bindParam(':id', $id);
+					
+					if( $query->execute() ){
+						return $id;
+					}else{
+						return 0;
+					}
 				}else{
 					//insert
+				}
+			}
+		}
+		
+		function load($id){
+			if( $this->connection ){
+				if( $id != "" ){
+					$query = $this->connection->prepare("SELECT * FROM `administrators` WHERE `id` = :id");
+					$query->bindParam(':id', $id);
+					if( $query->execute() ){
+						$admin = $query->fetchObject("administrator");
+					}
+					
+					if( is_object( $admin ) ){
+						$admin->setConnection( $this->connection );
+					}
+					
+					return $admin;
 				}
 			}
 		}
@@ -69,6 +115,12 @@
 		function setEnabled($enabled) { $this->enabled = $enabled; }
 		function getEnabled() { return $this->enabled; }
 
+		function setType($type) { $this->type = $type; }
+		function getType() { return $this->type; }
+		function setLast_login($last_login) { $this->last_login = $last_login; }
+		function getLast_login() { return $this->last_login; }
+		function setLast_session($last_session) { $this->last_session = $last_session; }
+		function getLast_session() { return $this->last_session; }
 
 	
 	}

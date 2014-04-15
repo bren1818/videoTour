@@ -32,9 +32,16 @@
 			$adminSession->setCurrentUser( $user );
 			$adminSession->setCurrentUserID( $verify );
 			$adminSession->renew(); 
-			logMessage( $user." logged in successfully");
-		
-			header("Location: admin.php");
+			//user Update 
+			$admin = $admin->load( $verify );
+			
+			if( is_object( $admin ) ){
+				$admin->setLast_login(   $adminSession->getStartTime() );
+				$admin->setLast_session( $adminSession->getSessionID() );	
+				$saved = $admin->save();
+				logMessage( $user." logged in successfully");
+				header("Location: admin.php");
+			}
 			exit;
 		}else{
 			echo "<p>Incorrect Username or Password</p>";
