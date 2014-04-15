@@ -1,0 +1,352 @@
+<?php
+	require_once("includes/includes.php");
+	require_once("includes/Mobile_Detect.php");
+	
+	$session = session_id();
+	if ($session == ''){ session_start(); }
+	$_SESSION['sessionid'] = session_id();
+	
+	$detect = new Mobile_Detect();
+	//$deviceType = ($detect->isMobile() ? (  $detect->isTablet() ? 2 : 3 ) : 1);
+	
+	if( isset( $_REQUEST['tourID'] ) && $_REQUEST['tourID'] != "" ){
+
+		$tourID =  $_REQUEST['tourID'];
+	
+		$conn = getConnection();
+		$project = new Projects($conn);
+		$project = $project->load($tourID);
+		
+		if( is_object($project) ){
+			$title = $project->getTitle();
+			
+			if( $project->isActive() ){
+				pageHeaderShow( $title ); 
+				if( $project->getStartingSegmentID() == null || $project->getStartingSegmentID() == ""){
+					echo "<p>Error - This project doesn't have a start</p>";
+				}else if(  $project->getStartingSegmentID() != "" ){
+					$segments = new Segments($conn);
+					$segment = $segments->load( $project->getStartingSegmentID() );
+					
+					if( is_object($segment) && $segment->getClipID() != "" ){
+					//$clip = new Clip($conn);
+
+					if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+						$ip = $_SERVER['HTTP_CLIENT_IP'];
+					} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+						$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+					} else {
+						$ip = $_SERVER['REMOTE_ADDR'];
+					}
+				?>
+					
+					<?php if( $project->getShowCount() ){ ?><div id="currentStep">1</div><?php } ?>
+					<?php if( $project->getShowBadge() ){ ?><div id="badge"></div><?php } ?>
+					
+					<div id="jp_container_1" class="jp-video ">
+					<div class="jp-type-single">
+					  <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+					  <div class="jp-gui">
+						<div class="jp-video-play">
+						  <a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a>
+						</div>
+						<div class="jp-interface">
+						  <div class="jp-progress">
+							<div class="jp-seek-bar">
+							  <div class="jp-play-bar"></div>
+							</div>
+						  </div>
+						  <div class="jp-current-time"></div>
+						  <div class="jp-duration"></div>
+						  <div class="jp-controls-holder">
+							<ul class="jp-controls">
+							  <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+							  <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+							  <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+							  <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+							  <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+							  <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+							</ul>
+							<div class="jp-volume-bar">
+							  <div class="jp-volume-bar-value"></div>
+							</div>
+							<ul class="jp-toggles">
+							  <li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="full screen">full screen</a></li>
+							  <li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="restore screen">restore screen</a></li>
+							  <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+							  <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+							</ul>
+						  </div>
+						  <div class="jp-title">
+							<ul>
+							  <li><?php
+								//echo $clip->getNote();
+							  ?></li>
+							</ul>
+						  </div>
+						</div>
+					  </div>
+					  <div class="jp-no-solution">
+						<!--<span>Update Required</span>
+						To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.-->
+					  </div>
+					</div>
+					<div class="clear"></div>
+					</div>
+
+					<script type="text/javascript">
+						var serverHost = "http://205.189.20.167"; //could be blank...
+						var windowWidth;
+						var windowHeight;
+						var currentStep = 1;
+						
+						var showCount = <?php echo $project->getShowCount(); ?>;
+						var showBadge = <?php echo $project->getShowBadge(); ?>;
+						
+						
+						var isTablet = <?php echo ($detect->isTablet() == "" ? 0 : $detect->isTablet()); ?>;
+						var isMobile = <?php echo ($detect->isMobile() == "" ? 0 : $detect->isMobile()); ?>;
+						var type = 1;
+						if( isTablet == 1 && isMobile == 1 ){
+							type = 2;
+						}else if( isTablet == 0 && isMobile == 1){
+							type = 3;
+						}
+						var nextStep;
+						var player;
+						<?php
+						//new user?
+							$tablet = ($detect->isTablet() == "" ? 0 : $detect->isTablet());
+							$mobile = ($detect->isMobile() == "" ? 0 : $detect->isMobile());
+							
+							if( $mobile == 1 ){
+								if( $tablet == 1 ){
+									$deviceType = 2;
+								}else{
+									$deviceType = 3;
+								}
+							}else{
+								$deviceType = 1;
+							}
+							
+							//echo 'window.alert("Type: '.$deviceType.'");';
+						
+						
+							$analyticUser = new analytics_visitors($conn);
+							$id = 0;
+							if( isset( $_SESSION['analyticUserId'] ) && $_SESSION['analyticUserId'] != "" ){
+								$id = $_SESSION['analyticUserId'];
+							}
+							
+							$userExists = $analyticUser->exists($id );
+
+							if( $userExists ){
+								$analyticUser = $analyticUser->load( $id );
+								
+								if( is_object( $analyticUser ) ){
+									$hasEnteredContest = $analyticUser->getFilled_out_entry();
+									if( $hasEnteredContest == 1 ){
+									?>
+						var enteredContest = 1;
+									<?php
+									}else{
+									?>
+						var enteredContest = 0;
+									<?php
+									}
+								
+									$analyticUser->setId( $id );
+									$count = $analyticUser->getHasReturned();
+									$analyticUser->setDeviceType($deviceType);
+									$count++;
+									$analyticUser->setHasReturned( $count );
+									$analyticUser->save();
+								}
+							}else{
+								$analyticUser->setIp( $ip );
+								$analyticUser->setDeviceType($deviceType);
+								$analyticUser->setProjectId( $tourID );
+								$id = $analyticUser->save();
+								$_SESSION['analyticUserId'] = $id;
+								?>
+						var enteredContest = 0;
+								<?php
+							}
+						?>
+						var userID = "<?php echo $id; ?>";
+						var nthAction = 0;
+						var PROJECT_ID = <?php echo $tourID; ?>;
+						var currentSegmentID = <?php echo $project->getStartingSegmentID(); ?>;
+						var currentSegmentData;
+						var currentDecisions;
+						var currentClipID;
+						var nextStep;  //function holder...
+						var started = 0;
+					</script>
+					<script type="text/javascript" src="/js/home.js" ></script>
+					<script type="text/javascript">
+						$(function(){
+
+							if( isTablet == 0 && isMobile == 0 ){
+								type = 1;
+								
+								setSize(); 
+							
+								$('body').attr('class', 'desktop');
+								$(window).resize(function () {
+									waitForFinalEvent(function(){
+										//setSize();
+										
+									}, 500, "WindowResize");
+								});
+							 
+							 	$('#jquery_jplayer_1').height( windowHeight );
+								$('#jquery_jplayer_1').width( windowWidth );
+								$('div.jp-video-play').css('height',  windowHeight + 'px' );
+								$('div.jp-video-play').css('margin-top', ( -1 * windowHeight )  + 'px' );
+							 
+							 
+							 }else{
+								var ww;
+								if( isMobile == 1 && isTablet == 0 ){
+									$('body').attr('class', 'mobile');
+									type = 3;
+									ww = 480;
+									$('#Viewport').attr('content', 'maximum-scale=1, minimum-scale=1, user-scalable=no, width=480');
+								}else if( isMobile && isTablet ){
+									$('body').attr('class', 'tablet');
+									type = 2;
+									ww = 1024;
+									$('#Viewport').attr('content', 'user-scalable=no, width=1024');
+								}
+							
+
+								windowWidth =  ww; //$(window).width() -5;
+								windowHeight =  $(window).height() -5 ;
+								
+								$('#jquery_jplayer_1').height( windowHeight );
+								$('#jquery_jplayer_1').width( windowWidth );
+								$('div.jp-video-play').css('height',  windowHeight + 'px' );
+							 }
+						
+							
+							
+							var clipPath = "";
+							var segmentData = "";
+							var decisions = new Array();
+							
+							if( currentSegmentID != 0 && currentSegmentID != "" ){
+								segmentData = getAjaxHandlerResponse("getSegment", currentSegmentID );
+								
+								if( segmentData ){
+									currentSegmentData =  segmentData;
+									var clipID = segmentData.StartingClipID;
+									if( clipID != 0 && clipID != "" ){
+										clipPath =	getClipPath( clipID, type);
+									}
+								}
+							
+								if( clipPath != "" ){
+									if(  segmentData.Decisions ){
+										if( segmentData.Decisions.length > 0 ){
+											for( var d = 0; d < segmentData.Decisions.length; d++ ){
+												decisions[d] = { "id" : segmentData.Decisions[d].DecisionID, "text" : segmentData.Decisions[d].ButtonText, "continues" :  segmentData.Decisions[d].Continues  , "ends" : segmentData.Decisions[d].Ends , "goToSegment" : segmentData.Decisions[d].NextSegmentID  , "PlayClip" : segmentData.Decisions[d].PlaysClip } 
+											}
+										}
+										currentDecisions = decisions;
+									}	
+
+									$("#jquery_jplayer_1").jPlayer({
+										ready: function () {
+										  $(this).jPlayer("setMedia", {
+											m4v: clipPath
+										  }); 
+										  currentClipID = clipID;
+										  logAction("Start");
+										  player = $(this);
+										 if( type == 1 ){
+											$(this).jPlayer("play");
+										 }
+										 bindMobileHelper();
+										},
+										ended: function(){
+											console.log( "ended pt.1 > overlay Decisions");
+											if( decisions ){
+												overlayDecisions( decisions );
+											}
+										},
+										size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
+										preload : "auto",
+										volume: 1,
+										swfPath: "/js",
+										keyEnabled : true,
+										keyBindings: {
+										  play: {
+											key: 32, // space
+											fn: function(f) {
+											  if(f.status.paused) {
+												f.play();
+											  } else {
+												f.pause();
+											  }
+											}
+										  },
+										  fullScreen: {
+											key: 13, // enter
+											fn: function(f) {
+											  if(f.status.video || f.options.audioFullScreen) {
+												f._setOption("fullScreen", !f.options.fullScreen);
+											  }
+											}
+										  }
+										},
+										supplied: "m4v"
+									});
+									
+									
+									
+									if( isMobile ){ //mobile devices wont auto-play video
+										showAlert('Welcome to the Mobile Tour. This tour streams video. Click the Golden Hawk to begin each clip! This content is best viewed in portrait mode.','Welcome, Do you have what it takes?');
+									}
+								}
+							}
+
+
+							
+						});
+					</script>
+				<?php
+				}else{
+						echo "Could not load project - missing start segment or clip id";
+						logMessage( "Could not load project - missing start segment or clip id, Segment ID: ".$project->getStartingSegmentID().", projectID: ".$tourID, "user.log");
+					}
+				}
+			}else{
+				pageHeaderShow("Contest No Longer Available"); 
+				logMessage( "User tried to access non available Tour ID: ".$tourID, "user.log");
+				?>
+				<h1>Sorry this contest is no longer running...</h1>
+				<p>Please check again later!</p>
+				<?php
+			}
+		}else{
+			pageHeaderShow("Unknown Project"); 
+			logMessage( "Unknown Project ".$tourID, "user.log");
+			?>
+			<h2>Sorry....</h2>
+			<p>We don't have a project by that name...</p>
+		<?php
+		}
+	}else{
+		pageHeaderShow("Unknown Project"); 
+		logMessage( "Unknown Project ".$tourID, "user.log");
+		?>
+		<h2>Sorry no tourID set.</h2>
+		<p>There should be a ?tourID= someID</p>
+		<?php
+		logMessage( "Unknown Project no tourID provided", "user.log");
+	}
+?>
+<?php
+	pageFooterShow();
+?>

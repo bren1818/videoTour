@@ -1,0 +1,89 @@
+.ui-widget-content a.button{ color: #fff; }
+
+.button {
+	cursor: pointer;
+	-moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0) );
+	background:-moz-linear-gradient( center top, #3d94f6 5%, #1e62d0 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0');
+	background-color:#3d94f6;
+	-webkit-border-top-left-radius:4px;
+	-moz-border-radius-topleft:4px;
+	border-top-left-radius:4px;
+	-webkit-border-top-right-radius:4px;
+	-moz-border-radius-topright:4px;
+	border-top-right-radius:4px;
+	-webkit-border-bottom-right-radius:4px;
+	-moz-border-radius-bottomright:4px;
+	border-bottom-right-radius:4px;
+	-webkit-border-bottom-left-radius:4px;
+	-moz-border-radius-bottomleft:4px;
+	border-bottom-left-radius:4px;
+	text-indent:0;
+	border:1px solid #337fed;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:13px;
+	font-weight:normal;
+	font-style:normal;
+	height:22px;
+	line-height:22px;
+	width:85px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #1570cd;
+}
+
+.button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6) );
+	background:-moz-linear-gradient( center top, #1e62d0 5%, #3d94f6 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e62d0', endColorstr='#3d94f6');
+	background-color:#1e62d0;
+}.button:active {
+	position:relative;
+	top:1px;
+}
+		
+.button.wa{
+	width: auto;
+	padding: 0px 4px;
+}
+
+p{ margin: 4px 0px; font-size: 12px; }
+
+.ajaxTable tr:hover td{
+	background-color: rgba( 255, 255, 0, .5 );
+}
+
+.center{ text-align: center; }
+
+form{ width: 800px; }
+
+#admin_content{
+	width: 1024px;
+	margin: 0 auto;
+}
+
+.segments  li.segment > .decisionTree > li{
+	margin: 10px 0px;
+}
+
+li.decision_continues,
+li.decision_ends{
+	border: 1px solid #000;
+	padding: 10px;
+}
+
+.decision_ends .alreadyFollowed p{
+	color: #f00;
+}
+
+#adminBar{
+	text-align: right;
+	width: 100%;
+	display: block;
+	height: 40px;
+}
