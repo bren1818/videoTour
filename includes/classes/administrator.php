@@ -72,6 +72,20 @@
 			}
 		}
 		
+		function upateActivity(){
+			if( $this->connection ){
+				if( $this->id != "" ){
+					$t = time();
+					$id = $this->id;
+					$query = $this->connection->prepare("UPDATE `videotour`.`administrators` SET `last_login` = :lastlogin WHERE `administrators`.`id` = :id;");
+					$query->bindParam(':lastlogin', $t);
+					$query->bindParam(':id', $id);
+					$query->execute();
+				}
+			}
+		}
+	
+		
 		function load($id){
 			if( $this->connection ){
 				if( $id != "" ){

@@ -38,10 +38,11 @@
 			switch( $obj ){
 				case 'session':
 					if( $fx == "destroyRemoteSession" ){
-						//$obj = session
-						//fx = destroyRemoteSession
-						//id = $pid
-					
+						$adminSession = new adminSession();
+						$adminSession->killRemoteSession( $pid );
+						
+						$data[] = array("killed" => 1);
+						
 					}
 				break;
 				case 'entry':

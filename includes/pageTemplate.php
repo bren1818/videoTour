@@ -17,7 +17,7 @@
 			if( is_object( $admin ) ){  
 				if( $admin->getEnabled() ){
 					//smooth sailing
-					
+					$admin->upateActivity();//update last activity
 				}else{
 					$adminSession->destroy();
 					$admin = array();
