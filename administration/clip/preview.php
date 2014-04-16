@@ -25,9 +25,9 @@
 	if( $clip ){
 
 ?>
-<link rel="stylesheet" href="/css/blue.monday/jplayer.blue.monday.css"/>
-<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="/js/jQuery.jPlayer.2.5.0/jquery.jplayer.min.js"></script>
+<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/blue.monday/jplayer.blue.monday.css"/>
+<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jQuery.jPlayer.2.5.0/jquery.jplayer.min.js"></script>
 <div id="jp_container_1" class="jp-video ">
     <div class="jp-type-single">
       <div id="jquery_jplayer_1" class="jp-jplayer"></div>
@@ -81,11 +81,11 @@
  $("#jquery_jplayer_1").jPlayer({
         ready: function () {
           $(this).jPlayer("setMedia", {
-            m4v: "<?php echo $path; ?>"
+            m4v: "<?php echo fixedPath.$path; ?>"
           });
 		  $(this).jPlayer("play");
         },
-        swfPath: "/js",
+        swfPath: "<?php echo fixedPath; ?>/js",
         supplied: "m4v"
 });
 </script>

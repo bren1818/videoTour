@@ -21,15 +21,13 @@
 			//use the ajax handler for this one
 			var ret;
 			$.ajaxSetup({async: false});
-			$.get( <?php echo fixedPath; ?>"/includes/ajaxHandler.php", { fx : "getEntry", projectID : entryID, object : "entry" }, function( data ) {
+			$.get( "<?php echo fixedPath; ?>/includes/ajaxHandler.php", { fx : "getEntry", projectID : entryID, object : "entry" }, function( data ) {
 				ret =  jQuery.parseJSON( data );
 			});
 			$.ajaxSetup({async: true});
-			
-			//console.log(  ret );
+
 			var html = "";
-				
-			
+
 			if( ret ){
 				if( ret.data ){
 					var entry = ret.data;
@@ -67,7 +65,7 @@
 			//window.alert("view path for: " + visitorID );
 			var ret;
 			$.ajaxSetup({async: false});
-			$.get( "/requestHandler.php", { fx : "userEvents", projectID : <?php echo $projID; ?>, userID : visitorID }, function( data ) {
+			$.get( "<?php echo fixedPath; ?>/requestHandler.php", { fx : "userEvents", projectID : <?php echo $projID; ?>, userID : visitorID }, function( data ) {
 				ret =  jQuery.parseJSON( data );
 			});
 			$.ajaxSetup({async: true});

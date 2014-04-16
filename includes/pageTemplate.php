@@ -1,8 +1,6 @@
 <?php
 	error_reporting(E_ALL);
 
-	
-	
 	function footerMenu($projID){
 		?>
 			<p>
@@ -11,7 +9,7 @@
 			<a href="<?php echo fixedPath; ?>/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Contest Entries</a>	
 			<a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>
 			<a href="<?php echo fixedPath; ?>/administration/MapProject.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-sitemap"></i> Flow Chart</a>
-			<a class="button wa" href="/admin"><i class="fa fa-th-list"></i> Back to Admin</a>
+			<a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a>
 			</p>
 	  <?php
 	
@@ -57,7 +55,7 @@
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/tablesorter/blue/style.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/colorbox.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/style.css"/>
-			<link rel="shortcut icon" type="image/x-icon" href="<?php echo $fixedPath; ?>/favicon.ico">
+			<link rel="shortcut icon" type="image/x-icon" href="<?php echo fixedPath; ?>/favicon.ico">
 
 			<meta http-equiv="expires" content="Sun, 01 Jan 2014 00:00:00 GMT"/>
 			<meta http-equiv="pragma" content="no-cache" />

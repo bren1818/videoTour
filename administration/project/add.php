@@ -13,7 +13,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		$id = $project->save();
 	
 		if( $id > 0 ){
-			header("location: /administration/project/edit?id=".$id );
+			header("location: ".fixedPath."/administration/project/edit?id=".$id );
 		
 		}else{
 			pageHeader();

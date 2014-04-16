@@ -15,7 +15,7 @@ function previewClip(clipID, clipType){
 	}
 
 	$(function(){
-		$.colorbox({href: '/administration/clip/preview.php?clip_id=' + clipID + '&type=' + type,  iframe:true, width:"80%", height:"80%"});
+		$.colorbox({href: serverHost + '/administration/clip/preview.php?clip_id=' + clipID + '&type=' + type,  iframe:true, width:"80%", height:"80%"});
 	});
 }
 
@@ -24,7 +24,7 @@ function getAjaxHandlerResponse(projectID, object, fx){
 	//projectID, what, function
 	var ret = null;
 	$.ajaxSetup({async: false});
-	$.get( "/includes/ajaxHandler.php", { projectID : projectID, object : object, fx:fx }, function( data ) {
+	$.get( serverHost +  "/includes/ajaxHandler.php", { projectID : projectID, object : object, fx:fx }, function( data ) {
 		ret =  jQuery.parseJSON( data );
 	});
 	$.ajaxSetup({async: true});
@@ -36,7 +36,7 @@ function updateItem(objectType, id, fx, newValue){
 	var ret = null;
 	$.ajaxSetup({async: false});
 	
-	$.post( "/includes/ajaxHandler.php", { objectType : objectType, id : id, fx:fx,newValue:newValue  }, function( data ) {
+	$.post( serverHost + "/includes/ajaxHandler.php", { objectType : objectType, id : id, fx:fx,newValue:newValue  }, function( data ) {
 		ret =  jQuery.parseJSON( data );
 	});
 	
@@ -269,39 +269,39 @@ function updateStartingSegment(projectID){
 /*Segments */
 
 function addSegment(projectID){
-	window.location = "/administration/segments/add?projectID=" + projectID;
+	window.location = serverHost + "/administration/segments/add?projectID=" + projectID;
 }
 
 function editSegment(projectID, segmentID ){
 	//window.alert(" Edit Segment: " + segmentID + " from Project " + projectID );
-	window.location = "/administration/segments/edit?projectID=" + projectID + "&segmentID=" + segmentID;
+	window.location = serverHost + "/administration/segments/edit?projectID=" + projectID + "&segmentID=" + segmentID;
 }
 
 /*Decision Tree*/
 function addDecisionGroup(projectID){
-	window.location = "/administration/decisionTree/add?projectID=" + projectID;
+	window.location = serverHost + "/administration/decisionTree/add?projectID=" + projectID;
 }
 
 function editDecisionTree(projectID, DecisionTreeID ){
 	//window.alert(" Edit Decision Tree: " + DecisionTreeID + " from Project " + projectID );
-	window.location = "/administration/decisionTree/edit?projectID=" + projectID + "&decisionTreeID=" +DecisionTreeID;
+	window.location = serverHost + "/administration/decisionTree/edit?projectID=" + projectID + "&decisionTreeID=" +DecisionTreeID;
 }
 
 /*Decisions */
 function editDecision(projectID, DecisionID){
-	window.location = "/administration/decision/edit?projectID=" + projectID + "&decisionID=" + DecisionID;
+	window.location = serverHost + "/administration/decision/edit?projectID=" + projectID + "&decisionID=" + DecisionID;
 }
 
 function addDecision(projectID, DecisionTreeID){
-	window.location = "/administration/decision/add?projectID=" + projectID + "&decisionTreeID=" + DecisionTreeID;
+	window.location = serverHost + "/administration/decision/add?projectID=" + projectID + "&decisionTreeID=" + DecisionTreeID;
 }
 
 function uploadClip(projectID){
-	window.location = "/administration/clip/upload?projectID=" + projectID;
+	window.location = serverHost + "/administration/clip/upload?projectID=" + projectID;
 }
 
 function addBadge(projectID){
-	window.location = "/administration/badge/add?projectID=" + projectID;
+	window.location = serverHost + "/administration/badge/add?projectID=" + projectID;
 }
 
 function reload(projectID){
@@ -727,19 +727,13 @@ function deleteProject(projectID ){
 					var d = del.data;
 					if( d.deletionSucceeded == 1 ){
 						window.alert("Deleted: " + d.NumBadges + " badges, " + d.NumClips + " clips " );
-						window.location = "/admin";
+						window.location = serverHost + "/admin";
 					}else{
 						window.alert("Detetion Failed!");
 					}
 				
 				}
-				//console.log( del );
-				//console.log( del.data );
-				//console.log( del.data[0] );
 			}
-			
-			
-			
 		}else{
 			window.alert("Deletion Cancelled!");
 		}

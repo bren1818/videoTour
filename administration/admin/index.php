@@ -28,7 +28,7 @@
 
 	<h1>Super Admin</h1>
 	
-	<p><a href="<?php echo fixedPath; ?>/administratio/user/update?new">Add User</a></p>
+	<p><a href="<?php echo fixedPath; ?>/administration/user/update?new=1">Add User</a></p>
 	
 	<p>Users Online</p>
 	<?php
@@ -50,12 +50,14 @@
 						<th>last online</th>
 						<th>kill session</th>
 						<th>type</th>
+						<th>Tools</th>
 					</tr> 
 				</thead>
 				<tbody>
 				<?php
+				$updatePath = fixedPath."/administration/user/update?id=";
 				foreach( $res as $row ){
-					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td><a onClick="killSession(\''.$row['last_session'].'\')">Boot em</a></td><td>'.$row['type'].'</td></tr>';
+					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td><a onClick="killSession(\''.$row['last_session'].'\')">Boot em</a></td><td>'.$row['type'].'</td><td><a href="'.$updatePath.$row['id'].'">Edit</a></td></tr>';
 				}
 				?>
 				</tbody>
@@ -84,14 +86,15 @@
 						<th>id</th>
 						<th>email</th> 
 						<th>last online</th>
-						<th>kill session</th>
 						<th>type</th>
+						<th>tools</th>
 					</tr> 
 				</thead>
 				<tbody>
 				<?php
+				$updatePath = fixedPath."/administration/user/update?id=";
 				foreach( $res as $row ){
-					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td><a onClick="killSession(\''.$row['last_session'].'\')">Boot em</a></td><td>'.$row['type'].'</td></tr>';
+					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td>'.$row['type'].'</td><td><a href="'.$updatePath.$row['id'].'">Edit</a></td></tr>';
 				}
 				?>
 				</tbody>
@@ -101,8 +104,8 @@
 	?>
 	
 	
+	<p><a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a></p>
 	
-	<?php footerMenu($projID); ?>
 <?php
 	}
 	pageFooter();

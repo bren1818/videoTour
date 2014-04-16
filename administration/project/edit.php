@@ -42,6 +42,9 @@
 		
 		if( is_object($project ) ){
 		
+
+			
+		
 		$segments = $segments->getList( $project->getId() );
 		
 ?>
@@ -317,26 +320,17 @@
 	}else{
 ?>	
 	<h3>No Project Specified...</h3>
-	<p><a class="button wa" href="/admin"><i class="fa fa-th-list"></i> Go back</a></p>
+	<p><a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a></p>
 	
 <?php	
 	}
-?>
-	<p>
-	<?php
-		if( is_object ($project ) ){
-		$projID =  $project->getId(); ?>
-	  <a href="/administration/ProjectAnalytics.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Project Analytics</a>	
-	  <a href="/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-users"></i> Contest Entries</a>	
-	  <a href="/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Contest Entries</a>	
-	  <!--<a href="/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>-->
-	  <a href="/administration/MapProject.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-sitemap"></i> Flow Chart</a>
-	  <a class="button wa" href="/admin"><i class="fa fa-th-list"></i> Back to Admin</a> 	 
-	</p>
-<?php
+
+	if( is_object ($project ) ){
+		$projID =  $project->getId(); 
+		footerMenu($projID);
 	}else{
 		?>
-		<a href="/admin">BAck to admin</a>
+		<a href="<?php echo fixedPath; ?>/admin">Back to Admin</a>
 		<?php
 	}
 	pageFooter();

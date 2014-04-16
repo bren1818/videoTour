@@ -122,7 +122,7 @@
 				//insert
 				//return pid;
 				$title = $this->getTitle();
-				$query = $this->connection->prepare("INSERT INTO `projects` (`id`, `title`, `startingSegmentID`, `active`, , ) VALUES (NULL, :title , NULL, '0', 1, 1);");
+				$query = $this->connection->prepare("INSERT INTO `projects` (`id`, `title`, `startingSegmentID`, `active`, `showBadge`, `showCount`, `hasForm`, `formURL`, `redirect`, `redirectURL` ) VALUES (NULL, :title , NULL, '0', 0, 1, 0, '', 0, '' );");
 				$query->bindParam(':title', $title);
 				if( $query->execute() ){
 					$this->setId( $this->connection->lastInsertId() );
