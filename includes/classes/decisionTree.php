@@ -55,7 +55,7 @@
 				//update
 				$id =  $this->getId();
 				
-				$query = $this->connection->prepare("UPDATE `videotour`.`decisiontree` SET `note` = :note, `step` = :step, `title` = :title WHERE `decisiontree`.`id` = :id;");
+				$query = $this->connection->prepare("UPDATE `decisiontree` SET `note` = :note, `step` = :step, `title` = :title WHERE `decisiontree`.`id` = :id;");
 				$query->bindParam(':note', $note);
 				$query->bindParam(':step', $step);
 				$query->bindParam(':title', $title);
@@ -69,7 +69,7 @@
 				
 			}else{
 			
-				$query = $this->connection->prepare("INSERT INTO `videotour`.`decisiontree` (`id`, `projectID`, `note`, `step`, `title`) VALUES (NULL, :projectID, :note, :step, :title);");
+				$query = $this->connection->prepare("INSERT INTO `decisiontree` (`id`, `projectID`, `note`, `step`, `title`) VALUES (NULL, :projectID, :note, :step, :title);");
 				$query->bindParam(':projectID', $projectID);
 				$query->bindParam(':note', $note);
 				$query->bindParam(':step', $step);

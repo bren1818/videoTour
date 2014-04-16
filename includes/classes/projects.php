@@ -94,7 +94,7 @@
 				
 				
 				
-				$query = $this->connection->prepare("UPDATE `videotour`.`projects` SET `title` = :title, `startingSegmentID` = :ssid, `active` = :active, `showBadge` = :showBadge, `showCount` = :showCount, `hasForm` = :hasForm, `formURL` = :formURL, `redirect` = :redirect, `redirectURL`= :redirectURL WHERE `projects`.`id` = :id;");
+				$query = $this->connection->prepare("UPDATE `projects` SET `title` = :title, `startingSegmentID` = :ssid, `active` = :active, `showBadge` = :showBadge, `showCount` = :showCount, `hasForm` = :hasForm, `formURL` = :formURL, `redirect` = :redirect, `redirectURL`= :redirectURL WHERE `projects`.`id` = :id;");
 				
 				
 				$query->bindParam(':title', $title);
@@ -122,7 +122,7 @@
 				//insert
 				//return pid;
 				$title = $this->getTitle();
-				$query = $this->connection->prepare("INSERT INTO `videotour`.`projects` (`id`, `title`, `startingSegmentID`, `active`, , ) VALUES (NULL, :title , NULL, '0', 1, 1);");
+				$query = $this->connection->prepare("INSERT INTO `projects` (`id`, `title`, `startingSegmentID`, `active`, , ) VALUES (NULL, :title , NULL, '0', 1, 1);");
 				$query->bindParam(':title', $title);
 				if( $query->execute() ){
 					$this->setId( $this->connection->lastInsertId() );

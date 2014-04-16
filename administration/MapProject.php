@@ -158,14 +158,7 @@
 			echo "<p>No Starting Segment Id! Error!</p>";
 		}
 		?>
-	<p>
-	  <a href="/administration/ProjectAnalytics.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Project Analytics</a>	
-	  <a href="/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-users"></i> Contest Entries</a>	
-	  <a href="/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Contest Entries</a>	
-	  <a href="/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>
-	  <!--<a href="/administration/MapProject.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-sitemap"></i> Flow Chart</a>-->
-	  <a class="button wa" href="/admin"><i class="fa fa-th-list"></i> Back to Admin</a> 	  
-	</p>
+		<?php footerMenu($projID); ?>
 		<?php
 	}else{
 		echo "<h1>Error: a project ID is required</h1>";

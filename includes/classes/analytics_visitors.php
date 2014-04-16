@@ -73,7 +73,7 @@
 					$returned = $this->getHasReturned();
 					$startTime = $this->getStartTime();
 				
-					$query = $this->connection->prepare("UPDATE `videotour`.`analytics_visitors` SET `end_time` = CURRENT_TIMESTAMP, `start_time` = :STARTTIME, `device_type` = :DEVICETYPE, `has_returned` = :RETURNED WHERE `analytics_visitors`.`visitor_id` = :ID;");
+					$query = $this->connection->prepare("UPDATE `analytics_visitors` SET `end_time` = CURRENT_TIMESTAMP, `start_time` = :STARTTIME, `device_type` = :DEVICETYPE, `has_returned` = :RETURNED WHERE `analytics_visitors`.`visitor_id` = :ID;");
 					$query->bindParam(':STARTTIME', $startTime);
 					$query->bindParam(':DEVICETYPE', $type);
 					$query->bindParam(':RETURNED', $returned);
@@ -88,7 +88,7 @@
 
 				}else{
 					
-					$query = $this->connection->prepare("INSERT INTO `videotour`.`analytics_visitors` (`visitor_id`, `project_id`, `start_time`, `end_time`, `ip`, `device_type`, `has_returned`) VALUES (NULL, :projectID, CURRENT_TIMESTAMP, NULL, :IP, :type, '0');");
+					$query = $this->connection->prepare("INSERT INTO `analytics_visitors` (`visitor_id`, `project_id`, `start_time`, `end_time`, `ip`, `device_type`, `has_returned`) VALUES (NULL, :projectID, CURRENT_TIMESTAMP, NULL, :IP, :type, '0');");
 					$query->bindParam(':projectID', $projectID);
 					$query->bindParam(':IP', $ip);
 					$query->bindParam(':type', $type);
@@ -107,7 +107,7 @@
 			if( $this->connection ){
 				if( $this->getId() != "" ){
 					$id = $this->getId();
-					$query = $this->connection->prepare("UPDATE `videotour`.`analytics_visitors` SET `end_time` = CURRENT_TIMESTAMP WHERE `analytics_visitors`.`visitor_id` = :id;");
+					$query = $this->connection->prepare("UPDATE `analytics_visitors` SET `end_time` = CURRENT_TIMESTAMP WHERE `analytics_visitors`.`visitor_id` = :id;");
 					$query->bindParam(':projectID', $id);
 					if( $query->execute() ){
 						return 1;

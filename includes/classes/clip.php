@@ -92,7 +92,7 @@
 				
 			if( $this->getId() == "" ){
 				//new Clip
-				$query = $this->connection->prepare("INSERT INTO `videotour`.`clip` (`id`, `projectID`, `name`, `note`) VALUES (NULL, :projectID, :clipName, :clipNote)");
+				$query = $this->connection->prepare("INSERT INTO `clip` (`id`, `projectID`, `name`, `note`) VALUES (NULL, :projectID, :clipName, :clipNote)");
 				
 				
 				//$clipDuration = $this->getDuration();
@@ -111,7 +111,7 @@
 				//Update
 				$clipID = $this->getId();
 				
-				$query = $this->connection->prepare("UPDATE `videotour`.`clip` SET `name` = :clipName, `note` = :clipNote WHERE `clip`.`id` = :clipID;");
+				$query = $this->connection->prepare("UPDATE `clip` SET `name` = :clipName, `note` = :clipNote WHERE `clip`.`id` = :clipID;");
 				
 				$query->bindParam(':clipName', $clipName );
 				$query->bindParam(':clipNote', $clipNote );

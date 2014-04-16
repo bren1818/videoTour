@@ -24,7 +24,7 @@
 		}else{
 		
 			$conn = getConnection();
-			$query = $conn->prepare("INSERT INTO `videotour`.`form_entry` (`entryID`, `projectID`, `visitorID`, `firstName`, `lastName`, `email`, `telephone`, `twitter`, `other`, `other_reason`, `timestamp`) VALUES (NULL, :projectID, :visitorID, :firstName, :lastName, :email, :phone, :twitter, :offer, :other, CURRENT_TIMESTAMP);");
+			$query = $conn->prepare("INSERT INTO `form_entry` (`entryID`, `projectID`, `visitorID`, `firstName`, `lastName`, `email`, `telephone`, `twitter`, `other`, `other_reason`, `timestamp`) VALUES (NULL, :projectID, :visitorID, :firstName, :lastName, :email, :phone, :twitter, :offer, :other, CURRENT_TIMESTAMP);");
 			$query->bindParam(':projectID', $projectID);
 			$query->bindParam(':visitorID', $visitorID);
 			$query->bindParam(':firstName', $firstName);
@@ -54,7 +54,7 @@
 				//log it in the analytic visitors
 				
 				if( $projectID != 0 && $visitorID !=0 && $entryID != ""){
-					$query = $conn->prepare("UPDATE `videotour`.`analytics_visitors` SET `filled_out_entry` = 1, `entryID` = :entryID, `end_time` = CURRENT_TIMESTAMP WHERE `visitor_id` = :visitorID AND `project_id` = :projectID;");
+					$query = $conn->prepare("UPDATE `analytics_visitors` SET `filled_out_entry` = 1, `entryID` = :entryID, `end_time` = CURRENT_TIMESTAMP WHERE `visitor_id` = :visitorID AND `project_id` = :projectID;");
 					$query->bindParam(':entryID', $entryID);
 					$query->bindParam(':visitorID', $visitorID);
 					$query->bindParam(':projectID', $projectID);

@@ -1,11 +1,12 @@
 <?php
 	session_start();
+	
 	define("ADMIN_DIR", "/administration");
 	
 	$path = dirname ( __FILE__ );
 	
 	require_once($path."/db.php");
-	
+	require_once($path.'/Settings.php');
 	require_once($path.'/classes/projects.php');
 	require_once($path.'/classes/segments.php');
 	require_once($path.'/classes/decisions.php');

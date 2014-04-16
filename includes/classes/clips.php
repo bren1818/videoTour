@@ -46,7 +46,7 @@
 			if( $this->getId() == "" ){
 
 				//new Clip
-				$query = $this->connection->prepare("INSERT INTO `videotour`.`clips` (`id`, `clipID`, `projectID`, `path`, `type`, `converted`) VALUES (NULL, :clipID, :projectID, :path, :type, :converted);");
+				$query = $this->connection->prepare("INSERT INTO `clips` (`id`, `clipID`, `projectID`, `path`, `type`, `converted`) VALUES (NULL, :clipID, :projectID, :path, :type, :converted);");
 				
 				$query->bindParam(':clipID', $clipID  );
 				$query->bindParam(':projectID', $projectID  );
@@ -64,7 +64,7 @@
 			}else{
 				//Update
 				$id = $this->getId();
-				$query = $this->connection->prepare("UPDATE `videotour`.`clips` SET `path` = :path, `type` = :type, `converted` = :converted WHERE `clips`.`id` = :id;");
+				$query = $this->connection->prepare("UPDATE `clips` SET `path` = :path, `type` = :type, `converted` = :converted WHERE `clips`.`id` = :id;");
 				$query->bindParam(':path', $path  );
 				$query->bindParam(':type', $type  );
 				$query->bindParam(':converted', $converted  );

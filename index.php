@@ -95,7 +95,7 @@
 					</div>
 
 					<script type="text/javascript">
-						var serverHost = "http://205.189.20.167"; //could be blank...
+						var serverHost = "<?php echo fixedPath; ?>"; //"http://205.189.20.167"; //could be blank...
 						var windowWidth;
 						var windowHeight;
 						var currentStep = 1;
@@ -183,7 +183,7 @@
 						var nextStep;  //function holder...
 						var started = 0;
 					</script>
-					<script type="text/javascript" src="/js/home.js" ></script>
+					<script type="text/javascript" src="<?php echo fixedPath; ?>/js/home.js" ></script>
 					<script type="text/javascript">
 						$(function(){
 
@@ -258,8 +258,10 @@
 
 									$("#jquery_jplayer_1").jPlayer({
 										ready: function () {
+											console.log( serverHost + clipPath );
+										
 										  $(this).jPlayer("setMedia", {
-											m4v: clipPath
+											m4v: serverHost + clipPath
 										  }); 
 										  currentClipID = clipID;
 										  logAction("Start");

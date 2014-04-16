@@ -120,12 +120,7 @@ $query = $conn->prepare("SELECT f.*, '', '', '', '' FROM `form_entry` f WHERE f.
 	<br />	<br />
 
 
-	<p>
-	  <a href="/administration/ProjectAnalytics.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Project Analytics</a>	
-	  <a href="/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>
-	  <a href="/administration/MapProject.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-sitemap"></i> Flow Chart</a>
-	  <a class="button wa" href="/admin"><i class="fa fa-th-list"></i> Back to Admin</a> 
-	</p>
+	<?php footerMenu($_REQUEST['projectID']); ?>
 
 
 

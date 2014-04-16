@@ -33,7 +33,7 @@
 					$projectID = $this->getProjectID();
 					
 				
-					$query = $this->connection->prepare("INSERT INTO `videotour`.`analytics_events` (`event_id`,  `visitor_id`, `project_ID`, `event_time`, `event_type`, `on_step`, `user_action`, `segment_id`, `clipID`) VALUES (NULL, :id, :projID, CURRENT_TIMESTAMP, :type, :step, :action, :segmentID, :clipID);");
+					$query = $this->connection->prepare("INSERT INTO `analytics_events` (`event_id`,  `visitor_id`, `project_ID`, `event_time`, `event_type`, `on_step`, `user_action`, `segment_id`, `clipID`) VALUES (NULL, :id, :projID, CURRENT_TIMESTAMP, :type, :step, :action, :segmentID, :clipID);");
 					$query->bindParam(':id', $visitor_id);
 					$query->bindParam(':projID', $projectID);
 					$query->bindParam(':type', $type);

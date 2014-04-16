@@ -21,7 +21,7 @@
 			//use the ajax handler for this one
 			var ret;
 			$.ajaxSetup({async: false});
-			$.get( "/includes/ajaxHandler.php", { fx : "getEntry", projectID : entryID, object : "entry" }, function( data ) {
+			$.get( <?php echo fixedPath; ?>"/includes/ajaxHandler.php", { fx : "getEntry", projectID : entryID, object : "entry" }, function( data ) {
 				ret =  jQuery.parseJSON( data );
 			});
 			$.ajaxSetup({async: true});
@@ -588,7 +588,7 @@
 		<hr />
 	<h3> Contest Entries </h3>
 	
-	<p><a href="/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa">View All Entries</a></p>
+	<p><a href="<?php echo fixedPath; ?>/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa">View All Entries</a></p>
 	
 	<h3>User Trails</h3>
 	<?php
@@ -654,15 +654,8 @@
 	?>
 	
 	
-	
-	<p>
-	 <!-- <a href="/administration/ProjectAnalytics.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Project Analytics</a>	-->
-	  <a href="/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-users"></i> Contest Entries</a>	
-	  <a href="/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Contest Entries</a>	
-	  <a href="/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>
-	  <a href="/administration/MapProject.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-sitemap"></i> Flow Chart</a>
-	  <a class="button wa" href="/admin"><i class="fa fa-th-list"></i> Back to Admin</a> 	  
-	</p>
+	<?php footerMenu($projID); ?>
+
 	
 	<?php
 		}else{

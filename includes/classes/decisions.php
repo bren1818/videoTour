@@ -54,7 +54,7 @@
 		
 			if( $this->getId() == "" ){
 				//insert
-				$query = $this->connection->prepare("INSERT INTO `videotour`.`decisions` (`id`, `projectID`, `decisionTreeID`, `clipID`, `segmentID`, `continues`, `ends`, `note`, `text`) VALUES (NULL, :projectID, :decisionTreeID, :clipID, :segmentID, :continues, :ends, :note, :text);");
+				$query = $this->connection->prepare("INSERT INTO `decisions` (`id`, `projectID`, `decisionTreeID`, `clipID`, `segmentID`, `continues`, `ends`, `note`, `text`) VALUES (NULL, :projectID, :decisionTreeID, :clipID, :segmentID, :continues, :ends, :note, :text);");
 
 				$query->bindParam(':projectID', $projectID  );
 				$query->bindParam(':decisionTreeID', $decisionTreeID );
@@ -70,7 +70,7 @@
 			}else{
 				//update
 				
-				$query = $this->connection->prepare("UPDATE `videotour`.`decisions` SET `clipID` = :clipID, `segmentID` = :segmentID, `continues` = :continues, `ends` = :ends, `note` = :note, `text` = :text WHERE `decisions`.`id` = :id;");
+				$query = $this->connection->prepare("UPDATE `decisions` SET `clipID` = :clipID, `segmentID` = :segmentID, `continues` = :continues, `ends` = :ends, `note` = :note, `text` = :text WHERE `decisions`.`id` = :id;");
 				
 				$id = $this->getId();
 				
@@ -113,7 +113,7 @@
 				$decisionID = $id;
 			}
 			if( $this->connection ){
-				$query = $this->connection->prepare("DELETE FROM `videotour`.`decisions` WHERE `decisions`.`id` = :id");
+				$query = $this->connection->prepare("DELETE FROM `decisions` WHERE `decisions`.`id` = :id");
 				$query->bindParam(':id', $decisionID);
 				if( $query->execute() ){
 					return 1;

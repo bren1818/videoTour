@@ -63,7 +63,7 @@
 			
 			if( $this->getId() == "" ){
 				//new Badge
-				$query = $this->connection->prepare("INSERT INTO `videotour`.`badges` (`id`, `projectID`, `note`, `path`) VALUES (NULL, :projectID, :note, :path)");
+				$query = $this->connection->prepare("INSERT INTO `badges` (`id`, `projectID`, `note`, `path`) VALUES (NULL, :projectID, :note, :path)");
 				
 				$query->bindParam(':projectID', $projectID  );
 				$query->bindParam(':note', $note );
@@ -80,7 +80,7 @@
 
 				$badgeID = $this->getId();
 				
-				$query = $this->connection->prepare("UPDATE `videotour`.`badges` SET `path` = :path, `note` = :note WHERE `badges`.`id` = :badgeID;");
+				$query = $this->connection->prepare("UPDATE `badges` SET `path` = :path, `note` = :note WHERE `badges`.`id` = :badgeID;");
 				
 				$query->bindParam(':path', $path );
 				$query->bindParam(':note', $note );

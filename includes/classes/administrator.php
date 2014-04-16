@@ -53,7 +53,7 @@
 			
 				if( $this->id != "" ){
 				
-					$query = $this->connection->prepare("UPDATE `videotour`.`administrators` SET  `email` = :email, `enabled` = :enabled, `last_login` = :lastlogin, `last_session` = :lastSession, `type` = :type WHERE `administrators`.`id` = :id;");
+					$query = $this->connection->prepare("UPDATE `administrators` SET  `email` = :email, `enabled` = :enabled, `last_login` = :lastlogin, `last_session` = :lastSession, `type` = :type WHERE `administrators`.`id` = :id;");
 					$query->bindParam(':email', $email);
 					$query->bindParam(':enabled', $enabled);
 					$query->bindParam(':lastlogin', $lastlogin);
@@ -77,7 +77,7 @@
 				if( $this->id != "" ){
 					$t = time();
 					$id = $this->id;
-					$query = $this->connection->prepare("UPDATE `videotour`.`administrators` SET `last_login` = :lastlogin WHERE `administrators`.`id` = :id;");
+					$query = $this->connection->prepare("UPDATE `administrators` SET `last_login` = :lastlogin WHERE `administrators`.`id` = :id;");
 					$query->bindParam(':lastlogin', $t);
 					$query->bindParam(':id', $id);
 					$query->execute();
