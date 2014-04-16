@@ -80,13 +80,13 @@
 		<body>
 		<div id="admin_content">
 			<div id="adminBar">
-				<a class="wa button" href="<?php echo fixedPath; ?>/login.php?logOut=1">Log Out</a>
+				<a class="wa button" href="<?php echo fixedPath; ?>/login.php?logOut=1"><i class="fa fa-power-off"></i> Log Out</a>
 			</div>
 		
 		<?php
 		
 		//pa( $adminSession );
-		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a href='".fixedPath."/administration/admin/index.php'>Admin Functions</a>" : "")."</p>";
+		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a class='button wa' href='".fixedPath."/administration/admin/index.php'><i class='fa fa-cogs'></i> Admin Functions</a>" : "")."</p>";
 		
 		
 	}

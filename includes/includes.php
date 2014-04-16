@@ -38,4 +38,21 @@
 		echo '<pre>'.print_r($arr,true).'</pre>';
 	}
 	
+	function bulletArray( $array, $return=0 ){
+		$html = "";
+		if( is_array( $array ) ){
+			$html = "<ul>";
+			foreach( $array as $item ){
+				$html.="<li>".$item."</li>";
+			}
+			$html.= "</ul>";
+		}
+		
+		if( $return ){
+			return $html;
+		}else{
+			echo $html;
+		}
+	}
+	
 ?>

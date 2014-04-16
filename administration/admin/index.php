@@ -28,7 +28,7 @@
 
 	<h1>Super Admin</h1>
 	
-	<p><a href="<?php echo fixedPath; ?>/administration/user/update?new=1">Add User</a></p>
+	<p><a class="button wa" href="<?php echo fixedPath; ?>/administration/user/update?new=1"><i class="fa fa-users"></i> Add User</a> - <a class="button wa"  href="<?php echo fixedPath."/administration/user/update?id=".$userID;?>"><i class="fa fa-user"></i> Update Profile</a> </p>
 	
 	<p>Users Online</p>
 	<?php
@@ -57,7 +57,7 @@
 				<?php
 				$updatePath = fixedPath."/administration/user/update?id=";
 				foreach( $res as $row ){
-					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td><a onClick="killSession(\''.$row['last_session'].'\')">Boot em</a></td><td>'.$row['type'].'</td><td><a href="'.$updatePath.$row['id'].'">Edit</a></td></tr>';
+					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td><a class="button wa" onClick="killSession(\''.$row['last_session'].'\')"><i class="fa fa-gavel"></i> Boot em</a></td><td>'.$row['type'].'</td><td><a class="button wa"  href="'.$updatePath.$row['id'].'"><i class="fa fa-pencil"></i> Edit</a> <a class="button wa"  href="'.fixedPath."/administration/user/delete?id=".$row['id'].'"><i class="fa fa-times-circle"></i> Delete</a></td></tr>';
 				}
 				?>
 				</tbody>
@@ -74,7 +74,7 @@
 		$t = time();
 		$t = $t - 300;
 		//last login is  > than current time -300
-		$query = $connection->prepare("SELECT `username`, `id`, `email`, `enabled`, `last_login`, `last_session`, `type` FROM `administrators` WHERE `last_login` < :time;");
+		$query = $connection->prepare("SELECT `username`, `id`, `email`, `enabled`, `last_login`, `last_session`, `type` FROM `administrators` WHERE `last_login` < :time OR `last_login` IS NULL ;");
 		$query->bindParam(':time', $t  );
 		if( $query->execute() ){
 			$res = $query->fetchAll();
@@ -94,7 +94,7 @@
 				<?php
 				$updatePath = fixedPath."/administration/user/update?id=";
 				foreach( $res as $row ){
-					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td>'.$row['type'].'</td><td><a href="'.$updatePath.$row['id'].'">Edit</a></td></tr>';
+					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td>'.$row['type'].'</td><td><a class="button wa"  href="'.$updatePath.$row['id'].'"><i class="fa fa-pencil"></i> Edit</a> <a class="button wa"  href="'.fixedPath."/administration/user/delete?id=".$row['id'].'"><i class="fa fa-times-circle"></i> Delete</a></td></tr>';
 				}
 				?>
 				</tbody>

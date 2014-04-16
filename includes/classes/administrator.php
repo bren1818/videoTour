@@ -68,6 +68,43 @@
 					}
 				}else{
 					//insert
+					$query = $this->connection->prepare("INSERT INTO `administrators` (`id`, `username`, `password`, `salt`, `email`, `enabled`, `last_login`, `last_session`, `type`) VALUES (NULL, :username, '', '', :email, :enabled, NULL, NULL, :type);");
+					$username = $this->getUsername();
+					
+					$query->bindParam(':username', $username);
+					$query->bindParam(':email', $email);
+					$query->bindParam(':enabled', $enabled);
+					$query->bindParam(':type', $type);
+					
+					if( $query->execute() ){
+						$this->setId( $this->connection->lastInsertId() );
+						return $this->getId();
+					}else{
+						return 0;
+					}		
+				}
+			}
+		}
+		
+		function updatePassword( $newPassword ){
+			if( $this->connection ){
+				if( $this->id != "" ){
+					$this->setSalt( $this->randomSalt() );
+					$this->setPassword( $newPassword );
+					$id = $this->getId();
+					$salt = $this->getSalt();
+					$pass = $this->getPassword();
+					
+					$query = $this->connection->prepare("UPDATE `administrators` SET `password` = :password, `salt` = :salt WHERE `administrators`.`id` = :id;");
+					$query->bindParam(':password', $pass );
+					$query->bindParam(':salt', $salt);
+					$query->bindParam(':id', $id);
+					
+					if( $query->execute() ){
+						return 1;
+					}else{
+						return 0;
+					}
 				}
 			}
 		}
@@ -104,7 +141,31 @@
 			}
 		}
 		
+		function userNameExists($username){
+			if( $this->connection ){
+				$query = $this->connection->prepare("SELECT * FROM `administrators` WHERE `username` = :username");
+				$query->bindParam(':username', $username);
+				if( $query->execute() ){
+					return $query->rowCount();
+				}
+				
+			}
+		}
 		
+		function delete(){
+			if( $this->connection ){
+				if( $this->id != "" ){
+					$id = $this->getId();
+					$query = $this->connection->prepare("DELETE FROM `administrators` WHERE `id` = :id");
+					$query->bindParam(':id', $id);
+					if( $query->execute() ){
+						return 1;
+					}else{
+						return 0;
+					}
+				}
+			}
+		}
 		
 		function setId($id) { $this->id = $id; }
 		function getId() { return $this->id; }

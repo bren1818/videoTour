@@ -48,7 +48,7 @@
 				$badge->save();
 				
 				?>
-					<p><a href="/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
+					<p><a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
 				
 				<?php
 				pageFooter();
@@ -92,7 +92,7 @@
 			<input type="hidden" name="projectID" value="<?php echo $project->getId(); ?>" />
 			
 			<input  id="submit" class="button" type="submit" value="Upload" />
-			<p><a href="/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
+			<p><a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
 		</form>
 		
 	<?php
@@ -101,7 +101,7 @@
 			?>
 			<h1>No ProjectID specified...</h1>
 			
-			<p><a class="button" href="/admin"><i class="fa fa-reply"></i> Go Back</a></p>
+			<p><a class="button" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-reply"></i> Go Back</a></p>
 			<?php
 		}
 	}

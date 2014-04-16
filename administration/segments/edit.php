@@ -178,14 +178,14 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 	</form>
 	
 	
-	<p><a href="/administration/project/edit?id=<?php echo $segment->getProjectID(); ?>" class="button"><i class="fa fa-reply"></i> Go Back</a></p>
+	<p><a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $segment->getProjectID(); ?>" class="button"><i class="fa fa-reply"></i> Go Back</a></p>
 
 <?php
 	}else{
 		?>
 		<h1>No ProjectID specified...</h1>
 		
-		<p><a class="button" href="/admin"><i class="fa fa-reply"></i> Go Back</a></p>
+		<p><a class="button" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-reply"></i> Go Back</a></p>
 		<?php
 	}
 	pageFooter();

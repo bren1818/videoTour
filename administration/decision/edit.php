@@ -247,7 +247,7 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 		<p class="center">
 		<input class="button" type="submit" value="SAVE" />
 		</p>
-		<p><a class="button" href="/administration/project/edit?id=<?php echo $project->getId();  ?>"><i class="fa fa-reply"></i> Go Back</a></p>
+		<p><a class="button" href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $project->getId();  ?>"><i class="fa fa-reply"></i> Go Back</a></p>
 	</form>
 	
 	
@@ -262,7 +262,7 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 		?>
 		<h1>No ProjectID or Decision ID specified...</h1>
 		
-		<p><a class="button" href="/admin"><i class="fa fa-reply"></i> Go Back</a></p>
+		<p><a class="button" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-reply"></i> Go Back</a></p>
 		<?php
 	}
 		pageFooter();

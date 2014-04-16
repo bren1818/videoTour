@@ -59,7 +59,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 				echo '<p>Could Not Add Decision... an error occurred... try again later?</p>';
 			}
 			?>
-				<p><a href="/administration/project/edit?id=<?php echo $projectID; ?>" class="button"><i class="fa fa-reply"></i> Go Back</a></p>
+				<p><a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projectID; ?>" class="button"><i class="fa fa-reply"></i> Go Back</a></p>
 			<?php
 			pageFooter();
 		}
@@ -72,7 +72,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		<?php
 		if( $projectID != "" ){
 			?>
-			<p><a href="/administration/project/edit?id=<?php echo $projectID; ?>" class="button"><i class="fa fa-reply"></i> Go Back</a></p>
+			<p><a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projectID; ?>" class="button"><i class="fa fa-reply"></i> Go Back</a></p>
 			<?php
 		}
 		pageFooter();
@@ -258,7 +258,7 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' || isset( $_POST["saveAndAdd"] ) && $fa
 		
 		<p class="center">
 		<?php  if( sizeof( $choices ) < 2 ){ ?> <input class="button wa" name="saveAndAdd" type="submit" value="Submit and Add another"/> <?php } ?> <input class="button wa" name="saveAndFinish" type="submit" value="Save & Finish" /></p>
-		<p><a class="button" href="/administration/project/edit?id=<?php echo $project->getId();  ?>"><i class="fa fa-reply"></i> Go Back</a></p>
+		<p><a class="button" href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $project->getId();  ?>"><i class="fa fa-reply"></i> Go Back</a></p>
 	</form>
 	
 	
@@ -267,7 +267,7 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' || isset( $_POST["saveAndAdd"] ) && $fa
 		?>
 		<h1>No ProjectID or Decision ID specified...</h1>
 		
-		<p><a class="button" href="/admin"><i class="fa fa-reply"></i> Go Back</a></p>
+		<p><a class="button" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-reply"></i> Go Back</a></p>
 		<?php
 	}
 		pageFooter();

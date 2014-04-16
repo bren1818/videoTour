@@ -20,7 +20,7 @@
 				echo '<p>Upload Complete!</p>';
 				echo '<p>"'.$_FILES["video"]["name"] .'" already exists. </p>';
 				$error = 1;
-				echo '<p><a class="button wa" href="/administration/clip/upload?projectID='.$projectID.'">Try again</a></p>';
+				echo '<p><a class="button wa" href="'.fixedPath.'/administration/clip/upload?projectID='.$projectID.'">Try again</a></p>';
 			}else{
 				//we've uploaded the video, lets create the entry and then convert the clips
 				
@@ -91,7 +91,7 @@
 
 				*/
 				
-				echo '<p><a target="_blank" class="button wa" href="/administration/project/edit?id='.$projectID.'">Go back to Project while this converts</a></p>';
+				echo '<p><a target="_blank" class="button wa" href="'.fixedPath.'/administration/project/edit?id='.$projectID.'">Go back to Project while this converts</a></p>';
 				
 				
 				echo '<h3>The Server will now convert your clips</h3>';
@@ -145,7 +145,7 @@
 			logMessage( "Converted mobile source file, ProjectID: ".$projectID." ClipID: ".$clip->getId()." to path: ".$filename, "conversion.log");
 				
 				?>
-				<p><a href="/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
+				<p><a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
 				
 				<?php
 				
@@ -200,7 +200,7 @@
 			<input type="hidden" name="projectID" value="<?php echo $project->getId(); ?>" />
 			
 			<input  id="submit" class="button" type="submit" value="Upload" />
-					<p><a href="/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
+					<p><a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projectID;  ?>" class="button wa">Back to Project</a></p>
 		</form>
 		
 	<?php
@@ -209,7 +209,7 @@
 			?>
 			<h1>No ProjectID specified...</h1>
 			
-			<p><a class="button" href="/admin"><i class="fa fa-reply"></i> Go Back</a></p>
+			<p><a class="button" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-reply"></i> Go Back</a></p>
 			<?php
 		}
 	}
