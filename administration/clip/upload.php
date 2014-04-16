@@ -99,7 +99,7 @@
 				$convert = new Convert( $conn );
 				$convert->setClipID( $clip->getId() );
 				$convert->setProjectID( $projectID );
-				
+				$convert->setOS( CUR_OS );
 				
 				
 				//original cip

@@ -20,8 +20,9 @@
 		$adminSession = new adminSession();
 
 		if( $adminSession->getExpired() ){
-			$adminSession->destroy();
+			
 			logMessage( $_SESSION['currentUser']." timed out");
+			$adminSession->destroy();
 			header("Location: ".fixedPath."/login.php?youTimedOut");
 		}else{
 			$adminSession->renew();
@@ -86,8 +87,14 @@
 		<?php
 		
 		//pa( $adminSession );
-		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a class='button wa' href='".fixedPath."/administration/admin/index.php'><i class='fa fa-cogs'></i> Admin Functions</a>" : "")."</p>";
+		$userID = $adminSession->getCurrentUserID();
+		$admin = new administrator( getConnection() );
+		$admin = $admin->load( $userID );
 		
+		if( is_object( $admin ) ){
+		
+		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a class='button wa' href='".fixedPath."/administration/admin/index.php'><i class='fa fa-cogs'></i> Admin Functions</a>" : "")."</p>";
+		}
 		
 	}
 	

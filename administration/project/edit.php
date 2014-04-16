@@ -285,7 +285,7 @@
 		<tbody>
 		<?php
 			foreach( $badges as $b ){
-				echo '<tr><td>'.$b->getId().'</td><td>'.$b->getNote().'</td><td><a href="'.$b->getPath().'" target="_blank"><img src="'.$b->getPath().'" height="50" width="50" /></a></td><td><a onClick="confirmDeleteBadge('.$project->getId().','.$b->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
+				echo '<tr><td>'.$b->getId().'</td><td>'.$b->getNote().'</td><td><a href="'.$b->getPath().'" target="_blank"><img src="'.fixedPath.$b->getPath().'" height="50" width="50" /></a></td><td><a onClick="confirmDeleteBadge('.$project->getId().','.$b->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
 			}
 		?>
 		</tbody>

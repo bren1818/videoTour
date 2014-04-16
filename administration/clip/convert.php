@@ -15,11 +15,14 @@ class Convert{
 	private $threads = 4;
 	private $fps = 24;
 	private $ext;
+	private $OS;
+	
 	
 	private $outputpath;
 	
 	function __construct($dbc=null) {
 		$this->connection = $dbc;
+		$this->OS = 1; //default to WINDOWS
 	}
 	
 	function doConvert(){
@@ -33,15 +36,34 @@ class Convert{
 		
 		set_time_limit( 10 * 60 ); //10 minute time out
 		
-		if( $postfix == "_o" ){
-			$cmd = "ffmpeg.exe -i ".$this->getSourceFolder().$this->getSourceFile()." -threads ".$this->getThreads()." -r ".$this->getFps()." ".$this->getDestinationFolder().$this->getDestinationFile().$postfix.".m4v 2>&1";
-		}else{
-			$cmd = "ffmpeg.exe -i ".$this->getSourceFolder().$this->getSourceFile()." -threads ".$this->getThreads()." -r ".$this->getFps()." -vf scale=".$this->getWidth().":".$this->getHeight()." ".$this->getDestinationFolder().$this->getDestinationFile().$postfix.".m4v 2>&1";
+	
+		
+		error_log( "Converting on OS: ".$this->getOS() );
+		
+		
+		if( $this->getOS() == 1 ){
+			if( $postfix == "_o" ){
+				$cmd = "ffmpeg.exe -i ".$this->getSourceFolder().$this->getSourceFile()." -threads ".$this->getThreads()." -r ".$this->getFps()." ".$this->getDestinationFolder().$this->getDestinationFile().$postfix.".m4v 2>&1";
+			}else{
+				$cmd = "ffmpeg.exe -i ".$this->getSourceFolder().$this->getSourceFile()." -threads ".$this->getThreads()." -r ".$this->getFps()." -vf scale=".$this->getWidth().":".$this->getHeight()." ".$this->getDestinationFolder().$this->getDestinationFile().$postfix.".m4v 2>&1";
+			}
+		}else if( $this->getOS() == 2 ){
+			if( $postfix == "_o" ){
+				$cmd = "./ffmpeg -i ".$this->getSourceFolder().$this->getSourceFile()." -threads ".$this->getThreads()." -r ".$this->getFps()." ".$this->getDestinationFolder().$this->getDestinationFile().$postfix.".m4v";
+			}else{
+				$cmd = "./ffmpeg -i ".$this->getSourceFolder().$this->getSourceFile()." -threads ".$this->getThreads()." -r ".$this->getFps()." -vf scale=".$this->getWidth().":".$this->getHeight()." ".$this->getDestinationFolder().$this->getDestinationFile().$postfix.".m4v";
+			}
+		
+		
 		}
+			
 			
 			
 		
 		$this->setOutputpath( "/uploads/".$this->getDestinationFile().$postfix.".m4v");
+		
+		error_log( "Executing: ".$cmd );
+		
 		exec( $cmd, $output);
 		
 		$this->updateRecord($id);
@@ -95,6 +117,7 @@ class Convert{
 	function getExt() { return $this->ext; }
 	function setOutputpath($outputpath) { $this->outputpath = $outputpath; }
 	function getOutputpath() { return $this->outputpath; }
-	
+	function setOS($OS) { $this->OS = $OS; }
+	function getOS() { return $this->OS; }
 }
 ?>
