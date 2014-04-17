@@ -18,9 +18,7 @@
 <?php
 	//check if user has access to the project?
 	
-	$userID = $adminSession->getCurrentUserID();
-	$admin = new administrator( getConnection() );
-	$admin = $admin->load( $userID );
+	
 	
 	
 
@@ -37,12 +35,7 @@
 		
 		if( is_object($project ) ){
 		
-		//simple security check :D
-		if(  ! in_array( $_REQUEST['id'], $admin->getProjectsAsArray() ) && $admin->getType() == 2 ){
-			echo '<h1>Access Denied!</h1>';
-			pageFooter();
-			exit;
-		}
+		checkAccess( $project->getId() );
 
 			
 		

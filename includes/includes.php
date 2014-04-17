@@ -20,6 +20,7 @@
 	require_once($path.'/classes/entry.php');
 	require_once($path.'/classes/administrator.php');
 	require_once($path.'/classes/adminSession.php');
+	require_once($path.'/classes/stylesheet.php');
 	
 	require_once($path."/pageTemplate.php");
 	

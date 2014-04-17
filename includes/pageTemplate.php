@@ -16,6 +16,14 @@
 	
 	}
 	
+	function curPageURL() {
+		$isHTTPS = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on");
+		$port = (isset($_SERVER["SERVER_PORT"]) && ((!$isHTTPS && $_SERVER["SERVER_PORT"] != "80") || ($isHTTPS && $_SERVER["SERVER_PORT"] != "443")));
+		$port = ($port) ? ':'.$_SERVER["SERVER_PORT"] : '';
+		$url = ($isHTTPS ? 'https://' : 'http://').$_SERVER["SERVER_NAME"].$port.$_SERVER["REQUEST_URI"];
+		return $url;
+	}
+	
 	function pageHeader($pageTitle = ""){
 		//session_start();
 		global $adminSession;
@@ -35,6 +43,9 @@
 				if( $admin->getEnabled() ){
 					//smooth sailing
 					$admin->upateActivity();//update last activity
+					
+					logMessage("User: ".$admin->getUsername()." Accessed: ".curPageURL(), "access.log");
+					
 				}else{
 					$adminSession->destroy();
 					$admin = array();
@@ -96,13 +107,33 @@
 		$admin = $admin->load( $userID );
 		
 		if( is_object( $admin ) ){
-		
-		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a class='button wa' href='".fixedPath."/administration/admin/index.php'><i class='fa fa-cogs'></i> Admin Functions</a>" : " <a class='button wa' href='".fixedPath."/administration/user/update?userID=".$admin->getId()."'><i class='fa fa-user'></i> Update Profile</a>")."</p>";
+			echo "<p><b>".$adminSession->getCurrentUser()."</b> active for: ".gmdate("H:i:s", $adminSession->getDuration() ).(($admin->getType() == 1) ? " <a class='button wa' href='".fixedPath."/administration/admin/index.php'><i class='fa fa-cogs'></i> Admin Functions</a>" : " <a class='button wa' href='".fixedPath."/administration/user/update?userID=".$admin->getId()."'><i class='fa fa-user'></i> Update Profile</a>")."</p>";
 		}
 		
 	}
+		function checkAccess( $projectID, $return = 0 ){
+			//simple security check :D
+			global $adminSession;
+			$userID = $adminSession->getCurrentUserID();
+			$admin = new administrator( getConnection() );
+			$admin = $admin->load( $userID );
+			if(  ! in_array( $projectID, $admin->getProjectsAsArray() ) && $admin->getType() == 2 ){
+				if( $return ){
+					return 0;
+				}else{
+					echo '<h1>Access Denied!</h1>';
+					pageFooter();
+					exit;
+				}
+			}
+			
+			if( $return ){
+				return 1;
+			}
+		}
 	
-		function pageHeaderShow($pageTitle = ""){
+	
+		function pageHeaderShow($pageTitle = "", $projectID=0){
 		ob_clean();
 		?>
 		<!DOCTYPE html>
@@ -120,6 +151,7 @@
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jQuery.jPlayer.2.5.0/jquery.jplayer.min.js"></script>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/playerHome/jplayer.blue.monday.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/ProjectHome.css" />
+			<link rel="stylesheet" href="<?php echo fixedPath; ?>/includes/projectCSS.php?projectID=<?php echo $projectID; ?>"/>
 			<meta id="Viewport" name="viewport" width="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 		</head>
 		<body>

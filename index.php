@@ -21,7 +21,7 @@
 			$title = $project->getTitle();
 			
 			if( $project->isActive() ){
-				pageHeaderShow( $title ); 
+				pageHeaderShow( $title, $project->getId() ); 
 				if( $project->getStartingSegmentID() == null || $project->getStartingSegmentID() == ""){
 					echo "<p>Error - This project doesn't have a start</p>";
 				}else if(  $project->getStartingSegmentID() != "" ){
