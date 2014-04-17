@@ -14,14 +14,21 @@
 		$username =  (isset($_POST['username']) && $_POST['username'] != "" ) ? preg_replace('/\s+/', '',$_POST['username']) : ""; //error  strip spaces!
 		$email =	 (isset($_POST['email']) && $_POST['email'] != "" ) ? preg_replace('/\s+/', '', $_POST['email']) : "";			 //error
 		$type = 	 (isset($_POST['type']) && $_POST['type'] != "" ) ? $_POST['type'] : 2;
-		$enabled =	 (isset($_POST['enabled']) && $_POST['enabled'] != "" ) ? $_POST['enabled'] : 0;
+		$enabled =	 (isset($_POST['enabled']) && $_POST['enabled'] != "" ) ? $_POST['enabled'] : 1;
 		$password =  (isset($_POST['password']) && $_POST['password'] != "" ) ? $_POST['password'] : ""; //error
 		$confirm =   (isset($_POST['confirm']) && $_POST['confirm'] != "" ) ? $_POST['confirm'] : ""; 	 //error
 		$nuserID =	 (isset($_POST['userID']) && $_POST['userID'] != "" ) ? $_POST['userID'] : 0; 	     //error
 		$updateType = (isset($_POST['updateType']) && $_POST['updateType'] != "" ) ? $_POST['updateType'] : ""; 	     //error
 		$updatePassword =   (isset($_POST['updatePassword']) && $_POST['updatePassword'] == "update" ) ? 1 : 0;
 		
+		$assignedProjects = (isset($_POST['assignedProjects']) && is_array($_POST['assignedProjects']) ) ?  $_POST['assignedProjects'] : array();
 		
+		$projects = "";
+		foreach( $assignedProjects as $proj ){
+			$projects.= $proj.", ";
+		}
+		$projects = trim( (string)$projects, ", "); //keep the ', ' space.
+		//echo $projects;
 		$errors = array(); $messages =  array();
 		
 		if( $nuserID == "" && $updateType == "NEW" ){
@@ -36,6 +43,9 @@
 					$user->setEmail(	$email   );
 					$user->setEnabled(  $enabled );
 					$user->setType(		$type    );
+					if( $type == 2 ){ //2 == regular admin
+						$user->setAssigned_projects( $projects );
+					}
 					$user->save();
 					
 					if( $user->getId() > 0 ){
@@ -58,8 +68,12 @@
 			//modifying your own profile
 			
 			$admin->setEmail(	$email   );
-			$admin->setEnabled(  $enabled );
-			$admin->setType(		$type    );
+			if( $admin->getType() == 1 ){ //only super admins can set their enabled / type
+				$admin->setEnabled(  $enabled );
+				$admin->setType(		$type    );
+				//$admin->setAssigned_projects( $assignedProjects );
+			}
+			
 			$updated = $admin->save();
 			if( $updated > 0 ){
 				$messages[] = "Profile updated successfully";
@@ -86,11 +100,13 @@
 				//modifying another user
 				$user  = new administrator( getConnection() );
 				$user = $user->load( $nuserID );
-			
-			
 				$user->setEmail(	$email   );
 				$user->setEnabled(  $enabled );
 				$user->setType(		$type    );
+				if( $type == 2 ){ //regular admin
+					$user->setAssigned_projects( $projects );
+				}
+				
 				$updated = $user->save();
 				if( $updated > 0 ){
 					$messages[] = "Profile updated successfully";
@@ -190,7 +206,15 @@
 			<tr><td><label for="username">Username:</label></td><td><input type="text" name="username" id="username" value="<?php echo $userToEdit->getUsername(); ?>" <?php if($userToEdit->getId() != ""){ echo "disabled='disabled'"; }else{ echo 'required="required"'; } ?>/></td></tr>
 			<tr><td><label for="email">Email:</label></td><td><input type="email" name="email" id="email" value="<?php echo $userToEdit->getEmail(); ?>" required="required"/></td></tr>
 			<?php if( $admin->getType() == 1 ){ ?>
-				<tr><td><label for="type">Type:</label></td><td><input type="number" name="type" id="type" value="<?php echo ($userToEdit->getType() != "") ? $userToEdit->getType() : "2"; ?>" min="1" max="2" required="required"/>(1=SA,2=A)</td></tr>
+				<tr><td><label for="type">Type:</label></td><td>
+					<!--
+					<input type="number" name="type" id="type" value="<?php echo ($userToEdit->getType() != "") ? $userToEdit->getType() : "2"; ?>" min="1" max="2" required="required"/>(1=SA,2=A)
+					-->
+					<select name="type" id="type">
+						<option value="1" <?php echo ($userToEdit->getType() == 1) ? "selected" : ""; ?>>Super Admin</option>
+						<option value="2" <?php echo ($userToEdit->getType() == 2) ? "selected" : ""; ?>>Regular Admin</option>
+					</select>
+					</td></tr>
 				<tr><td><label for="enabled">Enabled:</label></td><td><input type="checkbox" name="enabled" id="enabled" value="1" <?php if( $userToEdit->getEnabled() == 1){ echo " checked"; }?>/></td></tr>
 			<?php } ?>
 		
@@ -202,13 +226,64 @@
 				<tr><td>Password:</td><td><input type="password" name="password" id="password" required="required" value=""/></td></tr>
 				<tr><td>Confirm Password:</td><td><input type="password" name="confirm" id="confirm" required="required" value=""/></td></tr>
 			<?php } ?>
+			
+			<?php
+				//if( $userToEdit->getType() == 2 ||  $userToEdit->getId() == ""){
+				
+			?>	
+				<tr class="assignedProjs <?php if($userToEdit->getId() == 1){echo "hidden"; }?>"><td>Assigned Projects:</td><td>
+				  <!-- the [] in assignedProjects forces the select to be an array on post -->
+				  <select name="assignedProjects[]" data-placeholder="Assigned Projects..." multiple class="chosen-select" style="width: 150px;">
+					<option value=""></option>
+					<?php
+						$project = new Projects( getConnection() );
+						$projects = $project->listProjects();
+						if( $userToEdit->getId() != "" ){
+							$selectedProjs = $userToEdit->getAssigned_projects();
+							$selectedProjs = explode(',', $selectedProjs);
+						}else{
+							$selectedProjs = array();
+						}
+						
+						foreach( $projects as $project ){
+							if( in_array( $project->getId(), $selectedProjs ) ){
+								echo '<option value="'.$project->getId().'" selected>'.$project->getTitle().'</option>';
+							}else{
+								echo '<option value="'.$project->getId().'">'.$project->getTitle().'</option>';
+							}
+						}
+					?>
+				  </select>
+				</td></tr>
+			<?php// } ?>
 		</table>
 		<input type="submit" value="Save" class="button wa" />
 		<input type="hidden" name="userID" value="<?php echo $userToEdit->getId(); ?>">
 		<input type="hidden" name="updateType" value="<?php echo $updateType; ?>" />
 	</form>
-
-	<p><a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a></p>
+	<style>
+		tr.assignedProjs.hidden{
+			display: none;
+		}
+	</style>
+	<script>
+		$(function(){
+			
+			$(".chosen-select").chosen();
+			$('#type').change(function(){
+				console.log( $(this).val() );
+				if( $(this).val() == 2 ){
+					$('tr.assignedProjs').removeClass('hidden');
+				}else{
+					$('tr.assignedProjs').addClass('hidden');
+				}
+			});
+			if( $('#type').val() == 1 ){
+				$('tr.assignedProjs').addClass('hidden');
+			}
+		});
+	</script>
+	<p><?php echo ( ($admin->getType() == 1) ? '<a class="button wa" href="'.fixedPath.'/administration/admin/index"><i class="fa fa-th-list"></i> Back to Admin Functions</a> ' : " "); ?><a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a></p>
 <?php
 	pageFooter();
 ?>

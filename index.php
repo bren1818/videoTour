@@ -341,7 +341,11 @@
 		}
 	}else{
 		pageHeaderShow("Unknown Project"); 
-		logMessage( "Unknown Project ".$tourID, "user.log");
+		if( isset($tourID) ){
+			logMessage( "Unknown Project ".$tourID, "user.log");
+		}else{
+			logMessage( "Unknown Project ", "user.log");
+		}
 		?>
 		<h2>Sorry no tourID set.</h2>
 		<p>There should be a ?tourID= someID</p>

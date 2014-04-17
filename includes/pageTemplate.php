@@ -56,6 +56,7 @@
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/tablesorter/blue/style.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/colorbox.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/style.css"/>
+			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/chosen.min.css"/>
 			<link rel="shortcut icon" type="image/x-icon" href="<?php echo fixedPath; ?>/favicon.ico">
 
 			<meta http-equiv="expires" content="Sun, 01 Jan 2014 00:00:00 GMT"/>
@@ -71,6 +72,7 @@
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/scripts.js"></script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.colorbox-min.js"></script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.tablesorter.min.js"></script>
+			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/chosen.jquery.min.js"></script>
 			
 			<!--
 			Video Tour Web Application
@@ -93,7 +95,7 @@
 		
 		if( is_object( $admin ) ){
 		
-		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a class='button wa' href='".fixedPath."/administration/admin/index.php'><i class='fa fa-cogs'></i> Admin Functions</a>" : "")."</p>";
+		echo "<p>".$adminSession->getCurrentUser()." active for: ".$adminSession->getDuration()."(s)".(($admin->getType() == 1) ? " <a class='button wa' href='".fixedPath."/administration/admin/index.php'><i class='fa fa-cogs'></i> Admin Functions</a>" : " <a class='button wa' href='".fixedPath."/administration/user/update?userID=".$admin->getId()."'><i class='fa fa-user'></i> Update Profile</a>")."</p>";
 		}
 		
 	}

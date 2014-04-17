@@ -36,7 +36,7 @@
 ?>
 	<h1>Edit Project: <?php echo $project->getTitle(); ?></h1>
 	<!-- Associated Segments -->
-	<p><a href="<? echo fixedPath; ?>/administration/project/settings?projectID=<?php echo $id; ?>" class="button wa"><i class="fa fa-cog"></i> Edit Settings</a></p>
+	<p><a href="<?php echo fixedPath; ?>/administration/project/settings?projectID=<?php echo $id; ?>" class="button wa"><i class="fa fa-cog"></i> Edit Settings</a></p>
 	<!--Starting Segment -->
 	<?php if( $project->getStartingSegmentID() == null || $project->getStartingSegmentID() == 0){
 	?>

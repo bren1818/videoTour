@@ -57,7 +57,7 @@
 				<?php
 				$updatePath = fixedPath."/administration/user/update?id=";
 				foreach( $res as $row ){
-					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td><a class="button wa" onClick="killSession(\''.$row['last_session'].'\')"><i class="fa fa-gavel"></i> Boot em</a></td><td>'.$row['type'].'</td><td><a class="button wa"  href="'.$updatePath.$row['id'].'"><i class="fa fa-pencil"></i> Edit</a> <a class="button wa"  href="'.fixedPath."/administration/user/delete?id=".$row['id'].'"><i class="fa fa-times-circle"></i> Delete</a></td></tr>';
+					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td><a class="button wa" onClick="killSession(\''.$row['last_session'].'\')"><i class="fa fa-gavel"></i> Boot em</a></td><td>'.(($row['type'] == 1) ? "Super Admin" : "Admin").'</td><td><a class="button wa"  href="'.$updatePath.$row['id'].'"><i class="fa fa-pencil"></i> Edit</a> <a class="button wa"  href="'.fixedPath."/administration/user/delete?id=".$row['id'].'"><i class="fa fa-times-circle"></i> Delete</a></td></tr>';
 				}
 				?>
 				</tbody>
@@ -94,7 +94,7 @@
 				<?php
 				$updatePath = fixedPath."/administration/user/update?id=";
 				foreach( $res as $row ){
-					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td>'.$row['type'].'</td><td><a class="button wa"  href="'.$updatePath.$row['id'].'"><i class="fa fa-pencil"></i> Edit</a> <a class="button wa"  href="'.fixedPath."/administration/user/delete?id=".$row['id'].'"><i class="fa fa-times-circle"></i> Delete</a></td></tr>';
+					echo '<tr><td>'.$row['username'].'</td><td>'.$row['id'].'</td><td>'.$row['email'].'</td><td>'.date("Y-m-d H:i:s",$row['last_login']).'</td><td>'.(($row['type'] == 1) ? "Super Admin" : "Admin").'</td><td><a class="button wa"  href="'.$updatePath.$row['id'].'"><i class="fa fa-pencil"></i> Edit</a> <a class="button wa"  href="'.fixedPath."/administration/user/delete?id=".$row['id'].'"><i class="fa fa-times-circle"></i> Delete</a></td></tr>';
 				}
 				?>
 				</tbody>

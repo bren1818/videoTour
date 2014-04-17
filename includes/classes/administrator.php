@@ -11,6 +11,7 @@
 		private $type;
 		private $last_login;
 		private $last_session;
+		private $assigned_projects;
 		
 		function setConnection( $conn ){
 			$this->connection = $conn;
@@ -50,15 +51,17 @@
 				$lastSession = $this->getLast_session();
 				$type = $this->getType();
 				$id = $this->id;
+				$assigned_projects = $this->getAssigned_projects();
 			
 				if( $this->id != "" ){
 				
-					$query = $this->connection->prepare("UPDATE `administrators` SET  `email` = :email, `enabled` = :enabled, `last_login` = :lastlogin, `last_session` = :lastSession, `type` = :type WHERE `administrators`.`id` = :id;");
+					$query = $this->connection->prepare("UPDATE `administrators` SET  `email` = :email, `enabled` = :enabled, `last_login` = :lastlogin, `last_session` = :lastSession, `type` = :type, `assigned_projects` = :projects WHERE `administrators`.`id` = :id;");
 					$query->bindParam(':email', $email);
 					$query->bindParam(':enabled', $enabled);
 					$query->bindParam(':lastlogin', $lastlogin);
 					$query->bindParam(':lastSession', $lastSession);
 					$query->bindParam(':type', $type);
+					$query->bindParam(':projects', $assigned_projects);
 					$query->bindParam(':id', $id);
 					
 					if( $query->execute() ){
@@ -68,13 +71,14 @@
 					}
 				}else{
 					//insert
-					$query = $this->connection->prepare("INSERT INTO `administrators` (`id`, `username`, `password`, `salt`, `email`, `enabled`, `last_login`, `last_session`, `type`) VALUES (NULL, :username, '', '', :email, :enabled, NULL, NULL, :type);");
+					$query = $this->connection->prepare("INSERT INTO `administrators` (`id`, `username`, `password`, `salt`, `email`, `enabled`, `last_login`, `last_session`, `type`, `assigned_projects`) VALUES (NULL, :username, '', '', :email, :enabled, NULL, NULL, :type, :projects);");
 					$username = $this->getUsername();
 					
 					$query->bindParam(':username', $username);
 					$query->bindParam(':email', $email);
 					$query->bindParam(':enabled', $enabled);
 					$query->bindParam(':type', $type);
+					$query->bindParam(':projects', $assigned_projects);
 					
 					if( $query->execute() ){
 						$this->setId( $this->connection->lastInsertId() );
@@ -197,6 +201,8 @@
 		function setLast_session($last_session) { $this->last_session = $last_session; }
 		function getLast_session() { return $this->last_session; }
 
+		function setAssigned_projects($assigned_projects) { $this->assigned_projects = $assigned_projects; }
+		function getAssigned_projects() { return ( $this->assigned_projects != null ) ? $this->assigned_projects : ""; }
 	
 	}
 ?>
