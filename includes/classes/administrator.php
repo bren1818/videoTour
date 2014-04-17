@@ -203,6 +203,8 @@
 
 		function setAssigned_projects($assigned_projects) { $this->assigned_projects = $assigned_projects; }
 		function getAssigned_projects() { return ( $this->assigned_projects != null ) ? $this->assigned_projects : ""; }
+		
+		function getProjectsAsArray(){ return  (($this->getAssigned_projects() == "" ) ? array() : explode(',', $this->getAssigned_projects() ) ); }
 	
 	}
 ?>

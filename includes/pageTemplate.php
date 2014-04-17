@@ -1,6 +1,7 @@
 <?php
 	error_reporting(E_ALL);
-
+	$adminSession; //for Global Use
+	
 	function footerMenu($projID){
 		?>
 			<p>
@@ -17,6 +18,7 @@
 	
 	function pageHeader($pageTitle = ""){
 		//session_start();
+		global $adminSession;
 		$adminSession = new adminSession();
 
 		if( $adminSession->getExpired() ){

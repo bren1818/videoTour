@@ -69,8 +69,8 @@
 			
 			$admin->setEmail(	$email   );
 			if( $admin->getType() == 1 ){ //only super admins can set their enabled / type
-				$admin->setEnabled(  $enabled );
-				$admin->setType(		$type    );
+				$admin->setEnabled(  1 );
+				$admin->setType( $type ); //if you got here, you're enabled
 				//$admin->setAssigned_projects( $assignedProjects );
 			}
 			
@@ -145,7 +145,14 @@
 			bulletArray( $messages );
 		}
 		
-		echo  "<a href='".fixedPath."/administration/admin/index.php'>Back to Admin Functions</a>";
+		if( $admin->getType() == 1 ){
+		
+			echo  "<a class='button wa' href='".fixedPath."/administration/admin/index.php'>Back to Admin Functions</a> ";
+			echo  "<a class='button wa' href='".fixedPath."/admin'>Back to Admin</a>";
+		
+		}else{
+			echo  "<a class= 'button wa' href='".fixedPath."/admin'>Back to Admin</a>";
+		}
 		
 		pageFooter();
 		exit;
@@ -215,7 +222,7 @@
 						<option value="2" <?php echo ($userToEdit->getType() == 2) ? "selected" : ""; ?>>Regular Admin</option>
 					</select>
 					</td></tr>
-				<tr><td><label for="enabled">Enabled:</label></td><td><input type="checkbox" name="enabled" id="enabled" value="1" <?php if( $userToEdit->getEnabled() == 1){ echo " checked"; }?>/></td></tr>
+					<tr><td><label for="enabled">Enabled:</label></td><td><input type="checkbox" name="enabled" id="enabled" value="1" <?php if( $userToEdit->getEnabled() == 1){ echo " checked"; }?>/></td></tr>
 			<?php } ?>
 		
 			<?php if( $userToEdit->getId() != "" ){ ?>
@@ -228,7 +235,7 @@
 			<?php } ?>
 			
 			<?php
-				//if( $userToEdit->getType() == 2 ||  $userToEdit->getId() == ""){
+				if( $admin->getType() == 1 ){
 				
 			?>	
 				<tr class="assignedProjs <?php if($userToEdit->getId() == 1){echo "hidden"; }?>"><td>Assigned Projects:</td><td>
@@ -255,7 +262,7 @@
 					?>
 				  </select>
 				</td></tr>
-			<?php// } ?>
+			<?php } ?>
 		</table>
 		<input type="submit" value="Save" class="button wa" />
 		<input type="hidden" name="userID" value="<?php echo $userToEdit->getId(); ?>">
@@ -271,7 +278,7 @@
 			
 			$(".chosen-select").chosen();
 			$('#type').change(function(){
-				console.log( $(this).val() );
+				//console.log( $(this).val() );
 				if( $(this).val() == 2 ){
 					$('tr.assignedProjs').removeClass('hidden');
 				}else{
