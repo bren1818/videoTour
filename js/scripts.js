@@ -338,7 +338,7 @@ function confirmDeleteClip(clipID, button){
 	
 	$('#dialog').html( html );
 	$( "#dialog" ).dialog({ title: "Are you sure you want to Delete the Clip?", width: "600", buttons: {
-        "Delete Segment": function() {
+        "Delete Clip": function() {
 			$( this ).dialog( "close" );
 			$(button).parents('tr').remove();
 			deleteClip( clipID );

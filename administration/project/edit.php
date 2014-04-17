@@ -3,20 +3,6 @@
 	include "../../includes/includes.php";
 	pageHeader();
 ?>
-<style>
-.showHideVersions{
-	height: auto;
-	display: block;
-	padding-top: 10px;
-}
-
-.showHideVersions.hide{
-	height: 30px;
-	overflow: hidden;
-	background-image: url('/css/images/expand.png');
-	background-repeat: no-repeat;
-}
-</style>
 <script>
 	$(function(){
 		$('.showHideVersions').click(function(event){

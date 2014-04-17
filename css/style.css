@@ -87,3 +87,16 @@ li.decision_ends{
 	display: block;
 	height: 40px;
 }
+
+.showHideVersions{
+	height: auto;
+	display: block;
+	padding-top: 10px;
+}
+
+.showHideVersions.hide{
+	height: 30px;
+	overflow: hidden;
+	background-image: url('images/expand.png');
+	background-repeat: no-repeat;
+}
