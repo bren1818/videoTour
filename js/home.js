@@ -58,9 +58,9 @@ function getClipPath( clipID, clipType ){
 }
 
 function overlayDecisions(decisions){
-	console.log(" In overlayDecisions");
+	logger(" In overlayDecisions");
 	var html = "<div id='clickActions' class='actions'>";
-	//console.log( currentSegmentData );
+	//logger( currentSegmentData );
 	if( currentSegmentData && currentSegmentData.Question ){
 		if( currentSegmentData.Question != "" ){
 			html+= '<div id="currentQuestion" style="width:' + windowWidth + 'px">' + currentSegmentData.Question + '</div>';
@@ -145,7 +145,7 @@ function finished(){
 }
 
 function playSegment( segmentID ) {
-	console.log("In PlaySegment: " + segmentID );
+	logger("In PlaySegment: " + segmentID );
 	var segmentData = "";
 	var decisions = new Array();
 	if( segmentID != 0 && segmentID != "" ){
@@ -157,7 +157,7 @@ function playSegment( segmentID ) {
 		}
 
 		if( clipID != "" && clipID != 0 ){
-			//console.log( segmentData );
+			//logger( segmentData );
 			if(  segmentData.Decisions ){
 				if( segmentData.Decisions.length > 0 ){
 					for( var d = 0; d < segmentData.Decisions.length; d++ ){
@@ -169,7 +169,7 @@ function playSegment( segmentID ) {
 			}
 		}	
 		if( decisions != ""   ){
-			//console.log( "set decisions continuing ");
+			//logger( "set decisions continuing ");
 			nextStep =  function(){ overlayDecisions( decisions ); }
 			if( clipID != -1 ){
 				//come here if the decisiontree doesn't have a clip and you just want to show options
@@ -217,12 +217,12 @@ function bindMobileHelper(){
 }
 
 function getJPlayerHeight(){
-	console.log("Height: " + (type == 1 ? windowHeight :  "auto" ) );
+	logger("Height: " + (type == 1 ? windowHeight :  "auto" ) );
 	return (type == 1 ? windowHeight :  "auto" );
 }
 
 function getJPlayerWidth(){
-	console.log( "width: " + windowWidth ); //check if portait or landscape
+	logger( "width: " + windowWidth ); //check if portait or landscape
 	return windowWidth;
 }
 
@@ -237,19 +237,19 @@ function playClip(clipID ){
 	clipPath = getClipPath( clipID, type );
 	clipPath = serverHost + clipPath;
 	
-	console.log("Remove");
+	logger("Remove");
 	$("#jquery_jplayer_1").remove();
 	$("#jp_container_1, #jquery_jplayer_1").remove();
 	var html = '<div id="jp_container_1" class="jp-video "><div class="jp-type-single"><div id="jquery_jplayer_1" class="jp-jplayer"></div><div class="jp-gui"><div class="jp-video-play"><a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a></div></div></div>';
-	console.log("append");
+	logger("append");
 	$('body').append( html );
 	$('#jquery_jplayer_1').height( windowHeight );
 	$('#jquery_jplayer_1').width( windowWidth );
 	$('div.jp-video-play').css('height',  windowHeight + 'px' );
-	console.log("Bind PLayer");
+	logger("Bind PLayer");
 	$("#jquery_jplayer_1").jPlayer({
 		ready: function () {
-			//console.log("setting media as: " + clipPath );
+			//logger("setting media as: " + clipPath );
 		  $(this).jPlayer("setMedia", {
 			m4v: clipPath
 		  }); 
@@ -263,14 +263,14 @@ function playClip(clipID ){
 		  if( type == 1 ){
 			$(this).jPlayer("play");
 		  }else{
-			//setTimeout( function(){ $('a.jp-video-play-icon').click(); console.log("faux click!");   },1000);
+			//setTimeout( function(){ $('a.jp-video-play-icon').click(); logger("faux click!");   },1000);
 			//nativeSupport: true, 
 		  }
 		
 		  
 		},
 		ended: function(){
-			console.log( "ended pt.1 > overlay Decisions");
+			logger( "ended pt.1 > overlay Decisions");
 			if( typeof decisions === 'undefined' ){
 				nextStep();	
 			}else{
@@ -308,7 +308,7 @@ function playClip(clipID ){
 
 
 function doAction(goTosegmentID, playClipID, continues, ends ){
-	console.log("In doAction");
+	logger("In doAction");
 	nthAction ++;
 	
 	nextSegment = goTosegmentID;
@@ -343,15 +343,15 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			currentClipID = playClipID;
 			logAction("Continue");
 			
-			//console.log(" Do action > hasClip == 1 > nextStep set then playClip ");
+			//logger(" Do action > hasClip == 1 > nextStep set then playClip ");
 			nextStep = function(){ playSegment( goTosegmentID );  }
 			
-			//console.log("next Step: " + nextStep + " > go to playClip " );
+			//logger("next Step: " + nextStep + " > go to playClip " );
 			
 			playClip( playClipID  );
 		}else{
 			logAction("Continue");
-			//console.log("do Action >  play segment: " + goTosegmentID );
+			//logger("do Action >  play segment: " + goTosegmentID );
 			playSegment( goTosegmentID );
 		}
 		

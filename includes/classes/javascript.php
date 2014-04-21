@@ -1,8 +1,8 @@
 <?php
-	class stylesheet{
+	class javascript{
 		private $id;
 		private $projectID;
-		private $CSS;
+		private $JAVASCRIPT;
 		private $connection = null;
 		
 		function __construct($db = null) {
@@ -19,18 +19,18 @@
 		function getId() { return $this->id; }
 		function setProjectID($projectID) { $this->projectID = $projectID; }
 		function getProjectID() { return $this->projectID; }
-		function setCSS($CSS) { $this->CSS = $CSS; }
-		function getCSS() { return $this->CSS; }
+		function setJS($JS) { $this->JAVASCRIPT = $JS; }
+		function getJS() { return $this->JAVASCRIPT; }
 
 		function save(){
 			$id = $this->getId();
 			$projectID = $this->getProjectID();
-			$css = $this->getCSS();
+			$JS = $this->getJS();
 			
 			if( $id != "" ){
 				//update
-				$query = $this->connection->prepare("UPDATE `css` SET `CSS` = :css WHERE  `css`.`id` = :id;");
-				$query->bindParam(':css', $css);
+				$query = $this->connection->prepare("UPDATE `js` SET `JAVASCRIPT` = :JS WHERE  `js`.`id` = :id;");
+				$query->bindParam(':JS', $JS);
 				$query->bindParam(':id', $id);
 				if( $query->execute() ){
 					return $this->getId();
@@ -39,9 +39,9 @@
 				}
 			}else{
 				//insert
-				$query = $this->connection->prepare("INSERT INTO `css` (`id`, `projectID`, `CSS`) VALUES (NULL, :projectID, :CSS);");
+				$query = $this->connection->prepare("INSERT INTO `js` (`id`, `projectID`, `JAVASCRIPT`) VALUES (NULL, :projectID, :JS);");
 				$query->bindParam(':projectID', $projectID);
-				$query->bindParam(':CSS', $css);
+				$query->bindParam(':JS', $JS);
 				if( $query->execute() ){
 					$this->setId( $this->connection->lastInsertId() );
 					return $this->getId();
@@ -52,10 +52,10 @@
 		}
 		
 		function loadByProjectID($id = null){
-			$query = $this->connection->prepare("SELECT * FROM `css` WHERE `projectID` = :projectID");
+			$query = $this->connection->prepare("SELECT * FROM `js` WHERE `projectID` = :projectID");
 			$query->bindParam(':projectID', $id);
 			if( $query->execute() ){
-				$SS = $query->fetchObject("stylesheet");
+				$SS = $query->fetchObject("javascript");
 				if( is_object( $SS ) ){
 					$SS->setConnection( $this->connection );
 				}
@@ -64,10 +64,10 @@
 		}
 		
 		function load($id = null){
-			$query = $this->connection->prepare("SELECT * FROM `css` WHERE `id` = :id");
+			$query = $this->connection->prepare("SELECT * FROM `js` WHERE `id` = :id");
 			$query->bindParam(':id', $id);
 			if( $query->execute() ){
-				$SS = $query->fetchObject("stylesheet");
+				$SS = $query->fetchObject("javascript");
 				if( is_object( $SS ) ){
 					$SS->setConnection( $this->connection );
 				}

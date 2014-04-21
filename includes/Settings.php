@@ -1,6 +1,6 @@
 <?php
 	define( 'isProduction', 0 );
-	define( 'isLocal', 0 );
+	define( 'isLocal',0 );
 	define( 'isStaging', 1);
 	
 	if( isStaging ){

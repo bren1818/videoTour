@@ -95,6 +95,22 @@
 					</div>
 
 					<script type="text/javascript">
+						var debug = 1;
+						
+						
+						
+						function logger( msg  ){
+							var callerFunc = arguments.callee.caller.toString();
+								callerFuncName = (callerFunc.substring(callerFunc.indexOf("function") + 8, callerFunc.indexOf("(")) || "anoynmous")
+							
+							if( debug){
+								
+								console.log( "Logger - in function:" + callerFuncName + " - Message: " +  msg );
+							}
+						}
+					
+					
+					
 						var serverHost = "<?php echo fixedPath; ?>"; //"http://205.189.20.167"; //could be blank...
 						var windowWidth;
 						var windowHeight;
@@ -129,9 +145,6 @@
 								$deviceType = 1;
 							}
 							
-							//echo 'window.alert("Type: '.$deviceType.'");';
-						
-						
 							$analyticUser = new analytics_visitors($conn);
 							$id = 0;
 							if( isset( $_SESSION['analyticUserId'] ) && $_SESSION['analyticUserId'] != "" ){
@@ -258,7 +271,7 @@
 
 									$("#jquery_jplayer_1").jPlayer({
 										ready: function () {
-											console.log( serverHost + clipPath );
+											logger( serverHost + clipPath );
 										
 										  $(this).jPlayer("setMedia", {
 											m4v: serverHost + clipPath
@@ -272,7 +285,7 @@
 										 bindMobileHelper();
 										},
 										ended: function(){
-											console.log( "ended pt.1 > overlay Decisions");
+											logger( "ended pt.1 > overlay Decisions");
 											if( decisions ){
 												overlayDecisions( decisions );
 											}
@@ -312,11 +325,9 @@
 									}
 								}
 							}
-
-
-							
 						});
 					</script>
+					<script type="text/javascript" src="<?php echo fixedPath; ?>/includes/projectJS.php?projectID=<?php echo $tourID; ?>"></script>
 				<?php
 				}else{
 						echo "Could not load project - missing start segment or clip id";
@@ -352,7 +363,6 @@
 		<?php
 		logMessage( "Unknown Project no tourID provided", "user.log");
 	}
-?>
-<?php
+
 	pageFooterShow();
 ?>

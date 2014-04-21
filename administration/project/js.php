@@ -34,24 +34,25 @@
 			
 			checkAccess( $projectID );
 			
-			$CSS = ( isset( $_POST['CSS'] ) ? $_POST['CSS'] : "" );
-			$stylesheet = new stylesheet( $conn );
+			$js = ( isset( $_POST['js'] ) ? $_POST['js'] : "" );
+			$javascript = new javascript( $conn );
 			
 			if( isset( $_POST['SSID'] ) && $_POST['SSID'] == "" ){
-				$stylesheet->setCSS( $CSS );
-				$stylesheet->setProjectID( $projectID );
-				$stylesheet->save();
-				echo "New SS Saved as: ".$stylesheet->getId();
+				
+				$javascript->setProjectID( $projectID );
+				$javascript->setJS( $js );
+				$javascript->save();
+				echo "New JS Saved as: ".$javascript->getId();
 			}else{
-				$stylesheet = $stylesheet->loadByProjectID($projectID);
-				if( is_object(  $stylesheet ) ){
-					$stylesheet->setCSS( $CSS );
-					$saved = $stylesheet->save();
+				$javascript = $javascript->loadByProjectID($projectID);
+				if( is_object(  $javascript ) ){
+					$javascript->setJS( $js );
+					$saved = $javascript->save();
 					
 					echo "Saved";
 					
 				}else{
-					echo "Error Could not save changes";
+					echo "<p class='error'>Error Could not save changes</p>";
 				}
 			}
 			$project = new Projects($conn);
@@ -71,27 +72,30 @@
 	}
 	
 	if( is_object($project) ){
-		$stylesheet = new stylesheet( getConnection() );
-		$stylesheet = $stylesheet->loadByProjectID($projectID );
+		$javascript = new javascript( getConnection() );
+		$javascript = $javascript->loadByProjectID($projectID );
 		
-		if( is_object($stylesheet) ){
-			$css = $stylesheet->getCSS();
-			$ssid = $stylesheet->getId();
+		if( is_object($javascript) ){
+			$js = $javascript->getJS();
+			$ssid = $javascript->getId();
 		}
+		
+		
 ?>
-	<h1>&ldquo;<?php echo $project->getTitle(); ?>&rdquo; project's StyleSheet</h1>
-	<form name="ProjectCSS" method="POST" action="css.php">
+	<h1>&ldquo;<?php echo $project->getTitle(); ?>&rdquo; project's javascript</h1>
+	<form name="Projectjs" method="POST" action="js.php">
+		<p>Do not include &lt;script&gt; tags. This is included in the project as a js file within the footer.</p>
 		<p>Within the editor press F11 to go fullScreen. When typing if the word goes red press Ctrl-Space for auto-complete</p>
-		<textarea style="width: 100%; min-height: 500px; overflow: auto;" name="CSS" id="CSS"><?php echo $css; ?></textarea>
+		<textarea style="width: 100%; min-height: 500px; overflow: auto;" name="js" id="js"><?php echo $js ?></textarea>
 		<input type="hidden" name="projectID" value="<?php echo $projectID; ?>" />
 		<input type="hidden" name="SSID" value="<?php echo $ssid; ?>" /><br />
 		<input class="button wa" type="submit" value="Save" />
 	</form>
 	<div class="clear"></div>
 	<script type="text/javascript">
-	  var editor = CodeMirror.fromTextArea(document.getElementById("CSS"), {
+	  var editor = CodeMirror.fromTextArea(document.getElementById("js"), {
 			lineNumbers: true,
-			mode: "text/css", //text/html
+			mode: "text/javascript", //text/html
 			extraKeys: { 
 				"F11": function(cm) {
 				  cm.setOption("fullScreen", !cm.getOption("fullScreen"));

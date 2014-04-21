@@ -78,6 +78,7 @@
 
 		<h1>Project Settings</h1>
 		<a class="button wa" target="_blank" href="<?php echo fixedPath; ?>/administration/project/css?projectID=<?php echo $projectID;?>">Edit CSS</a>
+		<a class="button wa" target="_blank" href="<?php echo fixedPath; ?>/administration/project/js?projectID=<?php echo $projectID;?>">Edit JS</a>
 		<form name="projectSettings" method="post" action="settings.php?projectID=<?php echo $projectID; ?>">
 			<div class="formRow">
 				<div class="col col50 colLabel">

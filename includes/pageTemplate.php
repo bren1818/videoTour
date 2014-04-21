@@ -4,12 +4,15 @@
 	
 	function footerMenu($projID){
 		?>
-			<p>
+			<p><br />
+			<a href="<?php echo fixedPath; ?>/administration/project/settings?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-gear"></i> Project Settings</a>
 			<a href="<?php echo fixedPath; ?>/administration/ProjectAnalytics.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Project Analytics</a>
 			<a href="<?php echo fixedPath; ?>/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-users"></i> Contest Entries</a>	
 			<a href="<?php echo fixedPath; ?>/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Contest Entries</a>	
 			<a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>
 			<a href="<?php echo fixedPath; ?>/administration/MapProject.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-sitemap"></i> Flow Chart</a>
+			
+			
 			<a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a>
 			</p>
 	  <?php
@@ -77,7 +80,7 @@
 			
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery-1.10.2.min.js"></script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery-ui-1.10.4.custom.min.js"></script>
-			<!--http://jplayer.org/download/, http://jplayer.org/latest/quick-start-guide/-->
+
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jQuery.jPlayer.2.5.0/jquery.jplayer.min.js"></script>
 			<script>
 				var serverHost = "<?php echo fixedPath; ?>";
@@ -173,6 +176,7 @@
 		?>
 		<div class="clear"></div>
 		</div>
+		
 		</body>
 		</html>
 		<?php
