@@ -220,7 +220,8 @@
 						
 						<table class="tablesorter">
 						<thead> 
-							<tr> 
+							<tr>
+								<th>Order</th>
 								<th>Starts Clip id</th> 
 								<th>Continues/Ends</th> 
 								<th>Note</th> 
@@ -231,7 +232,7 @@
 						<tbody> 
 						<?php
 							foreach( $choices as $c ){
-								echo '<tr><td>'.( $c->getClipID() != 0 ? ' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a> | Clip ID: '.$c->getClipID() : '').'</td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td><td><a onClick="editDecision('.$project->getId().','.$c->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteDecision('.$project->getId().','.$c->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
+								echo '<tr><td>'.$c->getOrder().'</td><td>'.( $c->getClipID() != 0 ? ' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a> | Clip ID: '.$c->getClipID() : '').'</td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td><td><a onClick="editDecision('.$project->getId().','.$c->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteDecision('.$project->getId().','.$c->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
 							
 							}
 						?>
@@ -279,7 +280,7 @@
 		<tbody>
 		<?php
 			foreach( $badges as $b ){
-				echo '<tr><td>'.$b->getId().'</td><td>'.$b->getNote().'</td><td><a href="'.$b->getPath().'" target="_blank"><img src="'.fixedPath.$b->getPath().'" height="50" width="50" /></a></td><td><a onClick="confirmDeleteBadge('.$project->getId().','.$b->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
+				echo '<tr><td>'.$b->getId().'</td><td>'.$b->getNote().'</td><td><a href="'.fixedPath.$b->getPath().'" target="_blank"><img src="'.fixedPath.$b->getPath().'" height="50" width="50" /></a></td><td><a onClick="confirmDeleteBadge('.$project->getId().','.$b->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
 			}
 		?>
 		</tbody>
@@ -294,7 +295,7 @@
 		if( $project->isActive() ){
 			echo '<p><a onClick="activateProject('.$project->getId().',0, this)" class="button wa"><i class="fa fa-thumbs-down"></i> Deactivate Project</a> - Hide this project from the world!</p>';
 			?>
-			<p>Project URL: <a target="_blank" href="/?tourID=<?php echo $project->getId(); ?>">?tourID=<?php echo $project->getId(); ?></a></p>
+			<p>Project URL: <a target="_blank" href="<?php echo fixedPath; ?>/?tourID=<?php echo $project->getId(); ?>"><?php echo fixedPath; ?>/?tourID=<?php echo $project->getId(); ?></a></p>
 			<?php
 		}else{
 			echo '<p><a onClick="activateProject('.$project->getId().',1, this)" class="button wa"><i class="fa fa-thumbs-up"></i> Activate Project</a> - Make this Project Live!</p>';

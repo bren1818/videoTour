@@ -13,6 +13,8 @@
 		private $redirect;
 		private $redirectURL;
 		
+		private $badgeMode;
+		
 		
 		function __construct($dbc=null) {
 			$this->connection = $dbc;
@@ -37,6 +39,11 @@
 		function setShowBadge($showBadge) { $this->showBadge = $showBadge; }
 		function getShowBadge(){ return $this->showBadge; } 
 		function showBadge(){ return $this->getShowBadge(); } //alias
+		
+		
+		function setBadgeMode($badgeMode) { $this->badgeMode = $badgeMode; }
+		function getBadgeMode(){ return $this->badgeMode; } 
+		
 
 		function setShowCount($showCount) { $this->showCount = $showCount; }
 		function getShowCount(){ return $this->showCount; } 
@@ -89,12 +96,12 @@
 				$formURL = $this->getFormURL();
 				$redirect = $this->getRedirect();
 				$redirectURL = $this->getRedirectURL();
+				$badgeMode = $this->getBadgeMode();
 				
 				
 				
 				
-				
-				$query = $this->connection->prepare("UPDATE `projects` SET `title` = :title, `startingSegmentID` = :ssid, `active` = :active, `showBadge` = :showBadge, `showCount` = :showCount, `hasForm` = :hasForm, `formURL` = :formURL, `redirect` = :redirect, `redirectURL`= :redirectURL WHERE `projects`.`id` = :id;");
+				$query = $this->connection->prepare("UPDATE `projects` SET `title` = :title, `startingSegmentID` = :ssid, `active` = :active, `showBadge` = :showBadge, `badgeMode` = :badgeMode, `showCount` = :showCount, `hasForm` = :hasForm, `formURL` = :formURL, `redirect` = :redirect, `redirectURL`= :redirectURL WHERE `projects`.`id` = :id;");
 				
 				
 				$query->bindParam(':title', $title);
@@ -107,6 +114,7 @@
 				$query->bindParam(':formURL', $formURL);
 				$query->bindParam(':redirect', $redirect);
 				$query->bindParam(':redirectURL', $redirectURL);
+				$query->bindParam(':badgeMode', $badgeMode);
 				
 				
 				
@@ -122,7 +130,7 @@
 				//insert
 				//return pid;
 				$title = $this->getTitle();
-				$query = $this->connection->prepare("INSERT INTO `projects` (`id`, `title`, `startingSegmentID`, `active`, `showBadge`, `showCount`, `hasForm`, `formURL`, `redirect`, `redirectURL` ) VALUES (NULL, :title , NULL, '0', 0, 1, 0, '', 0, '' );");
+				$query = $this->connection->prepare("INSERT INTO `projects` (`id`, `title`, `startingSegmentID`, `active`, `showBadge`, `showCount`, `hasForm`, `formURL`, `redirect`, `redirectURL`, `badgeMode` ) VALUES (NULL, :title , NULL, '0', 0, 1, 0, '', 0, '', 0 );");
 				$query->bindParam(':title', $title);
 				if( $query->execute() ){
 					$this->setId( $this->connection->lastInsertId() );

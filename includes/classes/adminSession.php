@@ -26,7 +26,7 @@
 		
 		function __construct(){
 			if (session_id() == ''){ session_start(); }
-			$this->maxLength = 300; //default
+			$this->maxLength = 600; //default
 			$this->load();
 		}
 	

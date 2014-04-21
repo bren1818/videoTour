@@ -108,7 +108,7 @@
 				if( $this->getId() != "" ){
 					$id = $this->getId();
 					$query = $this->connection->prepare("UPDATE `analytics_visitors` SET `end_time` = CURRENT_TIMESTAMP WHERE `analytics_visitors`.`visitor_id` = :id;");
-					$query->bindParam(':projectID', $id);
+					$query->bindParam(':id', $id);
 					if( $query->execute() ){
 						return 1;
 					}else{

@@ -112,13 +112,16 @@
 					
 					
 						var serverHost = "<?php echo fixedPath; ?>"; //"http://205.189.20.167"; //could be blank...
+						var formURL = "<?php echo $project->getFormURL(); ?>";
+						var showForm = <?php echo $project->getHasForm(); ?>;
+						
 						var windowWidth;
 						var windowHeight;
 						var currentStep = 1;
 						
 						var showCount = <?php echo $project->getShowCount(); ?>;
 						var showBadge = <?php echo $project->getShowBadge(); ?>;
-						
+						var badgeMode = <?php echo $project->getBadgeMode(); ?>;
 						
 						var isTablet = <?php echo ($detect->isTablet() == "" ? 0 : $detect->isTablet()); ?>;
 						var isMobile = <?php echo ($detect->isMobile() == "" ? 0 : $detect->isMobile()); ?>;
@@ -195,6 +198,9 @@
 						var currentClipID;
 						var nextStep;  //function holder...
 						var started = 0;
+						
+						var shownD = 0;
+						
 					</script>
 					<script type="text/javascript" src="<?php echo fixedPath; ?>/js/home.js" ></script>
 					<script type="text/javascript">
@@ -281,14 +287,18 @@
 										  player = $(this);
 										 if( type == 1 ){
 											$(this).jPlayer("play");
+											shownD = 0;
 										 }
 										 bindMobileHelper();
 										},
 										ended: function(){
-											logger( "ended pt.1 > overlay Decisions");
+											
+											logger( "Player Ended");
 											if( decisions ){
+												logger("overlay within ended");
 												overlayDecisions( decisions );
 											}
+											
 										},
 										size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
 										preload : "auto",
@@ -316,6 +326,22 @@
 										  }
 										},
 										supplied: "m4v"
+										/*
+										timeupdate: function(event) {
+											//Is at end of clip?
+											var d = $("#jquery_jplayer_1").data("jPlayer").status.duration;
+											if( Math.floor(event.jPlayer.status.currentTime) > (d - 8) && (d - 8) > 0 ){
+												if( decisions  ){
+													if( shownD == 0 ){
+														logger("overlay within timeupdate - 1");
+														overlayDecisions( decisions );
+														//shownD = 1;
+														$.jPlayer.pause();
+													}
+												}
+											}
+										}
+										*/
 									});
 									
 									

@@ -16,11 +16,14 @@
 		$redirect = 	isset( $_POST['redirect'] ) ?  "1" : "0";
 		$redirectURL =  isset( $_POST['redirectURL'] ) ?  $_POST['redirectURL'] : "";
 		$projID  =  	isset( $_POST['projectID'] ) ?  $_POST['projectID'] : "";
+		$badgeMode =    isset( $_POST['badgeMode'] ) ?  $_POST['badgeMode'] : 0;
+	
 	
 		$project = $project->load($projID);
 		$project->setTitle( $title );
 		$project->setActive( $active );
 		$project->setShowBadge( $showBadge );
+		$project->setBadgeMode( $badgeMode );
 		$project->setShowCount( $showCount );
 		$project->setHasForm( $hasForm );
 		$project->setFormURL( $formURL );
@@ -106,6 +109,17 @@
 					<input type="checkbox" name="showBadge" id="showBadge" <?php if( $project->getShowBadge() ){echo "checked"; } ?>/>
 				</div>
 			</div>
+			
+			<div class="formRow">
+				<div class="col col50 colLabel">
+					<label for="badgeMode"><i class="fa fa-cog"></i> Badge Mode: (to do)</label>
+				</div>
+				<div class="col col50">
+					<input type="radio" name="badgeMode" value="0" <?php if( !$project->getBadgeMode() ){ echo " checked"; } ?>><i class="fa fa-circle"></i> Replace (show current badge only)<br>
+					<input type="radio" name="badgeMode" value="1" <?php if( $project->getBadgeMode() ){ echo " checked"; } ?>><i class="fa fa-bars"></i> Append (add badges under one another )
+				</div>
+			</div>
+			
 		
 			<div class="formRow">
 				<div class="col col50 colLabel">

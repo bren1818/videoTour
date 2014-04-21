@@ -58,25 +58,36 @@ function getClipPath( clipID, clipType ){
 }
 
 function overlayDecisions(decisions){
-	logger(" In overlayDecisions");
-	var html = "<div id='clickActions' class='actions'>";
-	//logger( currentSegmentData );
-	if( currentSegmentData && currentSegmentData.Question ){
-		if( currentSegmentData.Question != "" ){
-			html+= '<div id="currentQuestion" style="width:' + windowWidth + 'px">' + currentSegmentData.Question + '</div>';
-		}
-	}
-	html+= "<ul>";
-	if (decisions instanceof Array) {
-		decisions.forEach(function(choice) { //foreach
-			html+= '<li id="choice_' + choice.id +'" class="actionButton" onClick="doAction(' + choice.goToSegment + "," + choice.PlayClip + "," + choice.continues + "," + choice.ends  + ')"><strong>' + choice.text + '</strong></li>';
-		});
-	}
-	html+="</ul></div>";
-	if( type == 1 ){
-		$('.jp-jplayer').append(html);
+	
+	if( shownD == 1 ){
+	
 	}else{
-		$('body').append(html);
+		shownD = 1;
+		logger(" In overlayDecisions");
+		$('#clickActions').remove();
+		var html = "<div id='clickActions' class='actions'>";
+		//logger( currentSegmentData );
+		if( currentSegmentData && currentSegmentData.Question ){
+			if( currentSegmentData.Question != "" ){
+				html+= '<div id="currentQuestion" style="width:' + windowWidth + 'px">' + currentSegmentData.Question + '</div>';
+			}
+		}
+		
+		if (decisions instanceof Array) {
+			logger("Showing : " + decisions.length + " decisions");
+			html+= "<ul class='decisions decisions-" + decisions.length + "'>";
+			decisions.forEach(function(choice) { //foreach
+				html+= '<li id="choice_' + choice.id +'" class="actionButton" onClick="doAction(' + choice.goToSegment + "," + choice.PlayClip + "," + choice.continues + "," + choice.ends  + ')"><strong>' + choice.text + '</strong></li>';
+			});
+			html+="</ul>";
+			
+		}
+		html+="</div>";
+		if( type == 1 ){
+			$('.jp-jplayer').append(html);
+		}else{
+			$('body').append(html);
+		}
 	}
 }
 
@@ -96,46 +107,52 @@ function playAgain(){
 
 function finished(){
 	if( enteredContest == 0 ){
-		showAlert("You have what it takes! Please fill out this form for a chance to win!", "Enter for a chance to win!");
-		logAction("Finished");
-		
-		//hide the other stuff
-		$('#currentStep, #badge, #jp_container_1').hide();
-		//load the registration form
-		$('body').append('<div id="entryForm"></div>');
-		$( "#entryForm" ).load( "/registrationForm", function() {
-			//alert( "Load was performed." );
-			$('#registrationForm').append('<input type="hidden" name="visitorID" value="' + userID +'" /><input type="hidden" name="projectID" value="' + PROJECT_ID + '" /><input type="hidden" name="silentSave" value="1" />');
-			$('#registrationForm').submit(function(event) {
-			  event.preventDefault();
-				var datastring = $('#entryForm form').serialize();
-				$.ajax({
-					type: "POST",
-					url: serverHost + "/registrationForm",
-					data: datastring,
-					dataType: "json",
-					success: function(data) {
-						if( data ){
-							if( data.Saved ){
-								if( data.Saved == 1 ){
-									$('body #entryForm').remove();
-									$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
-									showAlert("Thank you for participating! You are contestant #" + data.entryID +" and will be notified if you're a winner.", "Good Luck! Entry recorded!");
-								}else{
-									window.alert("There appears to be something wrong with the data you entered. Please verify and try again");
-									window.alert( data );
+	
+		if( showForm == 1 ){
+			showAlert("You have what it takes! Please fill out this form for a chance to win!", "Enter for a chance to win!");
+			logAction("Finished");
+			
+			//hide the other stuff
+			$('#currentStep, #badge, #jp_container_1').hide();
+			//load the registration form
+			$('body').append('<div id="entryForm"></div>');
+			$( "#entryForm" ).load( formURL, function() {
+				//alert( "Load was performed." );
+				$('#registrationForm').append('<input type="hidden" name="visitorID" value="' + userID +'" /><input type="hidden" name="projectID" value="' + PROJECT_ID + '" /><input type="hidden" name="silentSave" value="1" />');
+				$('#registrationForm').submit(function(event) {
+				  event.preventDefault();
+					var datastring = $('#entryForm form').serialize();
+					$.ajax({
+						type: "POST",
+						url: formURL,
+						data: datastring,
+						dataType: "json",
+						success: function(data) {
+							if( data ){
+								if( data.Saved ){
+									if( data.Saved == 1 ){
+										$('body #entryForm').remove();
+										$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
+										showAlert("Thank you for participating! You are contestant #" + data.entryID +" and will be notified if you're a winner.", "Good Luck! Entry recorded!");
+									}else{
+										window.alert("There appears to be something wrong with the data you entered. Please verify and try again");
+										window.alert( data );
+									}
 								}
 							}
+						},
+						error: function(){
+							  window.alert("An error has occurred. Your entry has not been recorded. Please play again later or contact the CMS Administrator");
+							  //alert('error handing here');
 						}
-					},
-					error: function(){
-						  window.alert("An error has occurred. Your entry has not been recorded. Please play again later or contact the CMS Administrator");
-						  //alert('error handing here');
-					}
+					});
+					return false;
 				});
-				return false;
 			});
-		});
+		}
+		
+		//check if re-directs?
+		
 	}else{
 		logAction("Finished");
 		$('#currentStep, #badge, #jp_container_1').hide();
@@ -145,6 +162,10 @@ function finished(){
 }
 
 function playSegment( segmentID ) {
+
+	shownD = 0;
+	$('#clickActions').remove();
+
 	logger("In PlaySegment: " + segmentID );
 	var segmentData = "";
 	var decisions = new Array();
@@ -238,15 +259,22 @@ function playClip(clipID ){
 	clipPath = serverHost + clipPath;
 	
 	logger("Remove");
+	//$("#jquery_jplayer_1").jPlayer("destroy");
 	$("#jquery_jplayer_1").remove();
 	$("#jp_container_1, #jquery_jplayer_1").remove();
 	var html = '<div id="jp_container_1" class="jp-video "><div class="jp-type-single"><div id="jquery_jplayer_1" class="jp-jplayer"></div><div class="jp-gui"><div class="jp-video-play"><a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a></div></div></div>';
 	logger("append");
+	
 	$('body').append( html );
 	$('#jquery_jplayer_1').height( windowHeight );
 	$('#jquery_jplayer_1').width( windowWidth );
 	$('div.jp-video-play').css('height',  windowHeight + 'px' );
 	logger("Bind PLayer");
+	
+	
+	
+	
+	
 	$("#jquery_jplayer_1").jPlayer({
 		ready: function () {
 			//logger("setting media as: " + clipPath );
@@ -260,8 +288,13 @@ function playClip(clipID ){
 		  }
 		  player = $(this);
 		  bindMobileHelper();
+		  
+		  
 		  if( type == 1 ){
 			$(this).jPlayer("play");
+			$('#clickActions').remove();
+			shownD = 0;
+			
 		  }else{
 			//setTimeout( function(){ $('a.jp-video-play-icon').click(); logger("faux click!");   },1000);
 			//nativeSupport: true, 
@@ -270,11 +303,12 @@ function playClip(clipID ){
 		  
 		},
 		ended: function(){
-			logger( "ended pt.1 > overlay Decisions");
 			if( typeof decisions === 'undefined' ){
 				nextStep();	
 			}else{
+				logger( "ended home.js > overlay Decisions");
 				overlayDecisions( decisions );
+				
 			}
 		},
 		size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
@@ -303,12 +337,37 @@ function playClip(clipID ){
 		  }
 		},*/
 		supplied: "m4v"
+		/*timeupdate: function(event) {
+			if( typeof decisions === 'undefined' ){
+				nextStep();	
+			}else{
+			
+				//Is at end of clip?
+				var d = $("#jquery_jplayer_1").data("jPlayer").status.duration;
+				if( Math.floor(event.jPlayer.status.currentTime) > (d - 8) && (d - 8) > 0 ){
+					if( decisions ){
+						if( shownD == 0 ){
+							
+							logger("overlay within timeupdate - 2");
+							overlayDecisions( decisions );
+							shownD = 1;
+							$.jPlayer.pause();
+						}
+					}
+				}
+			
+			
+			
+			  
+			}
+		}*/
 	});
 }			
 
 
 function doAction(goTosegmentID, playClipID, continues, ends ){
 	logger("In doAction");
+	
 	nthAction ++;
 	
 	nextSegment = goTosegmentID;
@@ -318,7 +377,8 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 	if( playClipID != 0 && playClipID != "" ){
 		hasClip = true;
 	}
-
+	
+	shownD = 0;
 	$('#clickActions').remove();
 	
 	if( continues == 1  ){
@@ -333,7 +393,13 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 		if( showBadge ){
 			if( currentSegmentData && currentSegmentData.BadgePath != "" ){
 				$(function(){
-					$('#badge').html( '<img class="badge" src="' + currentSegmentData.BadgePath + '" />');
+					if( badgeMode == 1 ){
+						//append
+						$('#badge').html( $('#badge').html() + '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
+					}else{
+						$('#badge').html( '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
+					}
+					logger("Updated Badge to: " + serverHost + currentSegmentData.BadgePath);
 				});
 			}
 		}
@@ -360,7 +426,13 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 	
 		if( currentSegmentData && currentSegmentData.BadgePath != "" ){
 			$(function(){
-				$('#badge').html( '<img class="badge" src="' + currentSegmentData.BadgePath + '" />');
+				if( badgeMode == 1 ){
+					//append
+					$('#badge').html( $('#badge').html() + '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
+				}else{
+					$('#badge').html( '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
+				}
+				logger("Updated Badge to: " + serverHost + currentSegmentData.BadgePath);
 			});
 		}
 	
@@ -369,7 +441,7 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 		if( hasClip ) {
 			currentClipID = playClipID;
 			logAction("Finished");
-			nextStep = function(){ finished();  }
+			nextStep = function(){ finished();  } //finished
 			playClip( playClipID  );
 		}else{
 			logAction("Finished");

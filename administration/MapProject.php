@@ -18,7 +18,7 @@
 		pageHeader();
 		echo '<h1>"' .$project->getTitle() .'" Flow Chart</h1>';
 	?>
-		<style>
+		<style type="text/css">
 			ul.decisionTree,
 			ul.segments{
 				list-style: none;
@@ -39,7 +39,7 @@
 			global $visitedSegments;
 			echo '<ul class="segments segmentID_'.$segmentID.'">';
 				if( in_array( $segmentID, $visitedSegments ) ){
-					echo '<li class="alreadyFollowed"><p>This Segment ('.$segmentID.') <b>has already be followed</b>. This could because it is a <b>try again option</b> (which means this is ok). If not, it could indicate a logic error. - If you\'re concerned add the <b><a href="/administration/MapProject.php?projectID='.$_REQUEST['projectID'].'&hideDupeTrails=0">&hideDupeTrails=0</a></b> flag in the URL </p></li>';
+					echo '<li class="alreadyFollowed"><p>This Segment ('.$segmentID.') <b>has already be followed</b>. This could because it is a <b>try again option</b> (which means this is ok). If not, it could indicate a logic error. - If you\'re concerned add the <b><a href="'.fixedPath.'/administration/MapProject.php?projectID='.$_REQUEST['projectID'].'&hideDupeTrails=0">&hideDupeTrails=0</a></b> flag in the URL </p></li>';
 				}else{
 					global $conn;	
 					$visitedSegments[] = $segmentID;

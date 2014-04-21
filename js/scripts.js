@@ -622,7 +622,7 @@ function previewBadge(badgeId){
 		badgePath = badgePath.data;
 	
 		$(function(){
-			$.colorbox({href: badgePath,  iframe:true, width:"80%", height:"80%"});
+			$.colorbox({href: serverHost + badgePath,  iframe:true, width:"80%", height:"80%"});
 		});
 	}
 }

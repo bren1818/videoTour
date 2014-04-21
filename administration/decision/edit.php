@@ -14,6 +14,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		$continues =		0;
 		$ends = 			0;
 		$clipID =			$_POST['clipID'];
+		$order =			$_POST['order'];
 		
 		//continues
 		if( isset( $_POST['continues']) ){
@@ -41,6 +42,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		$decision->setEnds( $ends );
 		$decision->setNote( $note );
 		$decision->setText( $buttonText );
+		$decision->setOrder( $order );
 		$decision->save();
 	
 		$saved = 1;	
@@ -107,6 +109,7 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 	<table class="tablesorter">
 	<thead> 
 		<tr> 
+			<th>Order</th>
 			<th>Plays Clip id</th> 
 			<th>Continues/Ends</th> 
 			<th>Note</th> 
@@ -119,7 +122,7 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 			
 			if( $c->getId() != $decisionID ){
 		
-			echo '<tr><td>'.$c->getClipID().' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a></td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td></tr>';
+			echo '<tr><td>'.$c->getOrder().'</td><td>'.$c->getClipID().' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a></td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td></tr>';
 			
 			}
 		}
@@ -236,6 +239,18 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 					<input id="buttonText" name="buttonText" type="text" required="required" value="<?php echo $choice->getText(); ?>">
 				</td>
 			</tr>
+			
+			<tr>
+				<td valign="top">
+					<label for="order">
+						Order
+					</label>
+				</td>
+				<td valign="top">
+					<input id="order" name="order" type="number" required="required" value="<?php echo $choice->getOrder(); ?>">
+				</td>
+			</tr>
+			
 		</table>
 		<input type="hidden" name="projectID" value="<?php echo $project->getId(); ?>" />
 		<input type="hidden" name="decisionTreeID" value="<?php echo $dt->getId(); ?>" />

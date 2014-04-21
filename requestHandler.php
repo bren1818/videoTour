@@ -170,8 +170,10 @@
 								$ended  = 1;
 								$analyticUser = new analytics_visitors($conn);
 								$userExists = $analyticUser->exists($userID );
+								
 								if( $userExists ){
-									$analyticUser = $analyticUser->load( $id );
+									//$id = 
+									$analyticUser = $analyticUser->load( $userID );
 									if( is_object( $analyticUser ) ){
 										$endedR = $analyticUser->saveEnded();
 									}

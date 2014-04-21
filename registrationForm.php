@@ -1,5 +1,5 @@
 <?php
-	require_once("/includes/db.php");
+	require_once("includes/db.php");
 	
 	if(strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
 	

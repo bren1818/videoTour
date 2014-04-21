@@ -14,8 +14,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		$continues =		0;
 		$ends = 			0;
 		$clipID =			$_POST['clipID'];
-		//decisionID??
-		
+		$order =			$_POST['order'];
 		
 		//continues
 		if( isset( $_POST['continues']) ){
@@ -44,6 +43,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		$decision->setEnds( $ends );
 		$decision->setNote( $note );
 		$decision->setText( $buttonText );
+		$decision->setOrder( $order );
 		$decision->save();
 	
 
@@ -249,6 +249,19 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' || isset( $_POST["saveAndAdd"] ) && $fa
 					<input id="buttonText" name="buttonText" type="text" required="required">
 				</td>
 			</tr>
+			
+			<tr>
+				<td valign="top">
+					<label for="order">
+						Order
+					</label>
+				</td>
+				<td valign="top">
+					<input id="order" name="order" type="number" required="required" value="0">
+				</td>
+			</tr>
+			
+			
 		</table>
 		<input type="hidden" name="projectID" value="<?php echo $project->getId(); ?>" />
 		<input type="hidden" name="decisionTreeID" value="<?php echo $dt->getId(); ?>" />

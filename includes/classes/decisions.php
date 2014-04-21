@@ -10,6 +10,7 @@
 		private $note;
 		private $text;
 		private $connection;
+		private $order;
 		
 		function __construct($db = null) {
 			if( $db ){
@@ -37,6 +38,11 @@
 		function setText($text) { $this->text = $text; }
 		function getText() { return $this->text; }
 		
+		function setOrder($order) { $this->order = $order; }
+		function getOrder() { return $this->order; }
+		
+		
+		
 		function setConnection( $conn ){
 			$this->connection = $conn;
 		}
@@ -51,10 +57,11 @@
 			$ends = $this->getEnds();
 			$note = $this->getNote();
 			$text = $this->getText();
+			$order = $this->getOrder();
 		
 			if( $this->getId() == "" ){
 				//insert
-				$query = $this->connection->prepare("INSERT INTO `decisions` (`id`, `projectID`, `decisionTreeID`, `clipID`, `segmentID`, `continues`, `ends`, `note`, `text`) VALUES (NULL, :projectID, :decisionTreeID, :clipID, :segmentID, :continues, :ends, :note, :text);");
+				$query = $this->connection->prepare("INSERT INTO `decisions` (`id`, `projectID`, `decisionTreeID`, `clipID`, `segmentID`, `continues`, `ends`, `note`, `text`, `order`) VALUES (NULL, :projectID, :decisionTreeID, :clipID, :segmentID, :continues, :ends, :note, :text, :order);");
 
 				$query->bindParam(':projectID', $projectID  );
 				$query->bindParam(':decisionTreeID', $decisionTreeID );
@@ -64,13 +71,15 @@
 				$query->bindParam(':ends',$ends  );
 				$query->bindParam(':note',$note  );
 				$query->bindParam(':text', $text  );
+				$query->bindParam(':order', $order  );
+				
 				$query->execute();
 				$this->setId( $this->connection->lastInsertId() );
 				return $this->getId(); 
 			}else{
 				//update
 				
-				$query = $this->connection->prepare("UPDATE `decisions` SET `clipID` = :clipID, `segmentID` = :segmentID, `continues` = :continues, `ends` = :ends, `note` = :note, `text` = :text WHERE `decisions`.`id` = :id;");
+				$query = $this->connection->prepare("UPDATE `decisions` SET `clipID` = :clipID, `segmentID` = :segmentID, `continues` = :continues, `ends` = :ends, `note` = :note, `text` = :text, `order` = :order WHERE `decisions`.`id` = :id;");
 				
 				$id = $this->getId();
 				
@@ -81,6 +90,7 @@
 				$query->bindParam(':note',$note  );
 				$query->bindParam(':text', $text  );
 				$query->bindParam(':id', $id  );
+				$query->bindParam(':order', $order  );
 				
 				if( $query->execute() ){
 					return 1;
@@ -131,14 +141,14 @@
 				$decisions = array();
 				if( $decisionTreeID == null ){
 					//list all Decision Trees
-					$query = $this->connection->prepare("SELECT * FROM `decisions`");
+					$query = $this->connection->prepare("SELECT * FROM `decisions` order by `order`");
 					$query->execute();
 					while( $result = $query->fetchObject("Decisions") ){
 						$decisions[] = $result;
 					}
 				}else{
 					//fetch by project id
-					$query = $this->connection->prepare("SELECT * FROM `decisions` WHERE `decisionTreeID` = :decisionTreeID");
+					$query = $this->connection->prepare("SELECT * FROM `decisions` WHERE `decisionTreeID` = :decisionTreeID order by `order`");
 					$query->bindParam(':decisionTreeID', $decisionTreeID);
 					$query->execute();
 					while( $result = $query->fetchObject("Decisions") ){
