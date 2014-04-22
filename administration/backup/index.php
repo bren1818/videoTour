@@ -10,7 +10,7 @@
 		$project = $project->load($projID);
 		checkAccess( $projID );
 		pageHeader();
-		echo '<h1>"' .$project->getTitle() .'" -> Backup </h1>';
+		echo '<h1>"' .$project->getTitle() .'" -> Backup (In Progress - not full developed) </h1>';
 		echo '<p>Gathered Required elements</p>';
 		$visitedSegments = array();
 		$clipsToBackup = array();
@@ -106,15 +106,54 @@
 		//step 5, decisions
 		pa( (array)$project );
 		
+		//clip Files
+		$filePaths = array(); 
+		$filePath = "../..";
+		
 		
 		$query = $conn->prepare("SELECT `id` FROM `clip` WHERE `projectID` = :projectID");
 		$query->bindParam(':projectID', $projID);
 		if( $query->execute() ){
 			$clips = $query->fetchAll();
-			pa( $clips );
+			$clipObjects = array();
+
+			for($c =0; $c < sizeof($clips); $c++){
+				$id = $clips[$c]["id"];
+			
+				$clip = new Clip($conn);
+				$clip = (array)$clip->load( $id );
+				
+				
+				//clips by clip id
+				$files = new Clips($conn);
+				$files = $files->getList($id);
+				
+				for( $f = 0; $f < sizeof( $files ); $f++){
+					$clip["files"][] = $files[$f]->getPath();
+					$filePaths[] = $filePath.$files[$f]->getPath();
+				}
+				$clipObjects[] = $clip;
+			}
+			
 		}
 		
-
+		$badges = new Badge($conn);
+		$badges = $badges->getList($projID);
+		for($b =0; $b < sizeof($badges); $b++ ){
+			$filePaths[] = $filePath.$badges[$b]->getPath();
+		}
+		
+		echo "<p>Creating File... Contains: ".sizeof($filePaths)." files</p>";
+		
+		ob_implicit_flush(true);ob_end_flush();
+		//pa( $filePaths );
+		$zipName = 'project_'.$projID.'_backup.zip';
+		$created = create_zip( $filePaths, $zipName );
+		
+		if( $created != false ){
+			echo '<p><a target="_blank" href="'.fixedPath.'/administration/backup/'.$zipName.'">Download Zip</a></p>';
+		
+		}
 		
 		
 		?>

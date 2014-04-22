@@ -85,7 +85,10 @@
 				$query->bindParam(':clipsID', $id);
 				$query->execute();
 				$clip = $query->fetchObject("Clips");
-				$clip->setConnection( $this->connection );
+				
+				if( is_object( $clip ) ){
+					$clip->setConnection( $this->connection );
+				}
 				return  $clip;
 			}
 		}

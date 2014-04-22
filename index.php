@@ -111,6 +111,8 @@
 						var serverHost = "<?php echo fixedPath; ?>"; //"http://205.189.20.167"; //could be blank...
 						var formURL = "<?php echo $project->getFormURL(); ?>";
 						var showForm = <?php echo $project->getHasForm(); ?>;
+						var showPoster = <?php echo $project->getShowPoster(); ?>;
+						var posterFile = "<?php echo $project->getPosterFile(); ?>";
 						
 						var redirect = <?php echo $project->getRedirect(); ?>;
 						var redirectURL = "<?php echo $project->getRedirectURL(); ?>";
@@ -118,7 +120,7 @@
 						var windowWidth;
 						var windowHeight;
 						var currentStep = 1;
-						
+						var projectTitle = "<?php echo $project->getTitle(); ?>";
 						var showCount = <?php echo $project->getShowCount(); ?>;
 						var showBadge = <?php echo $project->getShowBadge(); ?>;
 						var badgeMode = <?php echo $project->getBadgeMode(); ?>;
@@ -263,16 +265,26 @@
 
 									$("#jquery_jplayer_1").jPlayer({
 										ready: function () {
-											$(this).jPlayer("setMedia", {
-												title: "Do you have what it takes?",
-												m4v: serverHost + clipPath,
-												poster: serverHost + "/poster.png"
-											}); 
+											if( showPoster == 1 ){
+												$(this).jPlayer("setMedia", {
+													title: projectTitle,
+													m4v: serverHost + clipPath,
+													poster: serverHost + posterFile
+												}); 
+											}else{
+												$(this).jPlayer("setMedia", {
+													m4v: serverHost + clipPath
+												}); 
+
+											}
+											
 											currentClipID = clipID;
 											logAction("Start");
 
 											if( type == 1 ){
-												//$(this).jPlayer("play");
+												if( showPoster != 1 ){
+													$(this).jPlayer("play");
+												}
 												shownD = 0;
 											}else{
 												jQuery('video').width(windowWidth);

@@ -15,6 +15,10 @@
 		
 		private $badgeMode;
 		
+		private $showPoster;
+		private $posterFile;
+		
+		
 		
 		function __construct($dbc=null) {
 			$this->connection = $dbc;
@@ -43,6 +47,16 @@
 		
 		function setBadgeMode($badgeMode) { $this->badgeMode = $badgeMode; }
 		function getBadgeMode(){ return $this->badgeMode; } 
+		
+		
+		
+		function setShowPoster($showPoster) { $this->showPoster = $showPoster; }
+		function getShowPoster(){ return $this->showPoster; } 
+		function setPosterFile($posterFile) { $this->posterFile = $posterFile; }
+		function getPosterFile(){ return $this->posterFile; } 
+		
+		
+		
 		
 
 		function setShowCount($showCount) { $this->showCount = $showCount; }
@@ -92,8 +106,12 @@
 				$redirectURL = $this->getRedirectURL();
 				$badgeMode = $this->getBadgeMode();
 				
+				$showPoster = $this->getShowPoster();
+				$posterFile = $this->getPosterFile();
 				
-				$query = $this->connection->prepare("UPDATE `projects` SET `title` = :title, `startingSegmentID` = :ssid, `active` = :active, `showBadge` = :showBadge, `badgeMode` = :badgeMode, `showCount` = :showCount, `hasForm` = :hasForm, `formURL` = :formURL, `redirect` = :redirect, `redirectURL`= :redirectURL WHERE `projects`.`id` = :id;");
+				
+				
+				$query = $this->connection->prepare("UPDATE `projects` SET `title` = :title, `startingSegmentID` = :ssid, `active` = :active, `showBadge` = :showBadge, `badgeMode` = :badgeMode, `showCount` = :showCount, `hasForm` = :hasForm, `formURL` = :formURL, `redirect` = :redirect, `redirectURL`= :redirectURL, `showPoster` = :showPoster, `posterFile` = :posterFile WHERE `projects`.`id` = :id;");
 				
 				
 				$query->bindParam(':title', $title);
@@ -107,6 +125,8 @@
 				$query->bindParam(':redirect', $redirect);
 				$query->bindParam(':redirectURL', $redirectURL);
 				$query->bindParam(':badgeMode', $badgeMode);
+				$query->bindParam(':showPoster', $showPoster);
+				$query->bindParam(':posterFile', $posterFile);
 				
 				
 				
@@ -122,7 +142,7 @@
 				//insert
 				//return pid;
 				$title = $this->getTitle();
-				$query = $this->connection->prepare("INSERT INTO `projects` (`id`, `title`, `startingSegmentID`, `active`, `showBadge`, `showCount`, `hasForm`, `formURL`, `redirect`, `redirectURL`, `badgeMode` ) VALUES (NULL, :title , NULL, '0', 0, 1, 0, '', 0, '', 0 );");
+				$query = $this->connection->prepare("INSERT INTO `projects` (`id`, `title`, `startingSegmentID`, `active`, `showBadge`, `showCount`, `hasForm`, `formURL`, `redirect`, `redirectURL`, `badgeMode`, `showPoster`, `posterFile` ) VALUES (NULL, :title , NULL, '0', 0, 1, 0, '', 0, '', 0,0,'' );");
 				$query->bindParam(':title', $title);
 				if( $query->execute() ){
 					$this->setId( $this->connection->lastInsertId() );

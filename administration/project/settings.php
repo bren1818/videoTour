@@ -17,7 +17,7 @@
 		$redirectURL =  isset( $_POST['redirectURL'] ) ?  $_POST['redirectURL'] : "";
 		$projID  =  	isset( $_POST['projectID'] ) ?  $_POST['projectID'] : "";
 		$badgeMode =    isset( $_POST['badgeMode'] ) ?  $_POST['badgeMode'] : 0;
-	
+		$showPoster =   isset( $_POST['showPoster'] ) ?  $_POST['showPoster'] : 0;
 	
 		$project = $project->load($projID);
 		$project->setTitle( $title );
@@ -29,6 +29,8 @@
 		$project->setFormURL( $formURL );
 		$project->setRedirect( $redirect );
 		$project->setRedirectURL( $redirectURL );
+		$project->setShowPoster( $showPoster );
+		
 	
 		if( $project->save() > 0 ){
 			echo "<p>Saved!</p>";
@@ -100,6 +102,32 @@
 					<input type="checkbox" name="active" id="active" <?php if( $project->isActive() ){echo "checked"; } ?>/>
 				</div>
 			</div>
+			
+			
+			<div class="formRow">
+				<div class="col col50 colLabel">
+					<label for="showBadge"><i class="fa fa-picture-o"></i> Show Intro Poster: </label>
+				</div>
+				<div class="col col50">
+					<input type="checkbox" value="1" name="showPoster" id="showPoster" <?php if( $project->getShowPoster() ){echo "checked"; } ?>/> (If un-checked this will auto-start video if applicable)
+				</div>
+			</div>
+			
+			<?php
+				if( $project->getShowPoster() ){
+					if( $project->getPosterFile() != "" ){
+				?>
+						<p><a target="_blank" href="<?php echo $project->getPosterFile(); ?>"><i class="fa fa-eye"></i> View Poster</a></p>
+			<?php	
+					}
+			?>
+					<p><a target="_blank" href="<?php echo fixedPath; ?>/administration/project/poster?projectID=<?php echo $projectID; ?>"><i class="fa fa-download"></i> Upload/Change Poster</a></p>
+			
+			<?php
+				}
+			?>
+			
+			
 			
 			<div class="formRow">
 				<div class="col col50 colLabel">
