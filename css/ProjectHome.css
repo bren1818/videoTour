@@ -101,8 +101,28 @@ div.actions ul li:hover{
 .mobile #jquery_jplayer_1,
 .mobile #jp_video_0,{
 	height: auto!important;
+	min-height: 480px!important;
 
 }
+
+.mobile div.jp-video-270p ,
+.mobile div.jp-video-270p {
+	width:100%;
+}
+
+.mobile div.jp-video-360p ,
+.mobile div.jp-video-360p {
+	width:100%;
+}
+
+.mobile div.jp-video-full {
+	/* Rules for IE6 (full-screen) */
+	width:480px;
+	height:270px;
+	/* Rules for IE7 (full-screen) - Otherwise the relative container causes other page items that are not position:static (default) to appear over the video/gui. */
+	position:static !important; position:relative;
+}
+
 
 .tablet div.actions,
 .mobile div.actions{

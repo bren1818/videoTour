@@ -3,9 +3,10 @@
 	ob_clean();
 	header('Content-Type: text/css; charset=UTF-8');
 	//header('Content-Disposition: attachement; filename="projectCSS.css";');
-	echo "/**Generated CSS FILE FOR PROJECT**/\r\n";
+	
 	if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 		$projID = $_REQUEST['projectID'];
+		echo "/**Generated CSS FILE FOR PROJECT: " .$projID. "**/\r\n";
 		$conn = getConnection();
 		$query = $conn->prepare("SELECT `CSS` FROM `css` WHERE `projectID` = :projectID");
 		$query->bindParam(':projectID', $projID);

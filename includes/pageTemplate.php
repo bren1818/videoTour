@@ -155,8 +155,8 @@
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/playerHome/jplayer.blue.monday.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/ProjectHome.css" />
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/includes/projectCSS.php?projectID=<?php echo $projectID; ?>"/>
-			<meta name="viewport" content="width=480, user-scalable=no">
-			<!--<meta id="Viewport" name="viewport" width="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">-->
+	
+			<meta id="Viewport" name="viewport" width="user-scalable=no, width=480">
 			
 		</head>
 		<body>

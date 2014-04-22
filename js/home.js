@@ -133,7 +133,7 @@ function finished(){
 									if( data.Saved == 1 ){
 										$('body #entryForm').remove();
 										$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
-										showAlert("Thank you for participating! You are contestant #" + data.entryID +" and will be notified if you're a winner.", "Good Luck! Entry recorded!");
+										showAlert("Thank you for participating! You will be notified if you're a winner.", "Good Luck! Entry recorded!");
 									}else{
 										window.alert("There appears to be something wrong with the data you entered. Please verify and try again");
 										window.alert( data );
@@ -209,7 +209,7 @@ function playSegment( segmentID ) {
 	
 	
 }
-
+/*
 function bindMobileHelper(){
 	if( isMobile ){
 		//$("#jquery_jplayer_1")
@@ -231,14 +231,14 @@ function bindMobileHelper(){
 				}
 				
 				}
-			*/
+			*//*
 			
 				jQuery('video').width(480);
 				jQuery('video').height(360);
 			
 		});	
 	}
-}
+}*/
 
 function getJPlayerHeight(){
 	logger("Height: " + (type == 1 ? windowHeight :  "auto" ) );
@@ -246,6 +246,10 @@ function getJPlayerHeight(){
 }
 
 function getJPlayerWidth(){
+	logger( "width: " + windowWidth ); //check if portait or landscape
+	if( windowWidth == undefined  ){
+		windowWidth = $(window).width();
+	}
 	logger( "width: " + windowWidth ); //check if portait or landscape
 	return windowWidth;
 }
@@ -293,29 +297,27 @@ function playClip(clipID ){
 	$("#jquery_jplayer_1").jPlayer({
 		ready: function () {
 			//logger("setting media as: " + clipPath );
-		  $(this).jPlayer("setMedia", {
-			m4v: clipPath
-		  }); 
-		  currentClipID = clipID;
-		  if( started == 0 ){
-			logAction("Start");
-			started = 1;
-		  }
-		  player = $(this);
-		  bindMobileHelper();
+			$(this).jPlayer("setMedia", {
+				m4v: clipPath
+			}); 
+			currentClipID = clipID;
+			if( started == 0 ){
+				logAction("Start");
+				started = 1;
+			}
 		  
-		  
-		  if( type == 1 ){
-			$(this).jPlayer("play");
+			if( type == 1 ){
+				$(this).jPlayer("play");
+			}else{
+					jQuery('video').width(windowWidth);
+					jQuery('video').height(windowHeight);
+				/*if( state == "tryagain" ){ 
+					logger("setting up a faux click");
+					setTimeout( function(){ $('a.jp-video-play-icon').click(); logger("faux click!");   },500);
+				}*/
+			}
 			$('#clickActions').remove();
 			shownD = 0;
-			
-		  }else{
-			setTimeout( function(){ $('a.jp-video-play-icon').click(); logger("faux click!");   },500);
-			//nativeSupport: true, 
-		  }
-		
-		  
 		},
 		ended: function(){
 			if( typeof decisions === 'undefined' ){

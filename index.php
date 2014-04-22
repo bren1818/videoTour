@@ -39,6 +39,8 @@
 						$ip = $_SERVER['REMOTE_ADDR'];
 					}
 				?>
+	
+					
 					
 					<?php if( $project->getShowCount() ){ ?><div id="currentStep">1</div><?php } ?>
 					<?php if( $project->getShowBadge() ){ ?><div id="badge"></div><?php } ?>
@@ -225,33 +227,40 @@
 							 
 							 }else{
 								$('body').attr('class', 'mobile');
+								type = 2;
 								$('#Viewport').attr('content', 'width=480'); //user-scalable=no, maximum-scale=1, minimum-scale=1,
-								type = 3;
-								$('#jquery_jplayer_1').height( windowHeight );
-								$('#jquery_jplayer_1').width( windowWidth );
-								//$('#jquery_jplayer_1').width( 480 );
-							//	$('div.jp-video-play').css('height',  '480px' );
-								/*var ww;
-								if( isMobile == 1 && isTablet == 0 ){
-									$('body').attr('class', 'mobile');
-									type = 3;
-									ww = 480;
-									$('#Viewport').attr('content', 'maximum-scale=1, minimum-scale=1, user-scalable=no, width=480');
-								}else if( isMobile && isTablet ){
-									$('body').attr('class', 'tablet');
-									type = 2;
-									ww = 1024;
-									$('#Viewport').attr('content', 'user-scalable=no, width=1024');
-								}
-							
-
-								windowWidth =  ww; //$(window).width() -5;
-								windowHeight =  $(window).height() -5 ;
+                                
+                                $('#jquery_jplayer_1').height( windowHeight );
+                                $('#jquery_jplayer_1').width( windowWidth );
+                                //$('#jquery_jplayer_1').width( 480 );
+                                $('div.jp-video-play').css('height',  '480px' );
 								
-								$('#jquery_jplayer_1').height( windowHeight );
-								$('#jquery_jplayer_1').width( windowWidth );
-								$('div.jp-video-play').css('height',  windowHeight + 'px' );
-								*/
+							
+								
+                                /*var ww;
+                                if( isMobile == 1 && isTablet == 0 ){
+                                    $('body').attr('class', 'mobile');
+                                    type = 3;
+                                    ww = 480;
+                                    $('#Viewport').attr('content', 'maximum-scale=1, minimum-scale=1, user-scalable=no, width=480');
+                                }else if( isMobile && isTablet ){
+                                    $('body').attr('class', 'tablet');
+                                    type = 2;
+                                    ww = 1024;
+                                    $('#Viewport').attr('content', 'user-scalable=no, width=1024');
+                                }
+                            
+
+                                windowWidth =  ww; //$(window).width() -5;
+                                windowHeight =  $(window).height() -5 ;
+                                
+                                $('#jquery_jplayer_1').height( windowHeight );
+                                $('#jquery_jplayer_1').width( windowWidth );
+                                $('div.jp-video-play').css('height',  windowHeight + 'px' );
+                                */
+
+								
+								
 							 }
 							
 							
@@ -283,26 +292,25 @@
 
 									$("#jquery_jplayer_1").jPlayer({
 										ready: function () {
-											logger( serverHost + clipPath );
-										
-										  $(this).jPlayer("setMedia", {
-											m4v: serverHost + clipPath
-										  }); 
-										  currentClipID = clipID;
-										  logAction("Start");
-							
-										 if( type == 1 ){
-											$(this).jPlayer("play");
-											shownD = 0;
-										 }
-										 bindMobileHelper();
+											$(this).jPlayer("setMedia", {
+												m4v: serverHost + clipPath
+											}); 
+											currentClipID = clipID;
+											logAction("Start");
+
+											if( type == 1 ){
+												$(this).jPlayer("play");
+												shownD = 0;
+											}else{
+												jQuery('video').width(windowWidth);
+												jQuery('video').height(windowHeight);
+											}
 										},
 										ended: function(){		
 											if( decisions ){
 												logger("index.php > ended > overlay decisions");
 												overlayDecisions( decisions );
 											}
-											
 										},
 										size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
 										preload : "auto",
@@ -357,6 +365,8 @@
 									
 									if( isMobile ){ //mobile devices wont auto-play video
 										showAlert('Welcome to the Mobile Tour. This tour streams video. Click the Golden Hawk to begin each clip! This content is best viewed in portrait mode.','Welcome, Do you have what it takes?');
+										
+										
 									}
 								}
 							}
