@@ -214,6 +214,7 @@ function bindMobileHelper(){
 	if( isMobile ){
 		//$("#jquery_jplayer_1")
 		$(player).bind($.jPlayer.event.play, function(event) {
+			/*
 			if( isTablet == 1  ){
 			
 			
@@ -228,11 +229,13 @@ function bindMobileHelper(){
 				if( 360 >  windowHeight ){
 				
 				}
-			
+				
+				}
+			*/
 			
 				jQuery('video').width(480);
 				jQuery('video').height(360);
-			}
+			
 		});	
 	}
 }
@@ -258,19 +261,31 @@ function playClip(clipID ){
 	clipPath = getClipPath( clipID, type );
 	clipPath = serverHost + clipPath;
 	
-	logger("Remove");
-	//$("#jquery_jplayer_1").jPlayer("destroy");
+	logger("Destroy & remove jPLayer");
+	
+	$("#jquery_jplayer_1").jPlayer("destroy");
+	/*
+	
 	$("#jquery_jplayer_1").remove();
 	$("#jp_container_1, #jquery_jplayer_1").remove();
 	var html = '<div id="jp_container_1" class="jp-video "><div class="jp-type-single"><div id="jquery_jplayer_1" class="jp-jplayer"></div><div class="jp-gui"><div class="jp-video-play"><a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a></div></div></div>';
-	logger("append");
+	
+	logger("Append new HTML");
 	
 	$('body').append( html );
+	
+	*/
+	
 	$('#jquery_jplayer_1').height( windowHeight );
 	$('#jquery_jplayer_1').width( windowWidth );
 	$('div.jp-video-play').css('height',  windowHeight + 'px' );
 	logger("Bind PLayer");
 	
+	$("#jquery_jplayer_1").jPlayer( "stop" );
+	$("#jquery_jplayer_1").jPlayer( "clearFile" );
+	
+	
+	//$("#jquery_jplayer_1").jPlayer('setMedia', {m4v: clipPath});
 	
 	
 	
@@ -296,7 +311,7 @@ function playClip(clipID ){
 			shownD = 0;
 			
 		  }else{
-			//setTimeout( function(){ $('a.jp-video-play-icon').click(); logger("faux click!");   },1000);
+			setTimeout( function(){ $('a.jp-video-play-icon').click(); logger("faux click!");   },500);
 			//nativeSupport: true, 
 		  }
 		
@@ -304,64 +319,44 @@ function playClip(clipID ){
 		},
 		ended: function(){
 			if( typeof decisions === 'undefined' ){
+				logger( "home.js, ended function, nextStep() current state: " + state + " set to tryagain");
+				state = "tryagain";
 				nextStep();	
 			}else{
-				logger( "ended home.js > overlay Decisions");
+				state = "tryagain";
+				logger( "home.js, ended function, overlayDecisions() current state: " + state + " set to tryagain");
 				overlayDecisions( decisions );
-				
 			}
 		},
 		size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
 		preload : (type == 1 ? "auto" : "none"),
 		volume: 1,
 		swfPath: "/js",
-		/*keyEnabled : true,
-		keyBindings: {
-		  play: {
-			key: 32, // space
-			fn: function(f) {
-			  if(f.status.paused) {
-				f.play();
-			  } else {
-				f.pause();
-			  }
-			}
-		  },
-		  fullScreen: {
-			key: 13, // enter
-			fn: function(f) {
-			  if(f.status.video || f.options.audioFullScreen) {
-				f._setOption("fullScreen", !f.options.fullScreen);
-			  }
-			}
-		  }
-		},*/
-		supplied: "m4v"
-		/*timeupdate: function(event) {
-			if( typeof decisions === 'undefined' ){
-				nextStep();	
-			}else{
+		supplied: "m4v",
+		timeupdate: function(event) {
 			
-				//Is at end of clip?
-				var d = $("#jquery_jplayer_1").data("jPlayer").status.duration;
-				if( Math.floor(event.jPlayer.status.currentTime) > (d - 8) && (d - 8) > 0 ){
-					if( decisions ){
-						if( shownD == 0 ){
-							
-							logger("overlay within timeupdate - 2");
-							overlayDecisions( decisions );
-							shownD = 1;
-							$.jPlayer.pause();
-						}
+			var d =  Math.floor($("#jquery_jplayer_1").data("jPlayer").status.duration);
+			var ct = parseInt(Math.floor(event.jPlayer.status.currentTime));
+			var showAt = parseInt( d - 8 );
+			
+			//logger("home.js, timeupdate function, ct:" + ct + " show at: " + showAt + " jplayerState paused? " + event.jPlayer.status.paused + " state: " + state );
+			
+			if( ct > 0 && ct >= showAt  && event.jPlayer.status.paused===false ){
+				//logger( "home.js - In timeupdate, state: " + state );
+				if( state == "tryagain" || state == ""){
+					$.jPlayer.pause();
+					if( typeof decisions === "undefined" ){
+						logger( "home.js pause clip, next step");
+						nextStep();	
+					}else{
+						logger( "home.js pause clip, show decisions");
+						overlayDecisions( decisions );
 					}
 				}
-			
-			
-			
-			  
 			}
-		}*/
+		}
 	});
+	
 }			
 
 
@@ -382,7 +377,8 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 	$('#clickActions').remove();
 	
 	if( continues == 1  ){
-		
+		state = "continue";
+		logger("Set state: continue" );
 		//update Step
 		if( showCount ){
 			currentStep = parseInt(currentStep) + 1
@@ -408,22 +404,17 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 		if( hasClip ) {
 			currentClipID = playClipID;
 			logAction("Continue");
-			
-			//logger(" Do action > hasClip == 1 > nextStep set then playClip ");
 			nextStep = function(){ playSegment( goTosegmentID );  }
-			
-			//logger("next Step: " + nextStep + " > go to playClip " );
-			
 			playClip( playClipID  );
 		}else{
 			logAction("Continue");
-			//logger("do Action >  play segment: " + goTosegmentID );
 			playSegment( goTosegmentID );
 		}
 		
 		
 	}else if( ends == 1  ){
-	
+		state = "ends";
+		logger("Set state: ends" );
 		if( currentSegmentData && currentSegmentData.BadgePath != "" ){
 			$(function(){
 				if( badgeMode == 1 ){
@@ -436,8 +427,7 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			});
 		}
 	
-		//ends
-		
+
 		if( hasClip ) {
 			currentClipID = playClipID;
 			logAction("Finished");
@@ -448,14 +438,11 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			playSegment( goTosegmentID );
 		}
 	}else{
-		
-		
-		//try again
+		state = "tryagain";
+		logger("Set state: tryagain" );
 		if( goTosegmentID != currentSegmentID ){
 			//this could be an error... or a branching wrong
-			
-			nextStep = function(){  playSegment( goTosegmentID );  }
-			
+			nextStep = function(){  playSegment( goTosegmentID );  }	
 			if( hasClip ) {
 				playClip( playClipID  );
 			}else{
@@ -473,6 +460,7 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			}
 		}
 	}
+	
 	if( type == 3){ //the ipad doesn't allow this?
 		triggerPlay();
 	}

@@ -97,8 +97,6 @@
 					<script type="text/javascript">
 						var debug = 1;
 						
-						
-						
 						function logger( msg  ){
 							var callerFunc = arguments.callee.caller.toString();
 								callerFuncName = (callerFunc.substring(callerFunc.indexOf("function") + 8, callerFunc.indexOf("(")) || "anoynmous")
@@ -109,7 +107,7 @@
 							}
 						}
 					
-					
+						var state = "";
 					
 						var serverHost = "<?php echo fixedPath; ?>"; //"http://205.189.20.167"; //could be blank...
 						var formURL = "<?php echo $project->getFormURL(); ?>";
@@ -198,14 +196,14 @@
 						var currentClipID;
 						var nextStep;  //function holder...
 						var started = 0;
-						
 						var shownD = 0;
+						
 						
 					</script>
 					<script type="text/javascript" src="<?php echo fixedPath; ?>/js/home.js" ></script>
 					<script type="text/javascript">
 						$(function(){
-
+							
 							if( isTablet == 0 && isMobile == 0 ){
 								type = 1;
 								
@@ -226,7 +224,14 @@
 							 
 							 
 							 }else{
-								var ww;
+								$('body').attr('class', 'mobile');
+								$('#Viewport').attr('content', 'width=480'); //user-scalable=no, maximum-scale=1, minimum-scale=1,
+								type = 3;
+								$('#jquery_jplayer_1').height( windowHeight );
+								$('#jquery_jplayer_1').width( windowWidth );
+								//$('#jquery_jplayer_1').width( 480 );
+							//	$('div.jp-video-play').css('height',  '480px' );
+								/*var ww;
 								if( isMobile == 1 && isTablet == 0 ){
 									$('body').attr('class', 'mobile');
 									type = 3;
@@ -246,8 +251,9 @@
 								$('#jquery_jplayer_1').height( windowHeight );
 								$('#jquery_jplayer_1').width( windowWidth );
 								$('div.jp-video-play').css('height',  windowHeight + 'px' );
+								*/
 							 }
-						
+							
 							
 							
 							var clipPath = "";
@@ -284,18 +290,16 @@
 										  }); 
 										  currentClipID = clipID;
 										  logAction("Start");
-										  player = $(this);
+							
 										 if( type == 1 ){
 											$(this).jPlayer("play");
 											shownD = 0;
 										 }
 										 bindMobileHelper();
 										},
-										ended: function(){
-											
-											logger( "Player Ended");
+										ended: function(){		
 											if( decisions ){
-												logger("overlay within ended");
+												logger("index.php > ended > overlay decisions");
 												overlayDecisions( decisions );
 											}
 											
@@ -325,23 +329,28 @@
 											}
 										  }
 										},
-										supplied: "m4v"
-										/*
+										supplied: "m4v",
+										
 										timeupdate: function(event) {
+										
 											//Is at end of clip?
-											var d = $("#jquery_jplayer_1").data("jPlayer").status.duration;
-											if( Math.floor(event.jPlayer.status.currentTime) > (d - 8) && (d - 8) > 0 ){
-												if( decisions  ){
-													if( shownD == 0 ){
-														logger("overlay within timeupdate - 1");
-														overlayDecisions( decisions );
-														//shownD = 1;
+											var d =  parseInt( Math.floor($("#jquery_jplayer_1").data("jPlayer").status.duration));
+											var ct = parseInt( Math.floor(event.jPlayer.status.currentTime) );
+											if( ct > 0 &&   ct >= (d - 8) && event.jPlayer.status.paused===false ){
+												logger( "In timeupdate trigger - State: " + state);
+												if( typeof decisions === "undefined" ){
+														//let ended call this
+														//nextStep();	
+												}else{
+													if( state == "tryagain" || state == "" ){
 														$.jPlayer.pause();
+														logger( "index.php - timeupdate function, overlayDecisions ");
+														overlayDecisions( decisions );
 													}
 												}
 											}
 										}
-										*/
+										
 									});
 									
 									
@@ -352,6 +361,9 @@
 								}
 							}
 						});
+						
+						//console.log( player );
+						
 					</script>
 					<script type="text/javascript" src="<?php echo fixedPath; ?>/includes/projectJS.php?projectID=<?php echo $tourID; ?>"></script>
 				<?php
