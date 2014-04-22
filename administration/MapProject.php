@@ -12,6 +12,9 @@
 	
 	if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] ){
 		$projID = $_REQUEST['projectID'];
+		
+		checkAccess( $projID );
+		
 		$conn = getConnection();
 		$project = new Projects($conn);
 		$project = $project->load($projID);

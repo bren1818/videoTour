@@ -1,6 +1,6 @@
 <?php
 	error_reporting(E_ALL);
-	$adminSession; //for Global Use
+	
 	
 	function footerMenu($projID){
 		?>
@@ -114,26 +114,7 @@
 		}
 		
 	}
-		function checkAccess( $projectID, $return = 0 ){
-			//simple security check :D
-			global $adminSession;
-			$userID = $adminSession->getCurrentUserID();
-			$admin = new administrator( getConnection() );
-			$admin = $admin->load( $userID );
-			if(  ! in_array( $projectID, $admin->getProjectsAsArray() ) && $admin->getType() == 2 ){
-				if( $return ){
-					return 0;
-				}else{
-					echo '<h1>Access Denied!</h1>';
-					pageFooter();
-					exit;
-				}
-			}
-			
-			if( $return ){
-				return 1;
-			}
-		}
+		
 	
 	
 		function pageHeaderShow($pageTitle = "", $projectID=0){

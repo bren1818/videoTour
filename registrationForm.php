@@ -171,6 +171,11 @@
 			background-color:#1e62d0;
 		}
 		
+		#other{
+			width: 100%;
+			min-height: 50px;
+		}
+		
 	</style>
 	
 	<script type="text/javascript">

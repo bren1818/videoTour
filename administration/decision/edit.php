@@ -114,15 +114,14 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 			<th>Continues/Ends</th> 
 			<th>Note</th> 
 			<th>Go to Segment</th>
+			<th>Tool</th>
 		</tr> 
 	</thead>
 	<tbody> 
 	<?php
 		foreach( $choices as $c ){
-			
 			if( $c->getId() != $decisionID ){
-		
-			echo '<tr><td>'.$c->getOrder().'</td><td>'.$c->getClipID().' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a></td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td></tr>';
+			echo '<tr><td>'.$c->getOrder().'</td><td>'.$c->getClipID().' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a></td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).'</td><td>'.$c->getNote().'</td><td><a href="'.fixedPath.'/administration/segments/edit?projectID='.$c->getProjectId().'&segmentID='.$c->getSegmentID().'">'.$c->getSegmentID().'</a></td><td><a class="button wa" href="'.fixedPath.'/administration/decision/edit?projectID='.$c->getProjectId().'&decisionID='.$c->getId().'">Edit</a></td></tr>';
 			
 			}
 		}

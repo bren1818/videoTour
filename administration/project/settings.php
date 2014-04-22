@@ -174,6 +174,9 @@
 		
 		<br />
 		<br />
+		<a class="button wa" href="<?php echo fixedPath; ?>/administration/backup/?projectID=<?php echo $projectID; ?>">Export/Dump Project</a>
+		<br />
+		<br />
 <?php
 		$projID =  $project->getId(); 
 	  footerMenu($projID);

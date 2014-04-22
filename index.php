@@ -38,10 +38,7 @@
 					} else {
 						$ip = $_SERVER['REMOTE_ADDR'];
 					}
-				?>
-	
-					
-					
+				?>	
 					<?php if( $project->getShowCount() ){ ?><div id="currentStep">1</div><?php } ?>
 					<?php if( $project->getShowBadge() ){ ?><div id="badge"></div><?php } ?>
 					
@@ -97,7 +94,7 @@
 					</div>
 
 					<script type="text/javascript">
-						var debug = 1;
+						var debug = 0; //should load from settings
 						
 						function logger( msg  ){
 							var callerFunc = arguments.callee.caller.toString();
@@ -114,6 +111,9 @@
 						var serverHost = "<?php echo fixedPath; ?>"; //"http://205.189.20.167"; //could be blank...
 						var formURL = "<?php echo $project->getFormURL(); ?>";
 						var showForm = <?php echo $project->getHasForm(); ?>;
+						
+						var redirect = <?php echo $project->getRedirect(); ?>;
+						var redirectURL = "<?php echo $project->getRedirectURL(); ?>";
 						
 						var windowWidth;
 						var windowHeight;
@@ -234,37 +234,8 @@
                                 $('#jquery_jplayer_1').width( windowWidth );
                                 //$('#jquery_jplayer_1').width( 480 );
                                 $('div.jp-video-play').css('height',  '480px' );
-								
-							
-								
-                                /*var ww;
-                                if( isMobile == 1 && isTablet == 0 ){
-                                    $('body').attr('class', 'mobile');
-                                    type = 3;
-                                    ww = 480;
-                                    $('#Viewport').attr('content', 'maximum-scale=1, minimum-scale=1, user-scalable=no, width=480');
-                                }else if( isMobile && isTablet ){
-                                    $('body').attr('class', 'tablet');
-                                    type = 2;
-                                    ww = 1024;
-                                    $('#Viewport').attr('content', 'user-scalable=no, width=1024');
-                                }
-                            
-
-                                windowWidth =  ww; //$(window).width() -5;
-                                windowHeight =  $(window).height() -5 ;
-                                
-                                $('#jquery_jplayer_1').height( windowHeight );
-                                $('#jquery_jplayer_1').width( windowWidth );
-                                $('div.jp-video-play').css('height',  windowHeight + 'px' );
-                                */
-
-								
-								
 							 }
-							
-							
-							
+
 							var clipPath = "";
 							var segmentData = "";
 							var decisions = new Array();
@@ -293,13 +264,15 @@
 									$("#jquery_jplayer_1").jPlayer({
 										ready: function () {
 											$(this).jPlayer("setMedia", {
-												m4v: serverHost + clipPath
+												title: "Do you have what it takes?",
+												m4v: serverHost + clipPath,
+												poster: serverHost + "/poster.png"
 											}); 
 											currentClipID = clipID;
 											logAction("Start");
 
 											if( type == 1 ){
-												$(this).jPlayer("play");
+												//$(this).jPlayer("play");
 												shownD = 0;
 											}else{
 												jQuery('video').width(windowWidth);

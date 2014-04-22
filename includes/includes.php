@@ -2,8 +2,33 @@
 	session_start();
 	
 	define("ADMIN_DIR", "/administration");
-	
 	$path = dirname ( __FILE__ );
+	
+	require_once($path.'/classes/adminSession.php');
+	$adminSession = new adminSession(); //for Global Use
+	
+	function checkAccess( $projectID, $return = 0 ){
+		//simple security check :D
+		global $adminSession;
+		
+		$userID = $adminSession->getCurrentUserID();
+		$admin = new administrator( getConnection() );
+		$admin = $admin->load( $userID );
+		if(  ! in_array( $projectID, $admin->getProjectsAsArray() ) && $admin->getType() == 2 ){
+			if( $return ){
+				return 0;
+			}else{
+				echo '<h1>Access Denied!</h1>';
+				pageFooter();
+				exit;
+			}
+		}
+		
+		if( $return ){
+			return 1;
+		}
+	}
+
 	
 	require_once($path."/db.php");
 	require_once($path.'/Settings.php');
@@ -19,7 +44,7 @@
 	require_once($path.'/classes/analytics_visitor_event.php');
 	require_once($path.'/classes/entry.php');
 	require_once($path.'/classes/administrator.php');
-	require_once($path.'/classes/adminSession.php');
+	
 	require_once($path.'/classes/stylesheet.php');
 	require_once($path.'/classes/javascript.php');
 	

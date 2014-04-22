@@ -58,13 +58,7 @@
 		function setRedirectURL($redirectURL) { $this->redirectURL = $redirectURL; }
 		function getRedirectURL() { return $this->redirectURL; }
 
-		
-		
-		
-		
-		
-		
-		
+
 		function listProjects(){
 			if( $this->connection ){
 				$query = $this->connection->prepare("SELECT * FROM `projects`");
@@ -97,8 +91,6 @@
 				$redirect = $this->getRedirect();
 				$redirectURL = $this->getRedirectURL();
 				$badgeMode = $this->getBadgeMode();
-				
-				
 				
 				
 				$query = $this->connection->prepare("UPDATE `projects` SET `title` = :title, `startingSegmentID` = :ssid, `active` = :active, `showBadge` = :showBadge, `badgeMode` = :badgeMode, `showCount` = :showCount, `hasForm` = :hasForm, `formURL` = :formURL, `redirect` = :redirect, `redirectURL`= :redirectURL WHERE `projects`.`id` = :id;");

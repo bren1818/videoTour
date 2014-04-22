@@ -131,9 +131,14 @@ function finished(){
 							if( data ){
 								if( data.Saved ){
 									if( data.Saved == 1 ){
-										$('body #entryForm').remove();
-										$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
-										showAlert("Thank you for participating! You will be notified if you're a winner.", "Good Luck! Entry recorded!");
+										if( redirect == 1 ){
+											window.location = redirectURL;
+										}else{
+											$('body #entryForm').remove();
+											$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
+											showAlert("Thank you for participating! You will be notified if you're a winner.", "Good Luck! Entry recorded!");
+										}
+										
 									}else{
 										window.alert("There appears to be something wrong with the data you entered. Please verify and try again");
 										window.alert( data );
@@ -151,7 +156,11 @@ function finished(){
 			});
 		}
 		
-		//check if re-directs?
+		if( redirect == 1 && showForm == 0 ){
+			//check if re-directs?
+			logger("Redirecting");
+			window.location = redirectURL;
+		}
 		
 	}else{
 		logAction("Finished");
@@ -205,40 +214,7 @@ function playSegment( segmentID ) {
 			finished();
 		}
 	}
-	
-	
-	
 }
-/*
-function bindMobileHelper(){
-	if( isMobile ){
-		//$("#jquery_jplayer_1")
-		$(player).bind($.jPlayer.event.play, function(event) {
-			/*
-			if( isTablet == 1  ){
-			
-			
-				if( 768 >  windowHeight ){
-				
-				}
-				
-				jQuery('video').width(1024);
-				jQuery('video').height(768);  //--> 2/3 height?
-			}else if( isMobile == 1 && isTablet == 0 ){
-			
-				if( 360 >  windowHeight ){
-				
-				}
-				
-				}
-			*//*
-			
-				jQuery('video').width(480);
-				jQuery('video').height(360);
-			
-		});	
-	}
-}*/
 
 function getJPlayerHeight(){
 	logger("Height: " + (type == 1 ? windowHeight :  "auto" ) );
@@ -246,7 +222,7 @@ function getJPlayerHeight(){
 }
 
 function getJPlayerWidth(){
-	logger( "width: " + windowWidth ); //check if portait or landscape
+	//logger( "width: " + windowWidth ); //check if portait or landscape
 	if( windowWidth == undefined  ){
 		windowWidth = $(window).width();
 	}
@@ -268,17 +244,7 @@ function playClip(clipID ){
 	logger("Destroy & remove jPLayer");
 	
 	$("#jquery_jplayer_1").jPlayer("destroy");
-	/*
-	
-	$("#jquery_jplayer_1").remove();
-	$("#jp_container_1, #jquery_jplayer_1").remove();
-	var html = '<div id="jp_container_1" class="jp-video "><div class="jp-type-single"><div id="jquery_jplayer_1" class="jp-jplayer"></div><div class="jp-gui"><div class="jp-video-play"><a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a></div></div></div>';
-	
-	logger("Append new HTML");
-	
-	$('body').append( html );
-	
-	*/
+
 	
 	$('#jquery_jplayer_1').height( windowHeight );
 	$('#jquery_jplayer_1').width( windowWidth );
@@ -288,15 +254,8 @@ function playClip(clipID ){
 	$("#jquery_jplayer_1").jPlayer( "stop" );
 	$("#jquery_jplayer_1").jPlayer( "clearFile" );
 	
-	
-	//$("#jquery_jplayer_1").jPlayer('setMedia', {m4v: clipPath});
-	
-	
-	
-	
 	$("#jquery_jplayer_1").jPlayer({
 		ready: function () {
-			//logger("setting media as: " + clipPath );
 			$(this).jPlayer("setMedia", {
 				m4v: clipPath
 			}); 
@@ -309,20 +268,18 @@ function playClip(clipID ){
 			if( type == 1 ){
 				$(this).jPlayer("play");
 			}else{
-					jQuery('video').width(windowWidth);
-					jQuery('video').height(windowHeight);
-				/*if( state == "tryagain" ){ 
-					logger("setting up a faux click");
-					setTimeout( function(){ $('a.jp-video-play-icon').click(); logger("faux click!");   },500);
-				}*/
+				jQuery('video').width(windowWidth);
+				jQuery('video').height(windowHeight);
 			}
 			$('#clickActions').remove();
 			shownD = 0;
 		},
 		ended: function(){
+		updateBadge();
 			if( typeof decisions === 'undefined' ){
 				logger( "home.js, ended function, nextStep() current state: " + state + " set to tryagain");
 				state = "tryagain";
+				
 				nextStep();	
 			}else{
 				state = "tryagain";
@@ -335,13 +292,32 @@ function playClip(clipID ){
 		volume: 1,
 		swfPath: "/js",
 		supplied: "m4v",
+		keyEnabled : true,
+		keyBindings: {
+		  play: {
+			key: 32, // space
+			fn: function(f) {
+			  if(f.status.paused) {
+				f.play();
+			  } else {
+				f.pause();
+			  }
+			}
+		  },
+		  fullScreen: {
+			key: 13, // enter
+			fn: function(f) {
+			  if(f.status.video || f.options.audioFullScreen) {
+				f._setOption("fullScreen", !f.options.fullScreen);
+			  }
+			}
+		  }
+		},
 		timeupdate: function(event) {
 			
 			var d =  Math.floor($("#jquery_jplayer_1").data("jPlayer").status.duration);
 			var ct = parseInt(Math.floor(event.jPlayer.status.currentTime));
 			var showAt = parseInt( d - 8 );
-			
-			//logger("home.js, timeupdate function, ct:" + ct + " show at: " + showAt + " jplayerState paused? " + event.jPlayer.status.paused + " state: " + state );
 			
 			if( ct > 0 && ct >= showAt  && event.jPlayer.status.paused===false ){
 				//logger( "home.js - In timeupdate, state: " + state );
@@ -361,12 +337,27 @@ function playClip(clipID ){
 	
 }			
 
+function updateBadge(){
+	if( showBadge ){
+		if( currentSegmentData && currentSegmentData.BadgePath != "" ){
+			//console.log( currentSegmentData );
+			$(function(){
+				if( badgeMode == 1 ){//append
+					$('#badge').html( $('#badge').html() + '<img id="badge_' + currentSegmentData.BadgeID + '" class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
+				}else{
+					$('#badge').html( '<img id="badge_' + currentSegmentData.BadgeID + '" class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
+				}
+				logger("Updated Badge to: " + serverHost + currentSegmentData.BadgePath);
+				$('#badge_' + currentSegmentData.BadgeID).hide();
+				$('#badge_' + currentSegmentData.BadgeID).fadeIn(1000); 
+			});
+		}
+	}
+}
 
 function doAction(goTosegmentID, playClipID, continues, ends ){
-	logger("In doAction");
-	
 	nthAction ++;
-	
+	logger("In doAction, nthAtction: " + nthAction);
 	nextSegment = goTosegmentID;
 	
 	var clipPath = "";
@@ -386,8 +377,9 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			currentStep = parseInt(currentStep) + 1
 			$('#currentStep').html(  currentStep );
 		}
-		//update Badge
 		
+		/*
+		//update Badge
 		if( showBadge ){
 			if( currentSegmentData && currentSegmentData.BadgePath != "" ){
 				$(function(){
@@ -401,8 +393,8 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 				});
 			}
 		}
-		
-
+	    */
+	
 		if( hasClip ) {
 			currentClipID = playClipID;
 			logAction("Continue");
@@ -413,10 +405,10 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			playSegment( goTosegmentID );
 		}
 		
-		
 	}else if( ends == 1  ){
 		state = "ends";
 		logger("Set state: ends" );
+		/*
 		if( currentSegmentData && currentSegmentData.BadgePath != "" ){
 			$(function(){
 				if( badgeMode == 1 ){
@@ -428,17 +420,24 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 				logger("Updated Badge to: " + serverHost + currentSegmentData.BadgePath);
 			});
 		}
-	
+		*/
 
 		if( hasClip ) {
 			currentClipID = playClipID;
 			logAction("Finished");
 			nextStep = function(){ finished();  } //finished
 			playClip( playClipID  );
+			
 		}else{
 			logAction("Finished");
 			playSegment( goTosegmentID );
+			
 		}
+		
+		
+		
+		
+		
 	}else{
 		state = "tryagain";
 		logger("Set state: tryagain" );
