@@ -18,6 +18,21 @@ function showAlert(message,title,buttonText){
 	});
 }
 
+function showLinkAlert(message,title,buttonText,link){
+	$(function(){
+		var wh = $(window).height();
+		var ww = $(window).width();
+	
+		if( $('#modalOverlay').length ){
+			$('#modalOverlay').remove();
+		}
+		
+		var html= "<div style='height: " + wh + "px; width: " + ww + "px;' id='modalOverlay'><div id='alert' style='top: " + ((wh /2 ) - 100) + "px;'><div class='titlebar'>" + title + "</div><div class='alertMessage'><p>" + message + "</p></div><div class='buttonHolder'><p style='text-align:center;'><a href='" + link + "' class='button'>" + buttonText + "</a></p></div></div></div>"; 
+		$('body').append( html );
+	});
+}
+
+
 function getAjaxHandlerResponse(fx, id){
 	//projectID, what, function
 	var ret = null;
@@ -112,7 +127,7 @@ function finished(){
 	if( enteredContest == 0 ){
 	
 		if( showForm == 1 ){
-			showAlert("You have what it takes to be a Laurier Golden Hawk!<br/>Please complete this form for a chance to win 1 of 10 $200 Laurier Bookstore gift certificates.", "Congratulations!", "Enter Contest");
+			showAlert("You have what it takes to be a Laurier Golden Hawk!<br />Please complete this form for a chance to win 1 of 10 $200 Laurier Bookstore gift certificates.", "Congratulations!", "Enter Contest");
 			logAction("Finished");
 			
 			//hide the other stuff
@@ -135,7 +150,11 @@ function finished(){
 								if( data.Saved ){
 									if( data.Saved == 1 ){
 										if( redirect == 1 ){
-											window.location = redirectURL;
+											//window.location = redirectURL;
+											showLinkAlert("Thanks for entering our contest! Winners will be announced the week of May 26, 2014.", "Good Luck! Entry recorded!", "Return to website", redirectURL );
+											
+											
+											
 										}else{
 											$('body #entryForm').remove();
 											$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
