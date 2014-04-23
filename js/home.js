@@ -4,7 +4,7 @@ function closeModal(){
 	}
 }
 
-function showAlert(message,title){
+function showAlert(message,title,buttonText){
 	$(function(){
 		var wh = $(window).height();
 		var ww = $(window).width();
@@ -13,7 +13,7 @@ function showAlert(message,title){
 			$('#modalOverlay').remove();
 		}
 		
-		var html= "<div style='height: " + wh + "px; width: " + ww + "px;' id='modalOverlay'><div id='alert' style='top: " + ((wh /2 ) - 100) + "px;'><div class='titlebar'>" + title + "</div><div class='alertMessage'><p>" + message + "</p></div><div class='buttonHolder'><p style='text-align:center;'><a onClick='closeModal()' class='button'>Close</a></p></div></div></div>"; 
+		var html= "<div style='height: " + wh + "px; width: " + ww + "px;' id='modalOverlay'><div id='alert' style='top: " + ((wh /2 ) - 100) + "px;'><div class='titlebar'>" + title + "</div><div class='alertMessage'><p>" + message + "</p></div><div class='buttonHolder'><p style='text-align:center;'><a onClick='closeModal()' class='button'>" + buttonText + "</a></p></div></div></div>"; 
 		$('body').append( html );
 	});
 }
@@ -112,7 +112,7 @@ function finished(){
 	if( enteredContest == 0 ){
 	
 		if( showForm == 1 ){
-			showAlert("You have what it takes! Please fill out this form for a chance to win!", "Enter for a chance to win!");
+			showAlert("You have what it takes to be a Laurier Golden Hawk!<br/>Please complete this form for a chance to win 1 of 10 $200 Laurier Bookstore gift certificates.", "Congratulations!", "Enter Contest");
 			logAction("Finished");
 			
 			//hide the other stuff
@@ -139,7 +139,7 @@ function finished(){
 										}else{
 											$('body #entryForm').remove();
 											$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
-											showAlert("Thank you for participating! You will be notified if you're a winner.", "Good Luck! Entry recorded!");
+											showAlert("Thank you for participating! You will be notified if you're a winner.", "Good Luck! Entry recorded!", "Close");
 										}
 										
 									}else{
@@ -169,7 +169,7 @@ function finished(){
 		logAction("Finished");
 		$('#currentStep, #badge, #jp_container_1').hide();
 		$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' href='" + window.location + "'>Play again?</a></blink></center>");
-		showAlert("You have what it takes! You've already entered the contest so we wont show you the form again.", "Thanks for playing!");
+		showAlert("You have what it takes! You've already entered the contest so we wont show you the form again.", "Thanks for playing!", "Close");
 	}
 }
 

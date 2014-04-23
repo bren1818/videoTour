@@ -89,6 +89,10 @@
 			padding-top: 50px;
 		}
 		
+		#registrationForm *{
+			font-family: Verdana, Geneva, sans-serif;
+		}
+		
 		.row{ width: 100%; padding: 5px 0px; }
 		.col{ width: 100%; }
 		
@@ -255,7 +259,8 @@
 		
 		<div class="row">
 			<div class="col col50 labelCol">
-			<label name="agree">I agree to the terms and conditions: <input type="checkbox" name="agree" value="agree" required="required"/></label>
+			<label name="agree">I agree to the contest <a target="_blank" href="http://www.wlu.ca/docsnpubs_detail.php?grp_id=12769&doc_id=58075">rules & regulations</a>: <input type="checkbox" name="agree" value="agree" required="required"/></label>
+			<p style="font-size: 12px;">Please note, only students who confirm their acceptance for September 2014 will be eligible to win.</p>
 			</div>
 		</div>
 		

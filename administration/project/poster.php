@@ -56,7 +56,7 @@
 			<?php
 				if( $project->getPosterFile() != "" ){
 			?>
-						<p><a target="_blank" href="<?php echo $project->getPosterFile(); ?>"><i class="fa fa-eye"></i> View Current Poster</a></p>
+					<p><a target="_blank" href="<?php echo $project->getPosterFile(); ?>"><i class="fa fa-eye"></i> View Current Poster</a></p>
 			<?php	
 				}
 			?>

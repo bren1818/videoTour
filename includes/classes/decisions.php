@@ -141,6 +141,24 @@
 			}
 		}
 		
+		function getListbyProject($projectID=null){
+			if( $this->connection ){
+				$decisions = array();
+				if( $projectID != null ){
+					//list all Decision Trees
+					$query = $this->connection->prepare("SELECT * FROM `decisions` WHERE `projectID` =  :PID");
+					$query->bindParam(':PID', $projectID);
+					$query->execute();
+					while( $result = $query->fetchObject("Decisions") ){
+						$decisions[] = $result;
+					}
+				}
+				return $decisions;
+			}else{
+				return array();
+			}
+		}
+		
 		
 		function getList($decisionTreeID=null){
 			if( $this->connection ){

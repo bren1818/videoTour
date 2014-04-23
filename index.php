@@ -2,6 +2,8 @@
 	require_once("includes/includes.php");
 	require_once("includes/Mobile_Detect.php");
 	
+	error_reporting(0);
+	
 	$session = session_id();
 	if ($session == ''){ session_start(); }
 	$_SESSION['sessionid'] = session_id();
