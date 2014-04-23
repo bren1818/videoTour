@@ -60,6 +60,8 @@
 					$SS->setConnection( $this->connection );
 				}
 				return $SS;
+			}else{
+				return new javascript();
 			}
 		}
 		
