@@ -4,10 +4,11 @@
 $saved = 0;	
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 	
+	
 
 	if( isset( $_POST['projectID'] ) && $_POST['projectID'] != "" && isset( $_POST['decisionID'] ) && $_POST['decisionID'] != "" ){
 	
-		$decisionID = $_POST['decisionID'];
+		$decisionID = 		$_POST['decisionID'];
 		$segmentID = 		$_POST['segmentID'];
 		$note =  			$_POST['note'];
 		$buttonText = 		$_POST['buttonText'];
@@ -15,6 +16,10 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		$ends = 			0;
 		$clipID =			$_POST['clipID'];
 		$order =			$_POST['order'];
+		
+		$forcedBadgeID = 	( isset($_POST['badgeID']) ? $_POST['badgeID'] : 0 );
+		
+		
 		
 		//continues
 		if( isset( $_POST['continues']) ){
@@ -43,6 +48,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 		$decision->setNote( $note );
 		$decision->setText( $buttonText );
 		$decision->setOrder( $order );
+		$decision->setForcedBadgeID( $forcedBadgeID );
 		$decision->save();
 	
 		$saved = 1;	
@@ -56,6 +62,9 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 
 	pageHeader();
+	
+
+	
 	if( $saved ){
 		$projectID = $_POST['projectID'];
 		$decisionID =$_POST['decisionID'];
@@ -142,6 +151,14 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 				event.stopPropagation();
 				$(this).parent().find('input').val("");
 			});
+			
+			$('#triggerUpdateBadge').click(function(event){
+				event.preventDefault();
+				$('#btn_badgeID').trigger( "click" );
+			});
+			
+			
+			
 		});
 	</script>
 	
@@ -249,6 +266,20 @@ if( $_SERVER['REQUEST_METHOD'] != 'POST' ||  $saved 	){
 					<input id="order" name="order" type="number" required="required" value="<?php echo $choice->getOrder(); ?>">
 				</td>
 			</tr>
+			<tr>
+				<td colspan="2"><hr/>The following option should only be used with segments as this could result in multiple badges<hr /></td>
+			</tr>
+			<tr>
+				<td>
+					<label for="badge">Force Badge at end of clip:<br /> <a id="btn_badgeID" class="button" onclick="selectBadge(<?php echo $project->getId(); ?>)"><i class="fa fa-folder-open"></i></a>	</label>
+				</td>
+				<td>				
+					<input type="text" onChange="updateDesc('badge',this)" id="badgeID" name="badgeID" value="<?php echo (($choice->getForcedBadgeID() == 0 ) ? "" : $choice->getForcedBadgeID() ); ?>" readonly />
+					<button class="button wa clearInput">Clear</button> 							
+				</td>
+			</tr>
+			
+			
 			
 		</table>
 		<input type="hidden" name="projectID" value="<?php echo $project->getId(); ?>" />

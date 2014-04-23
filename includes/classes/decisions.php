@@ -11,6 +11,8 @@
 		private $text;
 		private $connection;
 		private $order;
+		private $forcedBadgeID;
+		
 		
 		function __construct($db = null) {
 			if( $db ){
@@ -41,6 +43,8 @@
 		function setOrder($order) { $this->order = $order; }
 		function getOrder() { return $this->order; }
 		
+		function setForcedBadgeID($forcedBadgeID) { $this->forcedBadgeID = $forcedBadgeID;  }
+		function getForcedBadgeID() { return $this->forcedBadgeID; }
 		
 		
 		function setConnection( $conn ){
@@ -58,6 +62,7 @@
 			$note = $this->getNote();
 			$text = $this->getText();
 			$order = $this->getOrder();
+			$forcedBadgeID = $this->getForcedBadgeID();
 		
 			if( $this->getId() == "" ){
 				//insert
@@ -73,13 +78,14 @@
 				$query->bindParam(':text', $text  );
 				$query->bindParam(':order', $order  );
 				
+				
 				$query->execute();
 				$this->setId( $this->connection->lastInsertId() );
 				return $this->getId(); 
 			}else{
 				//update
 				
-				$query = $this->connection->prepare("UPDATE `decisions` SET `clipID` = :clipID, `segmentID` = :segmentID, `continues` = :continues, `ends` = :ends, `note` = :note, `text` = :text, `order` = :order WHERE `decisions`.`id` = :id;");
+				$query = $this->connection->prepare("UPDATE `decisions` SET `clipID` = :clipID, `segmentID` = :segmentID, `continues` = :continues, `ends` = :ends, `note` = :note, `text` = :text, `order` = :order, `forcedBadgeID` = :forcedBadgeID WHERE `decisions`.`id` = :id;");
 				
 				$id = $this->getId();
 				
@@ -91,7 +97,7 @@
 				$query->bindParam(':text', $text  );
 				$query->bindParam(':id', $id  );
 				$query->bindParam(':order', $order  );
-				
+				$query->bindParam(':forcedBadgeID', $forcedBadgeID  );
 				if( $query->execute() ){
 					return 1;
 				}else{

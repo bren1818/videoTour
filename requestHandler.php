@@ -14,6 +14,30 @@
 			
 			
 			switch ( $function ){
+				case 'getBadge':
+					if( isset( $_GET['id'] ) ){
+						
+						$badgeID = $_GET['id'];
+						$badge = new Badge($conn);
+						$badge = $badge->load($badgeID); 
+						
+						error_log( "badge id" . $badgeID );
+						
+						if( is_object( $badge ) ){
+							$badgeAlt = $badge->getNote();
+							$badgePath = $badge->getPath();
+							
+							$return = array("path" => $badgePath, "alt"=>$badgeAlt);
+							
+							$json = str_replace('\\u0000', "", json_encode( $return  ));
+							
+							error_log( $json );
+							
+							ob_clean();
+							echo $json;
+						}
+					}
+				break;
 				case 'getSegment':
 					if( isset( $_GET['id'] ) ){
 					
@@ -83,8 +107,9 @@
 										$continues = $decision->getContinues();
 										$ends = $decision->getEnds();
 										$buttonText = $decision->getText();
+										$forcedBadge = $decision->getForcedBadgeID();
 									
-										$decisionList[] = array("DecisionID"=>$decisionID, "PlaysClip"=>$playsClip, "NextSegmentID"=>$nextSegment, "Continues"=>$continues, "Ends"=> $ends, "ButtonText" => $buttonText);
+										$decisionList[] = array("DecisionID"=>$decisionID, "PlaysClip"=>$playsClip, "NextSegmentID"=>$nextSegment, "Continues"=>$continues, "Ends"=> $ends, "ButtonText" => $buttonText, "forcedBadge" => $forcedBadge);
 									
 									}
 								}
@@ -96,8 +121,9 @@
 										$continues = $decisions->getContinues();
 										$ends = $decisions->getEnds();
 										$buttonText = $decisions->getText();
+										$forcedBadge = $decisions->getForcedBadgeID();
 									
-								$decisionList[] = array("DecisionID"=>$decisionID, "PlaysClip"=>$playsClip, "NextSegmentID"=>$nextSegment, "Continues"=>$continues, "Ends"=> $ends, "ButtonText" => $buttonText);
+								$decisionList[] = array("DecisionID"=>$decisionID, "PlaysClip"=>$playsClip, "NextSegmentID"=>$nextSegment, "Continues"=>$continues, "Ends"=> $ends, "ButtonText" => $buttonText, "forcedBadge" =>$forcedBadge);
 								
 							
 							
@@ -107,8 +133,7 @@
 							}
 						
 						}
-						
-					
+											
 						$return = array("SegmentID" => $segmentID, "BadgeID"=> $badgeID, "BadgePath" =>$badgePath, "BadgeAlt"=> $badgeAlt, "DecisionTreeID"=>$decisionTreeID, "Question" => $question, "Step" => $step, "StartingClipID"=> $startingClipID, "Decisions" => $decisionList );
 						
 						$json = str_replace('\\u0000', "", json_encode( $return  ));

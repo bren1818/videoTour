@@ -65,7 +65,7 @@ function overlayDecisions(decisions){
 		shownD = 1;
 		logger(" In overlayDecisions");
 		$('#clickActions').remove();
-		var html = "<div id='clickActions' class='actions'>";
+		var html = "<div id='clickActions' style='height: " + getJPlayerHeight() + "px; width: 100%;' class='actions'>";
 		//logger( currentSegmentData );
 		if( currentSegmentData && currentSegmentData.Question ){
 			if( currentSegmentData.Question != "" ){
@@ -75,9 +75,12 @@ function overlayDecisions(decisions){
 		
 		if (decisions instanceof Array) {
 			logger("Showing : " + decisions.length + " decisions");
+			
+			
+			
 			html+= "<ul class='decisions decisions-" + decisions.length + "'>";
 			decisions.forEach(function(choice) { //foreach
-				html+= '<li id="choice_' + choice.id +'" class="actionButton" onClick="doAction(' + choice.goToSegment + "," + choice.PlayClip + "," + choice.continues + "," + choice.ends  + ')"><strong>' + choice.text + '</strong></li>';
+				html+= '<li id="choice_' + choice.id +'" class="actionButton" onClick="doAction(' + choice.goToSegment + "," + choice.PlayClip + "," + choice.continues + "," + choice.ends  + "," + choice.ForcedBadgeID + ')"><strong>' + choice.text + '</strong></li>';
 			});
 			html+="</ul>";
 			
@@ -183,15 +186,20 @@ function playSegment( segmentID ) {
 		segmentData = getAjaxHandlerResponse("getSegment", segmentID );
 		if( segmentData ){
 			currentSegmentData =  segmentData;
+			
+			console.log( currentSegmentData );
+			
 			var clipID = segmentData.StartingClipID;
 		}
-
+		//same function in index
 		if( clipID != "" && clipID != 0 ){
 			//logger( segmentData );
 			if(  segmentData.Decisions ){
 				if( segmentData.Decisions.length > 0 ){
 					for( var d = 0; d < segmentData.Decisions.length; d++ ){
-						decisions[d] = { "id" : segmentData.Decisions[d].DecisionID, "text" : segmentData.Decisions[d].ButtonText, "continues" :  segmentData.Decisions[d].Continues  , "ends" : segmentData.Decisions[d].Ends , "goToSegment" : segmentData.Decisions[d].NextSegmentID  , "PlayClip" : segmentData.Decisions[d].PlaysClip } 
+						logger( segmentData.Decisions[d] );
+					
+						decisions[d] = { "id" : segmentData.Decisions[d].DecisionID, "text" : segmentData.Decisions[d].ButtonText, "continues" :  segmentData.Decisions[d].Continues  , "ends" : segmentData.Decisions[d].Ends , "goToSegment" : segmentData.Decisions[d].NextSegmentID  , "PlayClip" : segmentData.Decisions[d].PlaysClip, "ForcedBadgeID" : segmentData.Decisions[d].forcedBadge } 
 					}
 				}
 				
@@ -275,7 +283,11 @@ function playClip(clipID ){
 			shownD = 0;
 		},
 		ended: function(){
-		updateBadge();
+			updateBadge();
+			if( forceABadge != 0 ){
+				forceDisplayBadge( forceABadge );
+			}
+			
 			if( typeof decisions === 'undefined' ){
 				logger( "home.js, ended function, nextStep() current state: " + state + " set to tryagain");
 				state = "tryagain";
@@ -355,7 +367,26 @@ function updateBadge(){
 	}
 }
 
-function doAction(goTosegmentID, playClipID, continues, ends ){
+
+function forceDisplayBadge( forceBadge ){
+	if( typeof forceBadge !== "undefined" && forceBadge != 0 ){
+		logger("Show that forced Badge " );
+		var badgePath = getAjaxHandlerResponse("getBadge", forceBadge );
+		if( badgePath && badgePath.path != "" ){
+			if( badgeMode == 1 ){//append
+				$('#badge').html( $('#badge').html() + '<img id="badge_' + forceBadge + '" class="badge" src="' + serverHost + badgePath.path + '" />');
+			}else{
+				$('#badge').html( '<img id="badge_' + forceBadge + '" class="badge" src="' + serverHost + badgePath.path + '" />');
+			}
+			logger("Updated Badge to: " + serverHost + badgePath.path);
+			$('#badge_' + forceBadge).hide();
+			$('#badge_' + forceBadge).fadeIn(1000); 
+		}
+	}
+}
+
+
+function doAction(goTosegmentID, playClipID, continues, ends, forceBadge ){
 	nthAction ++;
 	logger("In doAction, nthAtction: " + nthAction);
 	nextSegment = goTosegmentID;
@@ -377,29 +408,24 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			currentStep = parseInt(currentStep) + 1
 			$('#currentStep').html(  currentStep );
 		}
-		
-		/*
-		//update Badge
-		if( showBadge ){
-			if( currentSegmentData && currentSegmentData.BadgePath != "" ){
-				$(function(){
-					if( badgeMode == 1 ){
-						//append
-						$('#badge').html( $('#badge').html() + '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
-					}else{
-						$('#badge').html( '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
-					}
-					logger("Updated Badge to: " + serverHost + currentSegmentData.BadgePath);
-				});
-			}
-		}
-	    */
 	
 		if( hasClip ) {
 			currentClipID = playClipID;
 			logAction("Continue");
+			
+			if( typeof forceBadge !== "undefined" && forceBadge != 0 ){
+				forceABadge = forceBadge
+			}else{
+				forceABadge = 0;
+			}
+			
+			
 			nextStep = function(){ playSegment( goTosegmentID );  }
+			
 			playClip( playClipID  );
+			
+			
+			
 		}else{
 			logAction("Continue");
 			playSegment( goTosegmentID );
@@ -408,19 +434,6 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 	}else if( ends == 1  ){
 		state = "ends";
 		logger("Set state: ends" );
-		/*
-		if( currentSegmentData && currentSegmentData.BadgePath != "" ){
-			$(function(){
-				if( badgeMode == 1 ){
-					//append
-					$('#badge').html( $('#badge').html() + '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
-				}else{
-					$('#badge').html( '<img class="badge" src="' + serverHost + currentSegmentData.BadgePath + '" />');
-				}
-				logger("Updated Badge to: " + serverHost + currentSegmentData.BadgePath);
-			});
-		}
-		*/
 
 		if( hasClip ) {
 			currentClipID = playClipID;
@@ -433,11 +446,7 @@ function doAction(goTosegmentID, playClipID, continues, ends ){
 			playSegment( goTosegmentID );
 			
 		}
-		
-		
-		
-		
-		
+
 	}else{
 		state = "tryagain";
 		logger("Set state: tryagain" );

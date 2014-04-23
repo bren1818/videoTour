@@ -44,7 +44,9 @@
 ?>
 	<h1>Edit Project: <?php echo $project->getTitle(); ?></h1>
 	<!-- Associated Segments -->
-	<p><a href="<?php echo fixedPath; ?>/administration/project/settings?projectID=<?php echo $id; ?>" class="button wa"><i class="fa fa-cog"></i> Edit Settings</a></p>
+	<p><a href="<?php echo fixedPath; ?>/administration/project/settings?projectID=<?php echo $id; ?>" class="button wa"><i class="fa fa-cog"></i> Edit Settings</a> <a class="button wa" target="_blank" href="<?php echo fixedPath; ?>/administration/project/css?projectID=<?php echo $id;?>">Edit CSS</a> <a class="button wa" target="_blank" href="<?php echo fixedPath; ?>/administration/project/js?projectID=<?php echo $id;?>">Edit JS</a></p>
+	
+	
 	<!--Starting Segment -->
 	<?php if( $project->getStartingSegmentID() == null || $project->getStartingSegmentID() == 0){
 	?>
@@ -232,7 +234,7 @@
 						<tbody> 
 						<?php
 							foreach( $choices as $c ){
-								echo '<tr><td>'.$c->getOrder().'</td><td>'.( $c->getClipID() != 0 ? ' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a> | Clip ID: '.$c->getClipID() : '').'</td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td><td><a onClick="editDecision('.$project->getId().','.$c->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteDecision('.$project->getId().','.$c->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
+								echo '<tr><td>'.$c->getOrder().'</td><td>'.( $c->getClipID() != 0 ? ' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a> | Clip ID: '.$c->getClipID() : '').'</td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).($c->getForcedBadgeID() != 0 ? '<br /><i class="fa fa-shield"></i> Forces Badge ('.$c->getForcedBadgeID().')' : '').'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td><td><a onClick="editDecision('.$project->getId().','.$c->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteDecision('.$project->getId().','.$c->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
 							
 							}
 						?>

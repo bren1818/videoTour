@@ -94,7 +94,7 @@
 					</div>
 
 					<script type="text/javascript">
-						var debug = 0; //should load from settings
+						var debug = 1; //should load from settings
 						
 						function logger( msg  ){
 							var callerFunc = arguments.callee.caller.toString();
@@ -201,7 +201,7 @@
 						var nextStep;  //function holder...
 						var started = 0;
 						var shownD = 0;
-						
+						var forceABadge = 0;
 						
 					</script>
 					<script type="text/javascript" src="<?php echo fixedPath; ?>/js/home.js" ></script>
@@ -234,8 +234,9 @@
                                 
                                 $('#jquery_jplayer_1').height( windowHeight );
                                 $('#jquery_jplayer_1').width( windowWidth );
-                                //$('#jquery_jplayer_1').width( 480 );
-                                $('div.jp-video-play').css('height',  '480px' );
+                                
+                                $('div.jp-video-play').css('height',  windowHeight + 'px' );
+								$('div.jp-video-play').css('margin-top', ( -1 * windowHeight )  + 'px' );
 							 }
 
 							var clipPath = "";
@@ -253,11 +254,14 @@
 									}
 								}
 							
+								////same function in home.js
 								if( clipPath != "" ){
 									if(  segmentData.Decisions ){
 										if( segmentData.Decisions.length > 0 ){
 											for( var d = 0; d < segmentData.Decisions.length; d++ ){
-												decisions[d] = { "id" : segmentData.Decisions[d].DecisionID, "text" : segmentData.Decisions[d].ButtonText, "continues" :  segmentData.Decisions[d].Continues  , "ends" : segmentData.Decisions[d].Ends , "goToSegment" : segmentData.Decisions[d].NextSegmentID  , "PlayClip" : segmentData.Decisions[d].PlaysClip } 
+												logger( segmentData.Decisions[d] );
+											
+												decisions[d] = { "id" : segmentData.Decisions[d].DecisionID, "text" : segmentData.Decisions[d].ButtonText, "continues" :  segmentData.Decisions[d].Continues  , "ends" : segmentData.Decisions[d].Ends , "goToSegment" : segmentData.Decisions[d].NextSegmentID  , "PlayClip" : segmentData.Decisions[d].PlaysClip, "ForcedBadgeID" : segmentData.Decisions[d].forcedBadge  } 
 											}
 										}
 										currentDecisions = decisions;

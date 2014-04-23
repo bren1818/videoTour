@@ -17,10 +17,19 @@ body{
 	position: relative;
 }
 
-.jp-jplayer{
+/*
+.jp-jplayer {
 	background-image: url('images/loading.gif');
 	background-position: center center;
 	background-repeat: no-repeat;
+}
+*/
+.mobile .jp-player{
+
+}
+
+#jp_poster_0{
+	position: absolute;
 }
 
 #jp_video_0{
@@ -84,10 +93,11 @@ div.actions ul li:hover{
 	text-align: center;
 }
 
+/*
 .tablet .jp-jplayer,
 .mobile .jp-jplayer{
 	background-image: none;
-}
+}*/
 
 .tablet #badge,
 .mobile #badge{
@@ -364,5 +374,10 @@ a.playAgain{
 
 }
 
+video{
+	background-image: url('images/loading.gif');
+	background-repeat: no-repeat;
+	background-position: center center;
+}
 
 
