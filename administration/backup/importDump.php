@@ -2,7 +2,31 @@
 	error_reporting(E_ALL);
 	include "../../includes/includes.php";
 	
+	$IDMAP = array(); //type, oldID, new ID
+	
+	function getNewID( $type, $oldID ){
+		global $IDMAP;
+		if( isset( $IDMAP[$type] ) && is_array($IDMAP[$type])  ){
+			for( $ts = 0; $ts < sizeof(  $IDMAP[$type] ); $ts++ ){
+				if( $IDMAP[$type][$ts]["oldID"] == $oldID ){
+					return  $IDMAP[$type][$ts]["newID"];
+					break;
+				}
+			}
+			return 0;
+		}
+	}
+	
+	function setNewID( $type, $oldID, $newID ){
+		global $IDMAP;
+		$IDMAP[$type][] = array("oldID" => $oldID, "newID" => $newID );
+		echo "<p>Old ID for ".$type.": ".$oldID." now set to: ".$newID."</p>";
+	}
+	
+	
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		
+	
 		//decode the import
 		if ($_FILES["file"]["error"] > 0){
 				echo "Error: " . $_FILES["file"]["error"] . "<br>";
@@ -50,16 +74,16 @@
 				}
 				echo 'Connections created</p>';
 				
-				$IDMAP = new array(); //type, oldID, new ID
+				
 				
 				
 				echo '<p>Creating <b>New Project</b></p>';
 				$newProj = $projectData["project"];
-				if( is_object( $newProj ) ){
-					echo "<p>Old ID: ".$newProj->getId().'<br />';
-					$newProj->setId("");
-					echo "New ID: ".$newProj->getId()."</p>";
-					//will have to come back to fix starting segment, posterFile
+				if( is_object( $newProj ) ){	
+					setNewID( "project", $newProj->getId(), 10 );  //0 will be whatever the new ID is
+					
+					$newID = getNewID( "project" , $newProj->getId() );
+					echo "Swapping ProjectID: ".$newProj->getId()." with: ".$newID;
 					
 					
 					
