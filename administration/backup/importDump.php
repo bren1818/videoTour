@@ -283,6 +283,14 @@
 					<input type="file" name="file" required="required"/>
 				</td>
 			</tr>
+			
+			<tr>
+				<td>Project Files (Zip):</td>
+				<td>
+					<input type="file" name="zipFile" /> <!--required="required"-->
+				</td>
+			</tr>
+			
 			<tr>
 				<td colspan="2">
 					<input class="button wa" type="submit" value="Import" />

@@ -49,14 +49,24 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 	$zipName = 'project_'.$projID.'_backup_files.zip';
 	$created = create_zip( $filePaths, $zipName );
 	if( $created ){
+	
 		header('Content-type: application/zip');
 		header('Content-Disposition: attachment; filename="'.$zipName.'"');
-	//	ob_clean();
-	//	flush();
-		readfile($zipName);
-	}
-	//unlink($zipName);
 		
+		ignore_user_abort(true);
+		
+		$context = stream_context_create();
+		$file = fopen($zipName, 'rb', FALSE, $context);
+		while(!feof($file))
+		{
+			echo stream_get_contents($file, 2014);
+		}
+		fclose($file);
+		flush();
+		if (file_exists($zipName)) {
+			unlink( $zipName );
+		}
+	}
 }else{
 	exit;
 }
