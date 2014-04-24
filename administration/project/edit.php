@@ -7,8 +7,8 @@
 	$(function(){
 		$('.showHideVersions').click(function(event){
 			event.stopPropagation();
-			$(this).toggleClass('hide');
-			
+			//$(this).toggleClass('hide');
+			$(this).removeClass('hide');
 		});
 
 	});
@@ -61,7 +61,11 @@
 		$segmentsInfo = new Segments($conn);
 		if( $project->getStartingSegmentID() != 0 ){
 			$segmentsInfo = $segmentsInfo->load( $project->getStartingSegmentID() );
-			echo "(\"".$segmentsInfo->getNote()."\")";
+			if( is_object($segmentsInfo ) ){
+				echo "(\"".$segmentsInfo->getNote()."\")";
+			}else{
+				echo "Could not find / load Segment: ".$project->getStartingSegmentID();
+			}
 		}
 	?>
 	
@@ -313,7 +317,7 @@
 	<hr />
 <?php	
 	}
-	echo  "No Project";
+	
 	}else{
 ?>	
 	<h3>No Project Specified...</h3>

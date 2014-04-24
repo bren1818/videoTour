@@ -1,7 +1,7 @@
 <?php
 	require_once("includes.php");
 	//need to validate
-	
+	error_reporting(E_ALL^ E_WARNING);  
 	//require_once("classes\authentication.php");
 	$adminSession = new adminSession();
 	if( $adminSession->check() ){
@@ -257,6 +257,16 @@
 						$clips = $clips->getProjectClips( $pid ); //array of clips
 						$clipList = array();
 						
+						$project = new Projects($conn);
+						$project = $project->load($pid);
+						
+						if( $project->getPosterFile() != "" ){
+							if( unlink( '../'.$project->getPosterFile() ) ){
+							
+							}
+						}
+						
+						
 						if( is_array( $badges ) && sizeof( $badges ) > 0 ){
 							foreach( $badges as $badge ){
 								if( is_object( $badge ) ){
@@ -279,6 +289,9 @@
 								}
 							}
 						}
+						
+						if( 
+						
 						
 						$conn->beginTransaction();
 						try{
@@ -335,6 +348,28 @@
 							if( $query->execute() ){
 								//$deletedProject = 1;
 							}
+							
+							
+							$query = $conn->prepare("DELETE FROM `form_entry` WHERE `projectID` = :id");
+							$query->bindParam(':id', $pid);
+							if( $query->execute() ){
+								//$deletedProject = 1;
+							}
+							
+							$query = $conn->prepare("DELETE FROM `css` WHERE `projectID` = :id");
+							$query->bindParam(':id', $pid);
+							if( $query->execute() ){
+								//$deletedProject = 1;
+							}
+							
+							
+							$query = $conn->prepare("DELETE FROM `js` WHERE `projectID` = :id");
+							$query->bindParam(':id', $pid);
+							if( $query->execute() ){
+								//$deletedProject = 1;
+							}
+							
+							
 							
 							
 							

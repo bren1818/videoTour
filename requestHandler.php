@@ -31,7 +31,7 @@
 							
 							$json = str_replace('\\u0000', "", json_encode( $return  ));
 							
-							error_log( $json );
+							//error_log( $json );
 							
 							ob_clean();
 							echo $json;

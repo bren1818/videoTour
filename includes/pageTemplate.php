@@ -5,14 +5,11 @@
 	function footerMenu($projID){
 		?>
 			<p><br />
+			<a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>
 			<a href="<?php echo fixedPath; ?>/administration/project/settings?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-gear"></i> Project Settings</a>
 			<a href="<?php echo fixedPath; ?>/administration/ProjectAnalytics.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Project Analytics</a>
 			<a href="<?php echo fixedPath; ?>/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-users"></i> Contest Entries</a>	
-			<a href="<?php echo fixedPath; ?>/administration/ProjectContestEntries?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-bar-chart-o"></i> Contest Entries</a>	
-			<a href="<?php echo fixedPath; ?>/administration/project/edit?id=<?php echo $projID; ?>" class="button wa"><i class="fa fa-tachometer"></i> Project Dashboard</a>
 			<a href="<?php echo fixedPath; ?>/administration/MapProject.php?projectID=<?php echo $projID; ?>" class="button wa"><i class="fa fa-sitemap"></i> Flow Chart</a>
-			
-			
 			<a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a>
 			</p>
 	  <?php

@@ -101,15 +101,8 @@
 		
 		?>
 		<p>Download Project Data <a target="_blank" href="getDump.php?projectID=<?php echo $projID; ?>">Here</a></p>
-		<?php
-		
-		if( $created != false ){
-			echo '<p><a target="_blank" href="'.fixedPath.'/administration/backup/'.$zipName.'">Download Zip</a></p>';
-		
-		}
-		
-		
-		?>
+		<p>Download Project Files <a target="_blank" href="getZip.php?projectID=<?php echo $projID; ?>">Here</a></p>
+
 		<?php footerMenu($projID); ?>
 		<?php
 	}else{

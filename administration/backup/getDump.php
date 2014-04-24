@@ -16,10 +16,18 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 	$project->setConnection( "" );
 	$projectData["project"] = $project;
 	
-	//step 2, clips
+	//step 2, clip
+	$allClip = new Clip($conn);
+	$allClip = $allClip->getList( $project->getId() );
+	$projectData["Clip"] =  $allClip;
+	
+	//step 2.5, clips
+	/*
 	$allClips = new Clips($conn);
 	$allClips = $allClips->getProjectClips( $project->getId() );
 	$projectData["Clips"] =  $allClips;
+	
+	*/
 	
 	//step 3, badges
 	$allBadges = new Badge($conn);
@@ -63,11 +71,14 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 	$filePaths = array(); 
 	$filePath = "../..";
 	
+	
+	
+	
 	$query = $conn->prepare("SELECT `id` FROM `clip` WHERE `projectID` = :projectID");
 	$query->bindParam(':projectID', $projID);
 	if( $query->execute() ){
 		$clips = $query->fetchAll();
-		$clipObjects = array();
+		//$clipObjects = array();
 
 		for($c =0; $c < sizeof($clips); $c++){
 			$id = $clips[$c]["id"];
@@ -82,16 +93,21 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 			
 			for( $f = 0; $f < sizeof( $files ); $f++){
 				if( $f > 0 ){ //dont keep original files too large
+				
+					//take care of this so we skip the original files?
+					$projectData["Clips"][] = $files[$f];
+				
 					$clip["files"][] = $files[$f]->getPath();
 					$filePaths[] = $filePath.$files[$f]->getPath();
-					$fileMap[] = array("id"=> $id, "type" => "clip", "origPath" => $files[$f]->getPath() );
+					//$fileMap[] = array("id"=> $id, "type" => "clip", "origPath" => $files[$f]->getPath() );
 				}
 			}
-			$clipObjects[] = $clip;
+			//$clipObjects[] = $clip;
 		}
 		
 	}
 	
+	/*
 	//add badge files
 	$badges = new Badge($conn);
 	$badges = $badges->getList($projID);
@@ -109,15 +125,18 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 	
 	//echo "<p>Creating File... Contains: ".sizeof($filePaths)." files</p>";
 	
-	ob_implicit_flush(true);ob_end_flush();
-	//pa( $filePaths );
-	$zipName = 'project_'.$projID.'_backup.zip';
+	//ob_implicit_flush(true);
+	//ob_end_flush();
+
+	//$zipName = 'project_'.$projID.'_backup_files.zip';
 	
-	//$created = create_zip( $filePaths, $zipName );
+
+	
+	
 	$projectData["fileMap"] = $fileMap;
-	//pa( $projectData );
+	*/
 	
-	
+	error_reporting(0);
 	//remove PDO Connection data for serialization
 	for($PD = 0; $PD < sizeof( $projectData ); $PD++){
 		if( is_array( $projectData[$PD] ) ){
@@ -135,6 +154,8 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 	$ser =  serialize( $projectData );
 	echo $ser;
 	
+	ob_clean();
+    flush();
 	
 }
 ?>

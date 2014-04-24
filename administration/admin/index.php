@@ -102,8 +102,9 @@
 			<?php
 		}
 	?>
-	
-	
+	<hr />
+	<a href="<?php echo fixedPath; ?>/administration/backup/importDump.php">Import Project</a>
+	<hr />
 	<p><a class="button wa" href="<?php echo fixedPath; ?>/admin"><i class="fa fa-th-list"></i> Back to Admin</a></p>
 	
 <?php
