@@ -79,6 +79,8 @@
 				$query->bindParam(':order', $order  );
 				
 				
+				//forcedBadgeID
+				
 				$query->execute();
 				$this->setId( $this->connection->lastInsertId() );
 				return $this->getId(); 

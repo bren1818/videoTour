@@ -44,6 +44,32 @@
 			echo "Type: " . $_FILES["file"]["type"] . "<br>";
 			echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br></p>";
 		
+			if( isset( $_FILES["zipFile"] ) ){
+				echo '<hr />';
+				echo "<p>Upload: " . $_FILES["zipFile"]["name"] . "<br>";
+				echo "Type: " . $_FILES["zipFile"]["type"] . "<br>";
+				echo "Size: " . ($_FILES["zipFile"]["size"] / 1024) . " kB<br></p>";
+		
+				$projectFiles = $_FILES["zipFile"]["tmp_name"];
+				
+				if( file_exists( $projectFiles ) ){
+					$ext = explode(".", $_FILES["zipFile"]["name"]);
+					$ext = end( $ext );
+					if( $ext == "zip" ){
+						echo "<p>Zip File Uploaded OK!</p>";
+						//create the directory
+						
+						//unzip the contents,
+						
+						//perform the move / delete
+					
+					
+					}
+				}
+		
+			}
+		
+		
 			$conn = getConnection();
 			$ext = explode(".", $_FILES["file"]["name"]);
 			$ext = end( $ext );
@@ -195,9 +221,12 @@
 							$refSegment = $decision->getSegmentID();
 							$decision->setSegmentID( getNewID( "Segments" , $refSegment ) );
 							
-							$refBadgeID = $decision->getForcedBadgeID();
-							$decision->setForcedBadgeID( getNewID( "Badges" , $refBadgeID ) );
-						
+							if( $decision->getForcedBadgeID() != 0 ){
+								
+								$refBadgeID = $decision->getForcedBadgeID();
+								$decision->setForcedBadgeID( getNewID( "Badges" , $refBadgeID ) );
+							}
+							
 							$decision->setConnection( $conn );
 							
 							$newDecisionID = $decision->save();
