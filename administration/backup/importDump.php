@@ -224,7 +224,10 @@
 						if( $newProj->getPosterFile() != "" ){
 							$oldPoster = $newProj->getPosterFile();
 							$newPoster = str_replace( "/".$oldID."_poster", "/".$newProjID."_poster", $oldPoster );
-							$newProj->setPosterFile( $newPoster );
+							
+							echo "<p>I should replace the oldPoster ".$oldPoster." with the new Poster ".$newPoster."</p>"; 
+							
+							//$newProj->setPosterFile( $newPoster );
 						}
 						$newProj->save();
 
