@@ -96,7 +96,7 @@
 					</div>
 
 					<script type="text/javascript">
-						var debug = 1; //should load from settings
+						var debug = 0; //should load from settings
 						
 						function logger( msg  ){
 							var callerFunc = arguments.callee.caller.toString();
@@ -306,7 +306,7 @@
 										size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
 										preload : "auto",
 										volume: 1,
-										swfPath: "/js",
+										swfPath: "<?php echo $fixedPath; ?>/js",
 										keyEnabled : true,
 										keyBindings: {
 										  play: {
