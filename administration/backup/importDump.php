@@ -5,6 +5,10 @@
 	$IDMAP = array(); //type, oldID, new ID
 	$MapLog = "";
 	$WarningLog = "";
+	$ExtractOK = 0;
+	$target = "";
+	$Extracted_Path = "";
+	
 	
 	function getNewID( $type, $oldID ){
 		global $IDMAP;
@@ -32,6 +36,42 @@
 		}
 	}
 	
+	function rrmdir($dir) { 
+	   if (is_dir($dir)) { 
+		 $objects = scandir($dir); 
+		 foreach ($objects as $object) { 
+		   if ($object != "." && $object != "..") { 
+			 if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
+		   } 
+		 } 
+		 reset($objects); 
+		 rmdir($dir); 
+	   } 
+	 } 
+	
+	
+	function openZip($file_to_open) {
+		global $target;
+		/*require_once('pcl.php');
+		$archive = new PclZip($file_to_open);
+		if ($archive->extract(PCLZIP_OPT_PATH, $target) == 0) {
+			die("Unzip failed. Error : ".$archive->errorInfo(true));
+		}
+		*/
+		
+		$zip = new ZipArchive();
+		$x = $zip->open($file_to_open);
+		if($x === true) {
+			$zip->extractTo($target);
+			$zip->close();
+			 
+			unlink($file_to_open);
+		} else {
+			die("There was a problem. Please try again!");
+		}
+		
+	}
+
 	
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		//decode the import
@@ -57,13 +97,46 @@
 					$ext = end( $ext );
 					if( $ext == "zip" ){
 						echo "<p>Zip File Uploaded OK!</p>";
-						//create the directory
 						
-						//unzip the contents,
 						
-						//perform the move / delete
-					
-					
+						if (!file_exists(getcwd().'/temp')) {
+							echo "<p>Creating Temp Directory</p>";
+							if(!mkdir(getcwd().'/temp', 0777, true) ){
+								echo "<p>Could not create Temp Directory</p>";
+								die();
+							}
+						}
+						
+						$extractFolder = basename($_FILES["zipFile"]["name"], ".zip");
+						
+						if (!file_exists(getcwd().'/temp/'.$extractFolder)) {
+							echo "<p>Creating Temp Directory for Project</p>";
+							if( !mkdir(getcwd().'/temp/'.$extractFolder, 0777, true) ){
+								echo "<p>Could not create Temp Directory for Project</p>";
+								die();
+							}
+						}
+						//move temp file to new directory
+						
+						if( move_uploaded_file($projectFiles, getcwd().'/temp/'.$extractFolder.'/'.$_FILES["zipFile"]["name"] ) ){
+							echo "<p>Moved Temp Files</p>";
+							$archive = realpath( getcwd().'/temp/'.$extractFolder.'/'.$_FILES["zipFile"]["name"] );
+							if( file_exists(  $archive ) ){
+
+								echo '<p>Archive: '.$archive.'<p>';
+								global $target;
+								$target = realpath( getcwd().'/temp/'.$extractFolder.'/' );
+								openZip('temp/'.$extractFolder.'/'.$_FILES["zipFile"]["name"]);
+								$ExtractOK = 1;
+								global $Extracted_Path;
+								$Extracted_Path = 'temp/'.$extractFolder.'/';
+									
+								
+							}else{
+								echo "<p>Can't find zip...</p>";
+							}
+							
+						}	
 					}
 				}
 		
@@ -127,9 +200,13 @@
 						echo "<p>Setting Up Clips</p>";
 						
 						$clips =  $projectData["Clips"];
+						
+						//echo sizeof($clips)." clips found ".print_r( $clips,true );
+						
 						foreach( $clips as $clip ){	
 							$oldClipsID = $clip->getId();
 							$clip->setId("");
+							$oldID = $clip->getProjectID();
 							$clip->setProjectID( $newProjID );
 							$refClip = $clip->getClipID();
 							$clip->setClipID( getNewID( "Clip" , $refClip ) );
@@ -137,18 +214,34 @@
 							$newClipsID = $clip->save();
 							setNewID( "Clips", $oldClipsID, $newClipsID );
 							
+							global $Extracted_Path;
 							//TODO
-							$oldPath = $clip->getPath();
+							if( $ExtractOK ){
+								$oldPath = $clip->getPath();
+														//search                     replace                                 haystack
+														//oldID vs ClipsID gmmm
+								//$newPath = str_replace( "/".$oldID."_".$oldClipsID."_", "/".$newProjID."_".$newClipsID."_", $oldPath );
+								
+								$old = $Extracted_Path. ( str_replace("/uploads/", "", $oldPath ) );
+								$new = "/".$newProjID."_".$newClipsID."_";
+								$end = explode( "_", $oldPath );
+								$end = end( $end );
+								
+								if( !rename( $old, "../../uploads".$new.$end ) ){
+									echo "Error: I could not rename: ".$old." to: ../../uploads".$new.$end.'<br />';
+								}else{
+								
+									//echo "rename: ".$old." to: ../../uploads".$new.$end.'<br />';
+								
+									$clip->setPath( "/uploads".$new.$end );
+									$clip->save();
+								}
+									
+							}else{
+								echo "error";
 							
-													//search                     replace                                 haystack
-							$newPath = str_replace( "/".$oldID."_".$refClip."_", "/".$newProjID."_".$newClipsID."_", $oldPath );
-							echo "<p>I should replace the old path (".$oldPath." - ". "/".$oldID."_".$refClip."_" ." ) with the new path: ".$newPath." ( "."/".$newProjID."_".$newClipsID."_".") </p>";
-							//$clip->setPath( $newPoster );
-							//$clip->save();
-							
-							//move the uploaded files with old name, to the new name
-							
-							
+							}
+								
 						}
 						
 						echo "<p>Setting Up Decision Trees</p>";
@@ -170,19 +263,27 @@
 							$badge->setProjectID( $newProjID );
 							$badge->setConnection($conn);
 							
-							
-							
-							
 							$newBadgeID = $badge->save();
 							setNewID( "Badges", $oldBadgeID, $newBadgeID );
 							
 							
-							//Badge ID
-							$oldPath = $badge->getPath();
-													//search                     replace                                 haystack
-							$newPath = str_replace( "/".$oldID."_".$oldBadgeID."_", "/".$newProjID."_".$newBadgeID."_", $oldPath );
-							echo "<p>I should replace the old path (".$oldPath." - ". "/".$oldID."_".$oldBadgeID."_" ." ) with the new path: ".$newPath." ( "."/".$newProjID."_".$newBadgeID."_".") </p>";
+							if( $ExtractOK ){
 							
+								//Badge ID
+								$oldPath = $badge->getPath();
+														//search                     replace                                 haystack
+								$newPath = str_replace( "/".$oldID."_".$oldBadgeID."_", "/".$newProjID."_".$newBadgeID."_", $oldPath );
+								
+								//echo "rename: ".$Extracted_Path. ( str_replace("/uploads/", "",$oldPath ))." to: ../..".$newPath;
+								
+								if( !rename( $Extracted_Path. ( str_replace("/uploads/", "",$oldPath ) ), "../..".$newPath ) ){
+									echo "Error: I could not rename: ".$Extracted_Path. ( str_replace("/uploads/", "",$oldPath ))." to: ../..".$newPath;
+								}else{
+									$badge->setPath( $newPath );
+									$badge->save();
+								}
+								
+							}
 						}
 						
 						echo "<p>Setting up Segments</p>";
@@ -254,14 +355,24 @@
 							$oldPoster = $newProj->getPosterFile();
 							$newPoster = str_replace( "/".$oldID."_poster", "/".$newProjID."_poster", $oldPoster );
 							
-							echo "<p>I should replace the oldPoster ".$oldPoster." with the new Poster ".$newPoster."</p>"; 
+							if( $ExtractOK ){
+								echo "rename: ".$Extracted_Path. ( str_replace("/uploads/", "",$oldPoster ))." to: ../..".$newPath;
+								if( !rename( $Extracted_Path. ( str_replace("/uploads/", "",$oldPoster ) ), "../..".$newPoster ) ){
+									echo "Error: I could not rename: ".$Extracted_Path. ( str_replace("/uploads/", "",$oldPoster ))." to: ../..".$newPath;
+								}else{
+									$newProj->setPosterFile( $newPoster );
+								}
+							}
 							
-							//$newProj->setPosterFile( $newPoster );
 						}
 						$newProj->save();
 
 						//File renaming!!
-						
+						if( $ExtractOK ){
+							if( $Extracted_Path != "" ){
+								rrmdir( $Extracted_Path );
+							}
+						}
 						
 						echo "<p><a target='_blank' href='".fixedPath."/administration/project/edit?id=".$newProjID."'>View Imported Project</a></p>";
 						

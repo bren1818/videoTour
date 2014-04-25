@@ -92,7 +92,7 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 			$files = $files->getList($id);
 			
 			for( $f = 0; $f < sizeof( $files ); $f++){
-				if( $f > 0 ){ //dont keep original files too large
+				if( $f > 0 && sizeof($f) == 4 ){ //dont keep original files too large
 				
 					//take care of this so we skip the original files?
 					$projectData["Clips"][] = $files[$f];
@@ -100,6 +100,11 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 					$clip["files"][] = $files[$f]->getPath();
 					$filePaths[] = $filePath.$files[$f]->getPath();
 					//$fileMap[] = array("id"=> $id, "type" => "clip", "origPath" => $files[$f]->getPath() );
+				}else{
+					$projectData["Clips"][] = $files[$f];
+				
+					$clip["files"][] = $files[$f]->getPath();
+					$filePaths[] = $filePath.$files[$f]->getPath();
 				}
 			}
 			//$clipObjects[] = $clip;

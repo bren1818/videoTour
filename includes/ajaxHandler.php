@@ -261,7 +261,7 @@
 						$project = $project->load($pid);
 						
 						if( $project->getPosterFile() != "" ){
-							if( unlink( '../'.$project->getPosterFile() ) ){
+							if( unlink( '..'.$project->getPosterFile() ) ){
 							
 							}
 						}

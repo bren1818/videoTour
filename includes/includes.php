@@ -108,16 +108,18 @@
 			//add the files
 			foreach($valid_files as $file) {
 				if ($distill_subdirectories) {
-					$zip->addFile($file, basename($file) );
+					$zip->addFile($file, basename(ltrim($file, '/')) );
 				} else {
-					$zip->addFile($file, $file);
+					$zip->addFile($file, ltrim($file, '/'));
 				}
 			}
 			//debug
 			//echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
 			
 			//close the zip -- done!
-			$zip->close();
+			if ($zip->close() === false) {
+			   exit("Error creating ZIP file");
+			};
 			
 			//check to make sure the file exists
 			return file_exists($destination);

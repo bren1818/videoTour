@@ -44,7 +44,7 @@
 		function getOrder() { return $this->order; }
 		
 		function setForcedBadgeID($forcedBadgeID) { $this->forcedBadgeID = $forcedBadgeID;  }
-		function getForcedBadgeID() { return $this->forcedBadgeID; }
+		function getForcedBadgeID() { return isset($this->forcedBadgeID) ?  $this->forcedBadgeID : 0; }
 		
 		
 		function setConnection( $conn ){
@@ -66,7 +66,7 @@
 		
 			if( $this->getId() == "" ){
 				//insert
-				$query = $this->connection->prepare("INSERT INTO `decisions` (`id`, `projectID`, `decisionTreeID`, `clipID`, `segmentID`, `continues`, `ends`, `note`, `text`, `order`) VALUES (NULL, :projectID, :decisionTreeID, :clipID, :segmentID, :continues, :ends, :note, :text, :order);");
+				$query = $this->connection->prepare("INSERT INTO `decisions` (`id`, `projectID`, `decisionTreeID`, `clipID`, `segmentID`, `continues`, `ends`, `note`, `text`, `order`, `forcedBadgeID`) VALUES (NULL, :projectID, :decisionTreeID, :clipID, :segmentID, :continues, :ends, :note, :text, :order, :forcedBadgeID);");
 
 				$query->bindParam(':projectID', $projectID  );
 				$query->bindParam(':decisionTreeID', $decisionTreeID );
@@ -77,6 +77,7 @@
 				$query->bindParam(':note',$note  );
 				$query->bindParam(':text', $text  );
 				$query->bindParam(':order', $order  );
+				$query->bindParam(':forcedBadgeID', $forcedBadgeID  );
 				
 				
 				//forcedBadgeID

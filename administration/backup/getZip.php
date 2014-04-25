@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL);
 include "../../includes/includes.php";
+
 if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 	$projID = $_REQUEST['projectID'];
 	$conn = getConnection();
@@ -27,10 +28,10 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 			$files = $files->getList($id);
 			
 			for( $f = 0; $f < sizeof( $files ); $f++){
-				if( $f > 0 ){ //dont keep original files too large
-					$clip["files"][] = $files[$f]->getPath();
-					$filePaths[] = $filePath.$files[$f]->getPath();
-				}
+				
+				$clip["files"][] = $files[$f]->getPath();
+				$filePaths[] = $filePath.$files[$f]->getPath();
+				
 			}
 		}
 	}
@@ -49,10 +50,11 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 	$zipName = 'project_'.$projID.'_backup_files.zip';
 	$created = create_zip( $filePaths, $zipName );
 	if( $created ){
-	
-		header('Content-type: application/zip');
-		header('Content-Disposition: attachment; filename="'.$zipName.'"');
-		
+		ob_clean();
+		header("Content-type: application/zip"); 
+		header("Content-Disposition: attachment; filename=$zipName"); 
+		header("Content-Description: Backup"); 
+		header("Content-Length: ".filesize($zipName)); 
 		ignore_user_abort(true);
 		
 		$context = stream_context_create();
@@ -60,12 +62,12 @@ if( isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != "" ){
 		while(!feof($file))
 		{
 			echo stream_get_contents($file, 2014);
+			flush();
 		}
 		fclose($file);
-		flush();
-		if (file_exists($zipName)) {
+		//if (file_exists($zipName)) {
 			unlink( $zipName );
-		}
+		//}
 	}
 }else{
 	exit;
