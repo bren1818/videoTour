@@ -646,6 +646,7 @@ function clearContestEntries(projectID ){
 					var d = del.data;
 					if( d.Deleted == 1 ){
 						window.alert("Deleted: Contest Entries successfully");
+						window.location = window.location;
 					}else{
 						window.alert("Deletion Failed!");
 					}

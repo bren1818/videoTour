@@ -10,6 +10,7 @@
 		private $clipID;
 		private $visitor_id;
 		private $connection;
+		private $event_id;
 		
 		function __construct($db = null) {
 			if( $db ){
@@ -42,6 +43,7 @@
 					$query->bindParam(':segmentID', $segmentID);
 					$query->bindParam(':clipID', $clipID);
 					if( $query->execute() ){
+						$this->setEvent_id( $this->connection->lastInsertId() );		
 						return 1;
 					}else{
 						return -1;
@@ -51,6 +53,38 @@
 				}
 			}
 		}
+		
+		function getList($projectID = null){
+			if( $this->connection ){
+					
+				if( $projectID == null ){
+					//list all Clips
+					$query = $this->connection->prepare("SELECT * FROM `analytics_events`");
+					$query->execute();
+					while( $result = $query->fetchObject("analytics_visitor_event") ){
+						$events[] = $result;
+					}
+				}else{
+					//fetch by project id
+					$query = $this->connection->prepare("SELECT * FROM `analytics_events` WHERE `project_id` = :projectID");
+					$query->bindParam(':projectID', $projectID);
+					$query->execute();
+					if( $query->rowCount() > 1 ){
+						while( $result = $query->fetchObject("analytics_visitor_event") ){
+							$events[] = $result;
+						}
+					}else{
+						$events =  $query->fetchObject("analytics_visitor_event");
+					}
+				}
+				return $events;
+			}else{
+				return array();
+			}
+		}
+		
+		
+		
 		
 		function setUser_action($user_action){
 			$this->user_action = $user_action;
@@ -87,7 +121,8 @@
 		function getSegment_id() { return $this->segment_id; }
 		function setVisitor_id($visitor_id) { $this->visitor_id = $visitor_id; }
 		function getVisitor_id() { return $this->visitor_id; }
-
+		function setEvent_id($event_id) { $this->event_id = $event_id; }
+		function getEvent_id() { return $this->event_id; }
 	
 	}
 

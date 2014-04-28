@@ -228,7 +228,8 @@
 								$end = end( $end );
 								
 								if( !rename( $old, "../../uploads".$new.$end ) ){
-									echo "Error: I could not rename: ".$old." to: ../../uploads".$new.$end.'<br />';
+									global $WarningLog;
+									$WarningLog.= "Error: I could not rename: ".$old." to: ../../uploads".$new.$end.'<br />';
 								}else{
 								
 									//echo "rename: ".$old." to: ../../uploads".$new.$end.'<br />';

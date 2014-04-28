@@ -645,6 +645,8 @@
 				<p>Total Contest Entries: <?php echo $entries; ?></p>
 				<br />
 				<button id="clearAnalytics" onClick="clearAnalytics(<?php echo $projID; ?>)" class="button wa"><i class="fa fa-eraser"></i> Clear Analytics</button>
+				<a class="button wa" href="<?php echo fixedPath; ?>/administration/ProjectAnalyticsExport.php?projectID=<?php echo $projID; ?>"><i class="fa fa-bolt"></i> Export Analytics</a>
+				<a class="button wa" href="<?php echo fixedPath; ?>/administration/ProjectAnalyticsImport.php?projectID=<?php echo $projID; ?>"><i class="fa fa-level-up"></i> Import Analytics (TBD)</a>
 				<br />
 				<?php
 			}

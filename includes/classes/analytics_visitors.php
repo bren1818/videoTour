@@ -44,6 +44,39 @@
 			}
 		}
 		
+		
+		function getList($projectID = null){
+			if( $this->connection ){
+					
+				if( $projectID == null ){
+					//list all Clips
+					$query = $this->connection->prepare("SELECT * FROM `analytics_visitors`");
+					$query->execute();
+					while( $result = $query->fetchObject("analytics_visitors") ){
+						$visitors[] = $result;
+					}
+				}else{
+					//fetch by project id
+					$query = $this->connection->prepare("SELECT * FROM `analytics_visitors` WHERE `project_id` = :projectID");
+					$query->bindParam(':projectID', $projectID);
+					$query->execute();
+					if( $query->rowCount() > 1 ){
+						while( $result = $query->fetchObject("analytics_visitors") ){
+							$visitors[] = $result;
+						}
+					}else{
+						$visitors =  $query->fetchObject("analytics_visitors");
+					}
+				}
+				return $visitors;
+			}else{
+				return array();
+			}
+		}
+		
+		
+		
+		
 		function load($id){
 			if( $this->connection ) {
 				if( $id != "" ){
@@ -72,11 +105,20 @@
 					//$endTime = ($this->getEndTme() == "" ? "CURRENT_TIMESTAMP" : $this->getEndTme());
 					$returned = $this->getHasReturned();
 					$startTime = $this->getStartTime();
+					$filled_out_entry = $this->getFilled_out_entry();
+					$entryID = $this->getEntryID();
+					
 				
-					$query = $this->connection->prepare("UPDATE `analytics_visitors` SET `end_time` = CURRENT_TIMESTAMP, `start_time` = :STARTTIME, `device_type` = :DEVICETYPE, `has_returned` = :RETURNED WHERE `analytics_visitors`.`visitor_id` = :ID;");
+					$query = $this->connection->prepare("UPDATE `analytics_visitors` SET `end_time` = CURRENT_TIMESTAMP, `start_time` = :STARTTIME, `device_type` = :DEVICETYPE, `has_returned` = :RETURNED, `filled_out_entry` = :filled_out_entry, `entryID` = :entryID WHERE `analytics_visitors`.`visitor_id` = :ID;");
 					$query->bindParam(':STARTTIME', $startTime);
 					$query->bindParam(':DEVICETYPE', $type);
 					$query->bindParam(':RETURNED', $returned);
+					
+					$query->bindParam(':filled_out_entry', $filled_out_entry);
+					$query->bindParam(':entryID', $entryID);
+					
+					
+					
 					$query->bindParam(':ID', $id);
 					
 					if( $query->execute() ){
@@ -92,6 +134,9 @@
 					$query->bindParam(':projectID', $projectID);
 					$query->bindParam(':IP', $ip);
 					$query->bindParam(':type', $type);
+					
+					
+					
 					
 					if( $query->execute() ){
 						$this->setId( $this->connection->lastInsertId() );

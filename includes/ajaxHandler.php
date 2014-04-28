@@ -186,11 +186,11 @@
 						$conn->beginTransaction();
 						$entries = 0;
 						try{
-							$query = $conn->prepare("DELETE FROM `form_entry` where `projectID` = :pid");
+							$query = $conn->prepare("DELETE FROM `form_entry` WHERE `projectID` = :pid");
 							$query->bindParam(':pid', $pid);
-							if( $query->execute() ){
-								$entries = 1;
-							}
+							$query->execute() ;
+							$entries = 1;
+							$conn->commit();
 						}catch(PDOException $e) {
 							// roll back transaction
 							logMessage( "Could not delete Contest Entries for project: ".$pid, "ajaxHandler.log");
@@ -199,7 +199,7 @@
 						}
 						
 						if( $entries == 1 ){
-							$data[] = array( "Deleted" => "1" );
+							$data[] = array( "Deleted" => "1", "Query" => "DELETE FROM `form_entry` WHERE `projectID` = ".$pid );
 						
 						}else{
 							$data[] = array( "Deleted" => "0" );

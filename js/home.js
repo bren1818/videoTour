@@ -321,7 +321,7 @@ function playClip(clipID ){
 		size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
 		preload : (type == 1 ? "auto" : "none"),
 		volume: 1,
-		swfPath: "/js",
+		swfPath: serverHost + "/js",
 		supplied: "m4v",
 		keyEnabled : true,
 		keyBindings: {

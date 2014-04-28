@@ -1,15 +1,31 @@
 <?php
-	define( 'isProduction', 0 );
-	define( 'isLocal', 0 );
-	define( 'isStaging', 1);
+	$mode = 1;
 	
-	if( isStaging ){
-		define( 'fixedPath', "http://infowebtest.wlu.ca/its/birwin");
-	}else{
-		define( 'fixedPath', '');
+	switch ($mode) {
+		default:
+		case 1: //Local
+			define( 'isLocal', 1 );
+			define( 'isProd', 0 );
+			define( 'isStaging', 0);
+			define( 'fixedPath', '');
+			define( 'CUR_OS', 1 );
+		break;
+		case 2: //Staging
+			define( 'isLocal', 0 );
+			define( 'isProd', 0 );
+			define( 'isStaging', 1);
+			define( 'fixedPath', "http://infowebtest.wlu.ca/its/birwin");
+			define( 'CUR_OS', 2 );
+		break;
+		case 3:
+			define( 'isLocal', 0 );
+			define( 'isProd', 1 );
+			define( 'isStaging', 0);
+			define( 'fixedPath', "http://web.wlu.ca/goldenhawk");
+			define( 'CUR_OS', 2 );
+		
+		break;
 	}
 	
-	define( 'CUR_OS', 2 ); //1 = WINDOWS, 2 = *NIX, 3 = OSX (need binary)  - USing FFMPEG 32bit http://www.ffmpeg.org/download.html
-	
-	
+	//define( 'CUR_OS', 1 ); //1 = WINDOWS, 2 = *NIX, 3 = OSX (need binary)  - USing FFMPEG 32bit http://www.ffmpeg.org/download.html
 ?>

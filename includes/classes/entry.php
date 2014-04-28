@@ -23,6 +23,43 @@
 			$this->connection = $conn;
 		}
 		
+		function save(){
+			if( $this->connection ) {
+				$projectID = $this->getProjectID();
+				$visitorID = $this->getVisitorID();
+				$firstName = $this->getFirstName();
+				$lastName = $this->getLastName();
+				$email = $this->getEmail();
+				$phone = $this->getTelephone();
+				$twitter = $this->getTwitter();
+				$offer = $this->getOther();
+				$other = $this->getOther_reason();
+			
+				$query = $this->connection->prepare("INSERT INTO `form_entry` (`entryID`, `projectID`, `visitorID`, `firstName`, `lastName`, `email`, `telephone`, `twitter`, `other`, `other_reason`, `timestamp`) VALUES (NULL, :projectID, :visitorID, :firstName, :lastName, :email, :phone, :twitter, :offer, :other, CURRENT_TIMESTAMP);");
+				$query->bindParam(':projectID', $projectID);
+				$query->bindParam(':visitorID', $visitorID);
+				$query->bindParam(':firstName', $firstName);
+				$query->bindParam(':lastName', $lastName);
+				$query->bindParam(':email', $email);
+				$query->bindParam(':phone', $phone);
+				$query->bindParam(':twitter', $twitter);
+				$query->bindParam(':offer', $offer);
+				$query->bindParam(':other', $other);
+			
+			
+				if( $query->execute() ){
+					$entryID = $this->connection->lastInsertId();
+					$this->setEntryID( $entryID );
+					return $entryID;
+				
+				}else{
+					return -1;
+				}
+			}else{
+				return 0;
+			}
+		}
+		
 		function load($id){
 			if( $this->connection ) {
 				if( $id != "" ){
@@ -38,6 +75,36 @@
 				}
 			}
 		}
+		
+		function getList($projectID = null){
+			if( $this->connection ){
+					
+				if( $projectID == null ){
+					//list all Clips
+					$query = $this->connection->prepare("SELECT * FROM `form_entry`");
+					$query->execute();
+					while( $result = $query->fetchObject("entry") ){
+						$events[] = $result;
+					}
+				}else{
+					//fetch by project id
+					$query = $this->connection->prepare("SELECT * FROM `form_entry` WHERE `projectID` = :projectID");
+					$query->bindParam(':projectID', $projectID);
+					$query->execute();
+					if( $query->rowCount() > 1 ){
+						while( $result = $query->fetchObject("entry") ){
+							$events[] = $result;
+						}
+					}else{
+						$events =  $query->fetchObject("entry");
+					}
+				}
+				return $events;
+			}else{
+				return array();
+			}
+		}
+		
 	
 		function setEntryID($entryID) { $this->entryID = $entryID; }
 		function getEntryID() { return $this->entryID; }
