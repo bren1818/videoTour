@@ -10,9 +10,87 @@
 			//$(this).toggleClass('hide');
 			$(this).removeClass('hide');
 		});
+		
+		$('.highlightSegment').hover(function() {
+			var id= $(this).attr('data-attr-segmentid');
+			$('[data-attr-segmentid="' + id + '"]').addClass('highlightMe');
+		  }, function() {
+			var id= $(this).attr('data-attr-segmentid');
+			$('[data-attr-segmentid="' + id + '"]').removeClass('highlightMe');
+		  });
 
+		$('.highlightDecisionTree').hover(function() {
+			var id= $(this).attr('data-attr-decisionid');
+			$('[data-attr-decisionid="' + id + '"]').addClass('highlightMe');
+		  }, function() {
+			var id= $(this).attr('data-attr-decisionid');
+			$('[data-attr-decisionid="' + id + '"]').removeClass('highlightMe');
+		  });
+		
+		$('.highlightBadge').hover(function() {
+			var id= $(this).attr('data-attr-badgeid');
+			$('[data-attr-badgeid="' + id + '"]').addClass('highlightMe');
+		  }, function() {
+			var id= $(this).attr('data-attr-badgeid');
+			$('[data-attr-badgeid="' + id + '"]').removeClass('highlightMe');
+		  });
+
+		function scrollToItem( item ){
+			var scrollpos = $(item).offset().top; 
+     		$('html,body').animate({scrollTop: scrollpos },'slow');
+			$(item).each(function () { this.scale = 0.5; }).animate({ 
+				scale: 1,
+			}, {
+				duration: 1000,
+				step: function (now) {
+					$(this).css('font-size',  ( 1 + (now * 1) ) + 'em' );
+				}
+			}).each(function () { this.scale = 1; }).animate({ 
+				scale: 0,
+			}, {
+				duration: 1000,
+				step: function (now) {
+					$(this).css('font-size',  ( 1 + (now * 1) ) + 'em' );
+				}
+			});
+		}		
+		  
+		function jumpToNext(what,id, thisItem){
+			what = what.toLowerCase();
+			var item = $('[data-attr-' + what + 'id="' + id + '"]'); //should be an array of items
+			
+			if( item.length != 0 ){
+				for(var i =0; i < item.length; i++ ){
+					var itemO = $(thisItem)[0];
+					if( itemO == item[i]  ){
+						i++;
+						if( i == item.length ) {
+							scrollToItem( item[0] );
+						}else{
+							
+							scrollToItem( item[i] );
+						}
+					}else{
+						console.log( " no "  );
+					}
+				}
+			}
+		}
+
+		$('.highlightBadge').click(function(event){  event.preventDefault(); var id= $(this).attr('data-attr-badgeid'); jumpToNext("Badge", id, $(this) ); });
+		$('.highlightSegment').click(function(event){  event.preventDefault(); var id= $(this).attr('data-attr-segmentid'); jumpToNext("Segment", id, $(this) ); });
+		$('.highlightDecisionTree').click(function(event){  event.preventDefault(); var id= $(this).attr('data-attr-decisionid'); jumpToNext("Decision", id, $(this) ); });
 	});
 </script>
+
+<style>
+	.highlightMe{
+		color: #f00;
+		background-color: #ff0;
+		font-weight: bold;
+		cursor: pointer;
+	}
+</style>
 
 
 <?php
@@ -56,7 +134,7 @@
 	<?php
 	}else{
 	?>
-	<p>Starting Segment Id: <?php echo $project->getStartingSegmentID(); ?>
+	<p>Starting Segment Id: <span class="highlightSegment" data-attr-segmentid="<?php echo $project->getStartingSegmentID(); ?>"><?php echo $project->getStartingSegmentID(); ?></span>
 	<?php
 		$segmentsInfo = new Segments($conn);
 		if( $project->getStartingSegmentID() != 0 ){
@@ -159,8 +237,11 @@
 	
 	<?php
 		if( sizeof($segments) > 0 ){
+			
+			if( sizeof($segments) > 10 ){
 			?>
 			<div class="showHideVersions hide">
+			<?php } ?>
 			<table class="tablesorter">
 			<thead> 
 				<tr> 
@@ -176,13 +257,17 @@
 			<?php
 			foreach( $segments as $segment ){
 			
-				echo '<tr><td>'.$segment->getId().'</td><td><a class="button" onClick="previewClip('.$segment->getClipID().')"><i class="fa fa-play"></i> Preview</a> Clip ID: '.$segment->getClipID().'</td><td>'.$segment->getNote().'</td><td>'.$segment->getDecisionTreeID().'</td><td>'.($segment->getBadge() == 0 ? 'Not Assigned' : '<a onClick="previewBadge('.$segment->getBadge().')"><i class="fa fa-shield"></i> Preview</a> id:'.$segment->getBadge() ).'</td><td><a onClick="editSegment('.$project->getId().','.$segment->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteSegment('.$project->getId().','.$segment->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
+				echo '<tr><td><span class="highlightSegment" data-attr-segmentid="'.$segment->getId().'">'.$segment->getId().'</span></td><td><a class="button" onClick="previewClip('.$segment->getClipID().')"><i class="fa fa-play"></i> Preview</a> Clip ID: '.$segment->getClipID().'</td><td>'.$segment->getNote().'</td><td><span class="highlightDecisionTree" data-attr-decisionid="'.$segment->getDecisionTreeID().'">'.$segment->getDecisionTreeID().'</span></td><td>'.($segment->getBadge() == 0 ? 'Not Assigned' : '<a onClick="previewBadge('.$segment->getBadge().')"><i class="fa fa-shield"></i> Preview</a> id: <span class="highlightBadge" data-attr-badgeid="'.$segment->getBadge().'">'.$segment->getBadge().'</span>' ).'</td><td><a onClick="editSegment('.$project->getId().','.$segment->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteSegment('.$project->getId().','.$segment->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
 			
 			}
 			?>
 			</tbody>
 			</table> 
+			<?php
+			if( sizeof($segments) > 10 ){
+			?>
 			</div>
+			<?php } ?>
 			<?php
 		}else{
 			?>
@@ -219,7 +304,7 @@
 		
 		$choice = new Decisions($conn);
 		foreach( $DecisionTrees as $dt ){
-			echo '<tr><td>'.$dt->getStep().'</td><td>'.$dt->getId().'</td><td><b>'.$dt->getTitle().'</b><br />';
+			echo '<tr><td>'.$dt->getStep().'</td><td><span class="highlightDecisionTree" data-attr-decisionid="'.$dt->getId().'">'.$dt->getId().'</span></td><td><b>'.$dt->getTitle().'</b><br />';
 				$choices = $choice->getList( $dt->getId() );
 				if( sizeof( $choices ) > 0 ){
 					?>
@@ -238,7 +323,7 @@
 						<tbody> 
 						<?php
 							foreach( $choices as $c ){
-								echo '<tr><td>'.$c->getOrder().'</td><td>'.( $c->getClipID() != 0 ? ' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a> | Clip ID: '.$c->getClipID() : '').'</td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).($c->getForcedBadgeID() != 0 ? '<br /><i class="fa fa-shield"></i> Forces Badge ('.$c->getForcedBadgeID().')' : '').'</td><td>'.$c->getNote().'</td><td>'.$c->getSegmentID().'</td><td><a onClick="editDecision('.$project->getId().','.$c->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteDecision('.$project->getId().','.$c->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
+								echo '<tr><td>'.$c->getOrder().'</td><td>'.( $c->getClipID() != 0 ? ' <a class="button" onClick="previewClip('.$c->getClipID().')"><i class="fa fa-play"></i> Preview</a> | Clip ID: '.$c->getClipID() : '').'</td><td>'.( $c->getContinues() == true ? "Continues" : (   $c->getEnds()  == true ? "Ends" : "Incorrect Answer go back" )).($c->getForcedBadgeID() != 0 ? '<br /><i class="fa fa-shield"></i> Forces Badge <span class="highlightBadge" data-attr-badgeid="'.$c->getForcedBadgeID().'">('.$c->getForcedBadgeID().')</span>' : '').'</td><td>'.$c->getNote().'</td><td><span class="highlightSegment" data-attr-segmentid="'.$c->getSegmentID().'">'.$c->getSegmentID().'</span></td><td><a onClick="editDecision('.$project->getId().','.$c->getId().')" class="button"><i class="fa fa-pencil-square-o"></i> Edit</a> <a onClick="confirmDeleteDecision('.$project->getId().','.$c->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
 							
 							}
 						?>
@@ -273,7 +358,9 @@
 		$badges = new Badge( $conn );
 		$badges = $badges->getList( $project->getId() );
 	?>
+	<?php if( sizeof($badges) > 10 ){ ?>
 	<div class="showHideVersions hide">
+	<?php } ?>
 	<table class="tablesorter">
 		<thead> 
 			<tr> 
@@ -286,12 +373,14 @@
 		<tbody>
 		<?php
 			foreach( $badges as $b ){
-				echo '<tr><td>'.$b->getId().'</td><td>'.$b->getNote().'</td><td><a href="'.fixedPath.$b->getPath().'" target="_blank"><img src="'.fixedPath.$b->getPath().'" height="50" width="50" /></a></td><td><a onClick="confirmDeleteBadge('.$project->getId().','.$b->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a></td></tr>';
+				echo '<tr><td><span class="highlightBadge" data-attr-badgeid="'.$b->getId().'">'.$b->getId().'</span></td><td>'.$b->getNote().'</td><td><a href="'.fixedPath.$b->getPath().'" target="_blank"><img src="'.fixedPath.$b->getPath().'" height="50" width="50" /></a></td><td><a onClick="confirmDeleteBadge('.$project->getId().','.$b->getId().', this)" class="button"><i class="fa fa-trash-o"></i> Delete</a> <a href="'.fixedPath.'/administration/badge/edit?projectID='.$project->getId().'&badgeID='.$b->getId().'" class="button"><i class="fa fa-edit"></i> Update</a></td></tr>';
 			}
 		?>
 		</tbody>
 	</table>
+	<?php if( sizeof($badges) > 10 ){ ?>
 	</div>
+	<?php } ?>
 	<a class="button wa" onClick="addBadge(<?php echo $project->getId(); ?>)"><i class="fa fa-plus-circle"></i> Add Badge</a>
 	
 	<?php }else{ echo '<p>Badges are not enabled, enable them in project settings</p>'; } ?>

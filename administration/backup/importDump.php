@@ -434,6 +434,7 @@
 			
 			<tr>
 				<td colspan="2">
+				<br />
 					<input class="button wa" type="submit" value="Import" />
 				</td>
 			</tr>
