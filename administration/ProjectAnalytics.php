@@ -343,15 +343,17 @@
 						
 						<?php
 						}
+						
+						
 						//count of entrys, vs entries by UNIQUE IP
-						$query = $conn->prepare("SELECT ( SELECT COUNT(`entryID`) FROM `analytics_visitors` WHERE `project_id` = 18 AND `entryID` IS NOT NULL ) as `totalEntries`, ( SELECT COUNT(DISTINCT(`ip`)) FROM `analytics_visitors` WHERE `project_id` = 18 AND `entryID` IS NOT NULL ) as `UniqueIPEntries`");
+						$query = $conn->prepare("SELECT ( SELECT COUNT(`entryID`) FROM `analytics_visitors` WHERE `project_id` = :projectID AND `entryID` IS NOT NULL ) as `totalEntries`, ( SELECT COUNT(DISTINCT(`ip`)) FROM `analytics_visitors` WHERE `project_id` = :projectID AND `entryID` IS NOT NULL ) as `UniqueIPEntries`");
 						$query->bindParam(':projectID', $projID);
 						if( $query->execute() ){
 							if( $query->rowCount() ){
 							$res = $query->fetch();
 							$entries = $res['totalEntries'];
 							$uniqueIP = $res['UniqueIPEntries'];
-							
+							//echo ($entries - $uniqueIP)." - ".$uniqueIP;
 							?>
 								<script>
 								 // Set a callback to run when the Google Visualization API is loaded.
@@ -399,13 +401,13 @@
 		<table>
 				<tr>
 					<td valign="top">
-						<!--<div id="chart_completion"></div>-->
-						completions by unique ip
-						
+						<h4>Unique contest entries by IP <br/><small>Theoretically this should be all Unique, repeat could indicate cheaters</small></h4>
 						<div id="chart_uniqueIP"></div>
 					</td>
 					<td valign="top">
-						<div id="chart_user_completion"></div>
+						<!--<div id="chart_user_completion"></div>-->
+						<h4>Completions vs Entries (People who finish tour and submit entry)</h4>
+						<div id="drawCompletionsVsEntriesChart"></div>
 					</td>
 				</tr>
 				<tr>
@@ -479,15 +481,7 @@
 								<div id="chart_entries_by_device"></div>
 							</td>
 						</tr>
-						<tr>
-							<td>
-								<h4>Completions vs Entries (People who finish tour and submit entry)</h4>
-								<div id="drawCompletionsVsEntriesChart"></div>
-							</td>
-							<td></td>
 						
-						</tr>
-					
 					</table>
 					
 					
@@ -646,7 +640,7 @@
 				<br />
 				<button id="clearAnalytics" onClick="clearAnalytics(<?php echo $projID; ?>)" class="button wa"><i class="fa fa-eraser"></i> Clear Analytics</button>
 				<a class="button wa" href="<?php echo fixedPath; ?>/administration/ProjectAnalyticsExport.php?projectID=<?php echo $projID; ?>"><i class="fa fa-bolt"></i> Export Analytics</a>
-				<a class="button wa" href="<?php echo fixedPath; ?>/administration/ProjectAnalyticsImport.php?projectID=<?php echo $projID; ?>"><i class="fa fa-level-up"></i> Import Analytics (TBD)</a>
+				<a class="button wa" href="<?php echo fixedPath; ?>/administration/ProjectAnalyticsImport.php?projectID=<?php echo $projID; ?>"><i class="fa fa-level-up"></i> Import Analytics</a>
 				<br />
 				<?php
 			}

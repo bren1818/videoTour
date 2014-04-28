@@ -43,6 +43,8 @@
 	
 	
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		$entryOnly = ((isset($_POST['entryOnly']) && $_POST['entryOnly'] == 1) ? 1 : 0 );
+	
 		pageHeader();
 			if ($_FILES["file"]["error"] > 0){
 				echo "Error: " . $_FILES["file"]["error"] . "<br>";
@@ -76,7 +78,15 @@
 						
 						echo "<p>Importing Visitors.";
 						$count = 0;
+						$skipped = 0;
 						foreach( $projectAnalyticData['Analytics_visitors'] as $visitor ){
+						
+							if( $entryOnly == 1 && ( $visitor->getFilled_out_entry() != 1 ) ){
+								//skip
+								$skipped++;
+								continue;
+							}
+						
 							$oldID = $visitor->getId();
 							$visitor->setId("");
 							$visitor->setProjectId( $project->getId() );
@@ -98,8 +108,10 @@
 							}
 						}
 						echo ".complete!</p>";
-			
-			
+						
+						if( $entryOnly == 1 ){
+							echo "<p>Skipped: ".$skipped." users without contest entry</p>";
+						}
 			
 						echo "<p>Importing Events.";
 						$count = 0;
@@ -108,17 +120,24 @@
 							$oldVisitorID = $event->getVisitor_id();
 							$event->setProjectId( $project->getId() );
 							$event->setVisitor_id( getNewID( "analytics_visitors" , $oldVisitorID ) );
-							$event->setConnection($conn);
-							$event->save();
-							//$newID =  $event->getEvent_id();
-							if( $newID > 0 ){
-								//setNewID( "analytics_visitors", $oldID, $newID );
-								echo ".";
-								flush();
-								$count++;
-							}
-							if( $count % 50 === 0 ){
-								echo "<br />";
+							
+							if( $event->getVisitor_id() == 0 ){
+								global $WarningLog;
+								$WarningLog.="Wont import event (".$oldID.") <br/>";
+							}else{
+							
+								$event->setConnection($conn);
+								$event->save();
+								//$newID =  $event->getEvent_id();
+								if( $newID > 0 ){
+									//setNewID( "analytics_visitors", $oldID, $newID );
+									echo ".";
+									flush();
+									$count++;
+								}
+								if( $count % 50 === 0 ){
+									echo "<br />";
+								}
 							}
 						}
 						echo ".complete!</p>";
@@ -185,11 +204,18 @@
 		<form action="projectAnalyticsImport.php" method="post" enctype="multipart/form-data">
 			<table>
 				<tr>
-					<td>Analytics File: (.projAnalytics)</td>
+					<td><label for="file">Analytics File: (.projAnalytics)</label></td>
 					<td>
-						<input type="file" name="file" required="required"/>
+						<input type="file" id="file" name="file" required="required"/>
 					</td>
 				</tr>
+				<tr>
+					<td><label for="entryOnly">Only import analytic Data with corresponding contest entry</label></td>
+					<td>
+						<input type="checkbox" name="entryOnly" id="entryOnly" value="1" />
+					</td>
+				</tr>
+				
 				<tr>
 					<td colspan="2">
 						<input class="button wa" type="submit" value="Import" />
