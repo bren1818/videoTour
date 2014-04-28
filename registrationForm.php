@@ -33,7 +33,7 @@
 			$query->bindParam(':phone', $phone);
 			$query->bindParam(':twitter', $twitter);
 			$query->bindParam(':offer', $offer);
-			$query->bindParam(':other', $other);
+			$query->bindParam(':other', $other_reason);
 			
 			
 			if( $query->execute() ){

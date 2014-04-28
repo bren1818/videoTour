@@ -27,7 +27,7 @@ function showLinkAlert(message,title,buttonText,link){
 			$('#modalOverlay').remove();
 		}
 		
-		var html= "<div style='height: " + wh + "px; width: " + ww + "px;' id='modalOverlay'><div id='alert' style='top: " + ((wh /2 ) - 100) + "px;'><div class='titlebar'>" + title + "</div><div class='alertMessage'><p>" + message + "</p></div><div class='buttonHolder'><p style='text-align:center;'><a href='" + link + "' class='button'>" + buttonText + "</a></p></div></div></div>"; 
+		var html= "<div style='height: " + wh + "px; width: " + ww + "px;' id='modalOverlay'><div id='alert' style='top: " + ((wh /2 ) - 100) + "px;'><div class='titlebar'>" + title + "</div><div class='alertMessage'><p>" + message + "</p></div><div class='buttonHolder'><p style='text-align:center;'><a href='" + link + "' class='button wa'>" + buttonText + "</a></p></div></div></div>"; 
 		$('body').append( html );
 	});
 }
