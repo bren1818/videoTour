@@ -96,7 +96,15 @@
 					</div>
 					<div class="clear"></div>
 					</div>
-
+					<style>
+						.desktop .mobile.IE8Fix #clickActions{
+							position: relative!important;
+							z-index: 10000;
+							top: 0px;
+							clear: both;
+						}
+					
+					</style>
 					<script type="text/javascript">
 						var debug = 0; //should load from settings
 						
@@ -112,7 +120,7 @@
 					
 						var state = "";
 					
-						var serverHost = "<?php echo fixedPath; ?>"; //"http://205.189.20.167"; //could be blank...
+						var serverHost = "<?php echo fixedPath; ?>"; //for Mapping to sub folder
 						var formURL = "<?php echo $project->getFormURL(); ?>";
 						var showForm = <?php echo $project->getHasForm(); ?>;
 						var showPoster = <?php echo $project->getShowPoster(); ?>;
@@ -206,6 +214,7 @@
 						var started = 0;
 						var shownD = 0;
 						var forceABadge = 0;
+						
 						//Popup before showing Form
 						var ShowFormAlertText = "<?php echo $project->getShowFormAlertText(); ?>";
 						var ShowFormAlertTitle = "<?php echo $project->getShowFormAlertTitle(); ?>";
@@ -250,7 +259,7 @@
 							 }else{
 								$('body').attr('class', 'mobile');
 								type = 2;
-								$('#Viewport').attr('content', 'width=480'); //user-scalable=no, maximum-scale=1, minimum-scale=1,
+								$('#Viewport').attr('content', 'width=480'); 
                                 
                                 $('#jquery_jplayer_1').height( windowHeight );
                                 $('#jquery_jplayer_1').width( windowWidth );
@@ -274,7 +283,7 @@
 									}
 								}
 							
-								////same function in home.js
+								//dupe function in home.js
 								if( clipPath != "" ){
 									if(  segmentData.Decisions ){
 										if( segmentData.Decisions.length > 0 ){
@@ -324,7 +333,7 @@
 										size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
 										preload : "auto",
 										volume: 1,
-										swfPath: "<?php echo $fixedPath; ?>/js",
+										swfPath: "http://www.jplayer.org/2.0.0/js", //"<?php echo $fixedPath; ?>/js",
 										keyEnabled : true,
 										keyBindings: {
 										  play: {
@@ -380,6 +389,13 @@
 										?>
 										showAlert("<?php echo $mobilePopUpText;  ?>","<?php echo $mobilePopUpTitle; ?>", "<?php echo $mobilePopUpButtonText;  ?>");
 									}
+									
+									if( type == 1 ){ 
+										if( $('html').hasClass('no-video') ){
+											window.alert("It appears you're using a non HTML5 Browser like Chrome or Firefox, please scroll below each video after the clip plays, and click the button which corresponds to the choice you'd make.");
+										}								
+									}
+									
 								}
 							}
 						});

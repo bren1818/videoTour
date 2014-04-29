@@ -94,15 +94,30 @@ function overlayDecisions(decisions){
 			
 			
 			html+= "<ul class='decisions decisions-" + decisions.length + "'>";
+			/*must use old method for IE8
 			decisions.forEach(function(choice) { //foreach
 				html+= '<li id="choice_' + choice.id +'" class="actionButton" onClick="doAction(' + choice.goToSegment + "," + choice.PlayClip + "," + choice.continues + "," + choice.ends  + "," + choice.ForcedBadgeID + ')"><strong>' + choice.text + '</strong></li>';
 			});
+			*/
+			for(var d =0; d< decisions.length; d++){
+				var choice = decisions[d];
+				html+= '<li id="choice_' + choice.id +'" class="actionButton" onClick="doAction(' + choice.goToSegment + "," + choice.PlayClip + "," + choice.continues + "," + choice.ends  + "," + choice.ForcedBadgeID + ')"><strong>' + choice.text + '</strong></li>';
+			
+			}
+			
+			
 			html+="</ul>";
 			
 		}
 		html+="</div>";
-		if( type == 1 ){
-			$('.jp-jplayer').append(html);
+		if( type == 1 ){ 
+			if( $('html').hasClass('no-video') ){
+				//ie... try mobile faking...
+				//window.alert("Here >" + html);
+				$('body').append('<div class="mobile IE8Fix">' + html + '</div>');
+			}else{
+				$('.jp-jplayer').append(html);
+			}
 		}else{
 			$('body').append(html);
 		}
@@ -127,9 +142,7 @@ function finished(){
 	if( enteredContest == 0 ){
 	
 		if( showForm == 1 ){
-			showAlert("You have what it takes to be a Laurier Golden Hawk!<br />Please complete this form for a chance to win 1 of 10 $200 Laurier Bookstore gift certificates.", "Congratulations!", "Enter Contest");
-			//add to admin
-			
+			showAlert(ShowFormAlertText, ShowFormAlertTitle, ShowFormAlertButtonText);
 			logAction("Finished");
 			
 			//hide the other stuff
@@ -142,6 +155,9 @@ function finished(){
 				$('#registrationForm').submit(function(event) {
 				  event.preventDefault();
 					var datastring = $('#entryForm form').serialize();
+					
+					
+					
 					$.ajax({
 						type: "POST",
 						url: formURL,
@@ -153,14 +169,11 @@ function finished(){
 									if( data.Saved == 1 ){
 										if( redirect == 1 ){
 											//window.location = redirectURL;
-											showLinkAlert("Thanks for entering our contest! Winners will be announced the week of May 26, 2014.", "Good Luck! Entry recorded!", "Return to website", redirectURL );
-											
-											
-											
+											showLinkAlert(RedirectAlertText, RedirectAlertTitle, RedirectButtonText, redirectURL );
 										}else{
 											$('body #entryForm').remove();
 											$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' onClick='playAgain()'>Play again?</a></blink></center>");
-											showAlert("Thank you for participating! You will be notified if you're a winner.", "Good Luck! Entry recorded!", "Close");
+											showAlert(RedirectAlertText, RedirectAlertTitle, RedirectButtonText);
 										}
 										
 									}else{
@@ -169,11 +182,11 @@ function finished(){
 									}
 								}
 							}
-						},
-						error: function(){
-							  window.alert("An error has occurred. Your entry has not been recorded. Please play again later or contact the CMS Administrator");
-							  //alert('error handing here');
 						}
+						//error: function(){
+						//	  window.alert("An error has occurred. Your entry has not been recorded. Please play again later or contact the CMS Administrator");
+						//alert('error handing here');
+						//}
 					});
 					return false;
 				});
@@ -181,26 +194,28 @@ function finished(){
 		}
 		
 		if( redirect == 1 && showForm == 0 ){
-			//check if re-directs?
 			logger("Redirecting");
-			//window.location = redirectURL;
-			showLinkAlert("Thanks for entering our contest! Winners will be announced the week of May 26, 2014.", "Good Luck! Entry recorded!", "Return to website", redirectURL );
-			
+			showLinkAlert(RedirectAlertText, RedirectAlertTitle, RedirectButtonText, redirectURL );
 		}
 		
 		if( redirect == 0 && showForm == 0 ){
-			
+			showAlert(FinishAlertText,FinishAlertTitle,FinishAlertButtonText);
 		}
 		
 	}else{
-	
-		//if redirect
-	
-		//else
 		logAction("Finished");
 		$('#currentStep, #badge, #jp_container_1').hide();
+		if( redirect ){
+			logger("Redirecting");
+			showLinkAlert(RedirectAlertText, RedirectAlertTitle, RedirectButtonText, redirectURL );
+		}else if( showForm == 1 ){
+			showAlert(RepeatAlertText,RepeatAlertTitle,RepeatAlertButtonText);
+		}else{
+			showAlert(FinishAlertText,FinishAlertTitle,FinishAlertButtonText);
+		}
+	
 		$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' href='" + window.location + "'>Play again?</a></blink></center>");
-		showAlert("You have what it takes! You've already entered the contest so we wont show you the form again.", "Thanks for playing!", "Close");
+		
 	}
 }
 
@@ -218,7 +233,7 @@ function playSegment( segmentID ) {
 		if( segmentData ){
 			currentSegmentData =  segmentData;
 			
-			console.log( currentSegmentData );
+			//console.log( currentSegmentData );
 			
 			var clipID = segmentData.StartingClipID;
 		}
@@ -333,7 +348,7 @@ function playClip(clipID ){
 		size: { width: getJPlayerWidth(), height: getJPlayerHeight() },
 		preload : (type == 1 ? "auto" : "none"),
 		volume: 1,
-		swfPath: serverHost + "/js",
+		swfPath: "http://www.jplayer.org/2.0.0/js",
 		supplied: "m4v",
 		keyEnabled : true,
 		keyBindings: {

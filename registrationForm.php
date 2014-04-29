@@ -1,4 +1,7 @@
 <?php
+	header('Access-Control-Allow-Origin: *');
+	header('Access-Control-Allow-Methods: GET, POST');  
+	require_once("includes/Settings.php"); //for which DB
 	require_once("includes/db.php");
 	
 	if(strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
@@ -48,6 +51,7 @@
 		
 		if( $silentSave ){
 			if( $success ){
+				ob_clean();
 				echo json_encode( array("Saved" => 1 , "entryID" => $entryID, "values"=> array($firstName, $lastName, $email, $phone, $twitter, $offer, $other_reason, $projectID, $visitorID, $silentSave) ) );
 				
 				//check if there is a visitor ID, if so link to a corresponding value

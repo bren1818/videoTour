@@ -138,7 +138,7 @@
 			min-width: 250px;
 		}
 		.formRow textarea{
-			min-height: 50px;
+			min-height: 80px;
 		}
 		
 		
@@ -228,6 +228,7 @@
 					<label for="hasForm"><i class="fa fa-tasks"></i> Show a Form: </label>
 				</div>
 				<div class="col col50">
+					<p>This form should be on the same server as this application, or must allow Cross-Domain-Posting!</p>
 					<input type="checkbox" name="hasForm" id="hasForm" <?php if( $project->getHasForm() ){echo "checked"; } ?>/>
 				</div>
 			</div>
