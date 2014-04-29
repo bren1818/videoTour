@@ -245,6 +245,67 @@
 						echo json_encode( array() );
 					}
 				break;
+				case 'deleteUserEvents':
+					if( isset( $_GET['userID'] ) &&  isset( $_GET['projectID'] ) ){
+						$userID = $_GET['userID'];
+						$projectID = $_GET['projectID'];
+						$conn = getConnection();
+						
+						$conn->beginTransaction();
+						$success = 1;
+						$deletedEvent = 0; $deletedVisitor = 0; $deletedEntry = 0;
+						
+						
+						try{
+							$query = $conn->prepare("DELETE FROM `analytics_events` WHERE `visitor_id` = :userID AND `project_id` = :projectID");
+							$query->bindParam(':projectID', $projectID);
+							$query->bindParam(':userID', $userID);
+							if( $query->execute() ){
+								$deletedEvent = 1;
+							}
+							
+							
+							
+							$query = $conn->prepare("DELETE FROM `analytics_visitors` WHERE `visitor_id` = :userID AND `project_id` = :projectID");
+							$query->bindParam(':projectID', $projectID);
+							$query->bindParam(':userID', $userID);
+							if( $query->execute() ){
+								$deletedVisitor = 1;
+							}
+							
+							
+							
+							$query = $conn->prepare("DELETE FROM `form_entry` WHERE `visitorID` = :userID AND `projectID` = :projectID");
+							$query->bindParam(':projectID', $projectID);
+							$query->bindParam(':userID', $userID);
+							if( $query->execute() ){
+								$deletedEntry = 1;
+							}
+							
+							
+							
+							$conn->commit();
+						}catch(PDOException $e) {
+							$conn->rollback();
+							
+							$success = 0;
+						}
+						
+						
+						
+						if( $success ){
+							ob_clean();
+							echo str_replace('\\u0000', "", json_encode( array( "DeleteUserEvents" => 1) ));
+						}else{
+							ob_clean();
+							echo str_replace('\\u0000', "", json_encode( array( "DeleteUserEvents" => 0, "Event" => $deletedEvent, "Visitor"=> $deletedVisitor, "Entry"=>$deletedEntry ) ));
+						}
+						
+					}else{
+						ob_clean();
+						echo json_encode( array() );
+					}
+				break;
 			}
 		}
 	}

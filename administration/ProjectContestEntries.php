@@ -10,7 +10,33 @@
 		echo '<h1>"' .$project->getTitle() .'" Contest Entries</h1>';
 ?>
 
+	<script type="text/javascript">
+		function deletePath( visitorID, row ){
+			var conf = confirm("Are you sure you want to delete this analytic (and it's corresponding entry if applicable)?");
+			if( conf ){
+				var ret;
+				$.ajaxSetup({async: false});
+				$.get( "<?php echo fixedPath; ?>/requestHandler.php", { fx : "deleteUserEvents", projectID : <?php echo $projID; ?>, userID : visitorID }, function( data ) {
+					ret =  jQuery.parseJSON( data );
+				});
+				$.ajaxSetup({async: true});
+			}
+			
+			if( ret ){
+				if( ret.DeleteUserEvents ){
+					$(row).closest("tr").remove();
+					window.alert("Delete Trail!");
+				
+				}else{
+					window.alert("Couldn't delete Trail");
+				}
+			
+			}
 	
+		}
+	
+	
+	</script>
 
 <?php
 		function getReason($id){
@@ -67,7 +93,7 @@ WHERE f.`projectID` = :projectID");
 				<?php
 				$i = 1;
 				foreach( $result as $row ){
-					echo '<tr><td>'.$i.'</td><td>'.$row['entryID'].'</td><td>'.$row['visitorID'].'</td><td>'.$row['firstName'].'</td><td>'.$row['lastName'].'</td><td>'.$row['email'].'</td><td>'.$row['telephone'].'</td><td>'.$row['twitter'].'</td><td>'.getReason( $row['other'] ).'</td><td>'.$row['other_reason'].'</td><td>'.getDevice($row['device_type']).'</td><td>'.$row['ip'].'</td><td>'.$row['has_returned'].'</td><td>'.$row['start_time'].'</td><td>'.$row['timestamp'].'</td></tr>';
+					echo '<tr><td>'.$i.'</td><td>'.$row['entryID'].'</td><td>'.$row['visitorID'].' <a class="button wa" onClick="deletePath('.$row['visitorID'].', this)"><i class="fa fa-trash-o"></i> Delete</a></td><td>'.$row['firstName'].'</td><td>'.$row['lastName'].'</td><td>'.$row['email'].'</td><td>'.$row['telephone'].'</td><td>'.$row['twitter'].'</td><td>'.getReason( $row['other'] ).'</td><td>'.$row['other_reason'].'</td><td>'.getDevice($row['device_type']).'</td><td>'.$row['ip'].'</td><td>'.$row['has_returned'].'</td><td>'.$row['start_time'].'</td><td>'.$row['timestamp'].'</td></tr>';
 					$i++;
 				}
 				?>

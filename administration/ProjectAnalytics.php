@@ -15,7 +15,7 @@
 		}
 	</style>
 	 <!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script> <!--for charts-->
     <script type="text/javascript">
 		function viewEntry( entryID ){
 			//use the ajax handler for this one
@@ -94,8 +94,73 @@
 			$( "#dialog" ).dialog({ width: "80%", title: "User Events" });
 		}
 		
+		function deletePath( visitorID, row ){
+			var conf = confirm("Are you sure you want to delete this analytic (and it's corresponding entry if applicable)?");
+			if( conf ){
+				var ret;
+				$.ajaxSetup({async: false});
+				$.get( "<?php echo fixedPath; ?>/requestHandler.php", { fx : "deleteUserEvents", projectID : <?php echo $projID; ?>, userID : visitorID }, function( data ) {
+					ret =  jQuery.parseJSON( data );
+				});
+				
+				
+				
+				$.ajaxSetup({async: true});
+			}
+			
+			if( ret ){
+				if( ret.DeleteUserEvents ){
+					$(row).closest("tr").remove();
+					window.alert("Delete Trail!");
+				
+				}else{
+					window.alert("Couldn't delete Trail");
+				}
+			
+			}
 	
-	
+		}
+		
+		function whereIs(ip){
+			
+			$(function(){
+				
+				$.ajax({
+					url: 'https://freegeoip.net/json/' + ip,
+					type: 'GET',
+					dataType: 'jsonp',
+					error: function(xhr, status, error) {
+						alert("error");
+					},
+					success: function(json) {
+						//alert("success");
+						console.log( json );
+						var html = "";
+						html += "<p>Country : " + json.country_name + '<br />';
+						html += "Province : " + json.region_name + '<br />';
+						html += "City : " + json.city + '<br />';
+						html += "Area Code : " + json.area_code + '<br />';
+						html += "Lat : " + json.latitude + '<br />';
+						html += "Long : " + json.longitude + '<br />';
+						html += "</p>";
+						
+						if( !$('#dialog').length ){
+							$('body').append('<div id="dialog" title="Estimated User Location"></div>');
+						}
+						$( "#dialog" ).hide();
+						$('#dialog').html( html );
+					
+						$( "#dialog" ).dialog({ width: "80%", title: "Estimated User Location" });
+						
+						
+					}
+				});
+				
+				
+			});
+		}
+		
+		
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
 	  
@@ -596,7 +661,7 @@
 						
 						<th><sup>nth</sup>Visitor</th>
 						<th>UID</th>
-						<th>Path</th>
+						<th>Option</th>
 						<th>Start Time</th>
 						<th>End Time</th>
 						<th>IP</th>
@@ -620,7 +685,8 @@
 					$DT = $row['device_type'];
 					
 					
-					echo '<tr><td>'.$count.'</td><td>'.$row['visitor_id'].'</td><td><a class="button wa" onClick="viewPath('.$row['visitor_id'].')"><i class="fa fa-sitemap"></i>View Path</a></td><td>'.$row['start_time'].'</td><td>'.$row['end_time'].'</td><td>'.$row['ip'].'</td><td>'.($DT == 1 ? "<i class='fa fa-desktop'></i> Desktop" : ($DT == 2 ? "<i class='fa fa-tablet'></i> Tablet" : "<i class='fa fa-mobile'></i> Mobile") ).'</td><td>'.$row['has_returned'].'</td><td>'.(($row['filled_out_entry'] == 1) ? "Yes <a onClick='viewEntry(".$row['entryID'].")' class='button wa'>View Entry</a>" : "No").'</td></tr>';
+					echo '<tr><td>'.$count.'</td><td>'.$row['visitor_id'].'</td><td><a class="button wa" onClick="viewPath('.$row['visitor_id'].')"><i class="fa fa-sitemap"></i>View Path</a>
+					<a class="button wa" onClick="deletePath('.$row['visitor_id'].', this)"><i class="fa fa-trash-o"></i> Delete Record</a></td><td>'.$row['start_time'].'</td><td>'.$row['end_time'].'</td><td><button class="wa button" onClick="whereIs(\''.$row['ip'].'\')"><i class="fa fa-globe"></i> '.$row['ip'].'</button></td><td>'.($DT == 1 ? "<i class='fa fa-desktop'></i> Desktop" : ($DT == 2 ? "<i class='fa fa-tablet'></i> Tablet" : "<i class='fa fa-mobile'></i> Mobile") ).'</td><td>'.$row['has_returned'].'</td><td>'.(($row['filled_out_entry'] == 1) ? "Yes <a onClick='viewEntry(".$row['entryID'].")' class='button wa'>View Entry</a>" : "No").'</td></tr>';
 					
 					$returns+= $row['has_returned'];
 					if( $DT == 1 ){ $computers++; }elseif( $DT == 2 ){  $tablets++; }elseif($DT == 3 ){  $mobiles++; }
