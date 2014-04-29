@@ -11,9 +11,11 @@
 	$detect = new Mobile_Detect();
 	//$deviceType = ($detect->isMobile() ? (  $detect->isTablet() ? 2 : 3 ) : 1);
 	
-	if( isset( $_REQUEST['tourID'] ) && $_REQUEST['tourID'] != "" ){
+	
+	
+	//if( isset( $_REQUEST['tourID'] ) && $_REQUEST['tourID'] != "" ){
 
-		$tourID =  $_REQUEST['tourID'];
+		$tourID = "22"; // $_REQUEST['tourID'];
 	
 		$conn = getConnection();
 		$project = new Projects($conn);
@@ -204,6 +206,22 @@
 						var started = 0;
 						var shownD = 0;
 						var forceABadge = 0;
+						//Popup before showing Form
+						var ShowFormAlertText = "<?php echo $project->getShowFormAlertText(); ?>";
+						var ShowFormAlertTitle = "<?php echo $project->getShowFormAlertTitle(); ?>";
+						var ShowFormAlertButtonText = "<?php echo $project->getShowFormAlertButtonText(); ?>";
+						//Popup before re-directing
+						var RedirectAlertText = "<?php echo $project->getRedirectAlertText(); ?>";
+						var RedirectAlertTitle = "<?php echo $project->getRedirectAlertTitle(); ?>";
+						var RedirectButtonText = "<?php echo $project->getRedirectButtonText(); ?>";
+						//If no redirect - finished
+						var FinishAlertText = "<?php echo $project->getFinishAlertText(); ?>";
+						var FinishAlertTitle = "<?php echo $project->getFinishAlertTitle(); ?>";
+						var FinishAlertButtonText = "<?php echo $project->getFinishAlertButtonText(); ?>";
+						//Repeat Visitors who entered contest already and no redirect
+						var RepeatAlertText = "<?php echo $project->getRepeatAlertText(); ?>";
+						var RepeatAlertTitle = "<?php echo $project->getRepeatAlertTitle(); ?>";
+						var RepeatAlertButtonText = "<?php echo $project->getRepeatAlertButtonText(); ?>";
 						
 					</script>
 					<script type="text/javascript" src="<?php echo fixedPath; ?>/js/home.js" ></script>
@@ -355,9 +373,12 @@
 									
 									
 									if( isMobile ){ //mobile devices wont auto-play video
-										showAlert('Welcome to the Mobile Tour. This tour streams video. Click the Golden Hawk to begin each clip! This content is best viewed in portrait mode.','Welcome, Do you have what it takes?');
-										
-										
+										<?php
+											$mobilePopUpButtonText = $project->getMobilePopUpButtonText();
+											$mobilePopUpTitle = $project->getMobilePopUpTitle();
+											$mobilePopUpText = $project->getMobilePopUpText();
+										?>
+										showAlert("<?php echo $mobilePopUpText;  ?>","<?php echo $mobilePopUpTitle; ?>", "<?php echo $mobilePopUpButtonText;  ?>");
 									}
 								}
 							}
@@ -389,7 +410,7 @@
 			<p>We don't have a project by that name...</p>
 		<?php
 		}
-	}else{
+	/*}else{
 		pageHeaderShow("Unknown Project"); 
 		if( isset($tourID) ){
 			logMessage( "Unknown Project ".$tourID, "user.log");
@@ -401,7 +422,7 @@
 		<p>There should be a ?tourID= someID</p>
 		<?php
 		logMessage( "Unknown Project no tourID provided", "user.log");
-	}
+	}*/
 
 	pageFooterShow();
 ?>

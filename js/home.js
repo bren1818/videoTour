@@ -128,6 +128,8 @@ function finished(){
 	
 		if( showForm == 1 ){
 			showAlert("You have what it takes to be a Laurier Golden Hawk!<br />Please complete this form for a chance to win 1 of 10 $200 Laurier Bookstore gift certificates.", "Congratulations!", "Enter Contest");
+			//add to admin
+			
 			logAction("Finished");
 			
 			//hide the other stuff
@@ -181,10 +183,20 @@ function finished(){
 		if( redirect == 1 && showForm == 0 ){
 			//check if re-directs?
 			logger("Redirecting");
-			window.location = redirectURL;
+			//window.location = redirectURL;
+			showLinkAlert("Thanks for entering our contest! Winners will be announced the week of May 26, 2014.", "Good Luck! Entry recorded!", "Return to website", redirectURL );
+			
+		}
+		
+		if( redirect == 0 && showForm == 0 ){
+			
 		}
 		
 	}else{
+	
+		//if redirect
+	
+		//else
 		logAction("Finished");
 		$('#currentStep, #badge, #jp_container_1').hide();
 		$('body').html("<marquee><h1>Thanks for Playing!</h1></marquee><center><blink><a class='playAgain' href='" + window.location + "'>Play again?</a></blink></center>");
