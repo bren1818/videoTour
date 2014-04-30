@@ -66,7 +66,8 @@
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/jquery-ui-1.10.4.custom.min.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/font-awesome.min.css"/>
 			
-			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/tablesorter/blue/style.css"/>
+			<!--<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/tablesorter/blue/style.css"/>-->
+			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/demo_table_jui.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/colorbox.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/style.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/chosen.min.css"/>
@@ -84,7 +85,11 @@
 			</script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/scripts.js"></script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.colorbox-min.js"></script>
-			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.tablesorter.min.js"></script>
+			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.dataTables.js"></script>
+			<!--<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.tablesorter.min.js"></script>
+			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.tablesorter.pager.js"></script>-->
+			
+			
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/chosen.jquery.min.js"></script>
 			
 			<!--

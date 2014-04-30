@@ -3,7 +3,8 @@
  * By Brendon Irwin
  */
 $(function(){
-	 $(".tablesorter").tablesorter(); 
+	 //$(".tablesorter").tablesorter().tablesorterPager(); 
+	 $(".tablesorter").DataTable({"bJQueryUI": true}); //use JQuery UI
 });
 
 function previewClip(clipID, clipType){
