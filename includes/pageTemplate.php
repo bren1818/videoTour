@@ -86,16 +86,24 @@
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/scripts.js"></script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.colorbox-min.js"></script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.dataTables.js"></script>
-			<!--<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.tablesorter.min.js"></script>
-			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery.tablesorter.pager.js"></script>-->
-			
-			
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/chosen.jquery.min.js"></script>
-			
 			<!--
 			Video Tour Web Application
 			By: Brendon Irwin
-			For: Wilfrid Laurier University 
+			For:
+			 __      __.__.__   _____       .__    .___   
+			/  \    /  \__|  |_/ ____\______|__| __| _/   
+			\   \/\/   /  |  |\   __\\_  __ \  |/ __ |    
+			 \        /|  |  |_|  |   |  | \/  / /_/ |    
+			  \__/\  / |__|____/__|   |__|  |__\____ |    
+				   \/                               \/    
+			.____                        .__              
+			|    |   _____   __ _________|__| ___________ 
+			|    |   \__  \ |  |  \_  __ \  |/ __ \_  __ \
+			|    |___ / __ \|  |  /|  | \/  \  ___/|  | \/
+			|_______ (____  /____/ |__|  |__|\___  >__|   
+					\/    \/                     \/  
+			
 			-->
 		</head>
 		<body>
@@ -118,31 +126,41 @@
 	}
 		
 	
-	
 		function pageHeaderShow($pageTitle = "", $projectID=0){
 		ob_clean();
 		?>
 		<!DOCTYPE html>
 		<html lang="en"> 
 		<head>
-		<!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+			<!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
+			<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 			<!--
 				Video Tour Web Application
 				By: Brendon Irwin
-				For: Wilfrid Laurier University 
+				For:
+				 __      __.__.__   _____       .__    .___   
+				/  \    /  \__|  |_/ ____\______|__| __| _/   
+				\   \/\/   /  |  |\   __\\_  __ \  |/ __ |    
+				 \        /|  |  |_|  |   |  | \/  / /_/ |    
+				  \__/\  / |__|____/__|   |__|  |__\____ |    
+					   \/                               \/    
+				.____                        .__              
+				|    |   _____   __ _________|__| ___________ 
+				|    |   \__  \ |  |  \_  __ \  |/ __ \_  __ \
+				|    |___ / __ \|  |  /|  | \/  \  ___/|  | \/
+				|_______ (____  /____/ |__|  |__|\___  >__|   
+						\/    \/                     \/  
+				
 			-->
 			<title><?php echo (($pageTitle == "") ? "Video Tour" : $pageTitle); ?></title>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/font-awesome.min.css"/>
 			<link rel="shortcut icon" type="image/x-icon" href="<?php echo fixedPath; ?>/favicon.ico">
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jquery-1.10.2.min.js"></script>
 			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/jQuery.jPlayer.2.5.0/jquery.jplayer.min.js"></script>
-			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/modernizr.js"></script>
-			
+			<script type="text/javascript" src="<?php echo fixedPath; ?>/js/modernizr.js"></script>	
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/playerHome/jplayer.blue.monday.css"/>
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/css/ProjectHome.css" />
 			<link rel="stylesheet" href="<?php echo fixedPath; ?>/includes/projectCSS.php?projectID=<?php echo $projectID; ?>"/>
-	
 			<meta id="Viewport" name="viewport" content="user-scalable=no, width=480"/>
 			<meta name="HandheldFriendly" content="true"/>
 			<meta name="MobileOptimized" content="480"/> 

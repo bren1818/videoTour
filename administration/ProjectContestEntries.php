@@ -260,8 +260,8 @@ $query = $conn->prepare("SELECT f.*, '', '', '', '' FROM `form_entry` f WHERE f.
 			if( is_array( $result )  && $query->rowCount() > 0 ){
 				?>
 				<hr />
-	<h3>Entries without Analytic Data </h3>
-	<p>Entries may not have anlytic data if the data was deleted, if you think this is an error, please contact an administrator.</p>
+				<h3>Entries without Analytic Data </h3>
+				<p>Entries may not have anlytic data if the data was deleted, if you think this is an error, please contact an administrator.</p>
 	
 				<table class="tablesorter">
 				<thead> 
@@ -287,6 +287,41 @@ $query = $conn->prepare("SELECT f.*, '', '', '', '' FROM `form_entry` f WHERE f.
 		}
 	?>
 
+	
+	<h3>Possible Duplicate Entries</h3>
+	<?php
+		$query = $conn->prepare("SELECT *, COUNT(*) c FROM `form_entry` WHERE `projectID` = :projectID GROUP BY `email` HAVING c > 1 
+		UNION
+		SELECT *, COUNT(*) c FROM `form_entry` WHERE `projectID` = :projectID GROUP BY `telephone` HAVING c > 1
+		UNION
+		SELECT *, COUNT(*) c FROM `form_entry` WHERE `projectID` = :projectID AND `twitter` != '' GROUP BY `twitter` HAVING c > 1");
+		$query->bindParam(':projectID', $projID);
+		if( $query->execute() ){
+			$result = $query->fetchAll();
+			if( is_array( $result )  && $query->rowCount() > 0 ){
+		?>
+				<table class="tablesorter">
+				<thead> 
+					<tr>
+						<th>#</th><th>EntryID</th><th>Visitor ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Telephone</th><th>Twitter Name</th><th>Offer</th>
+						<th>Other Reason</th><th>Device</th><th>IP</th><th>Has Returned</th><th>Tour Start</th><th>Contest TimeStamp</th><th>Entries</th>
+					</tr> 
+				</thead>
+				<tbody>
+				<?php
+				$i = 1;
+				foreach( $result as $row ){
+					echo '<tr><td>'.$i.'</td><td>'.$row['entryID'].'</td><td>'.$row['visitorID'].' <a class="button wa" onClick="deletePath('.$row['visitorID'].', this)"><i class="fa fa-trash-o"></i> Delete</a></td><td>'.$row['firstName'].'</td><td>'.$row['lastName'].'</td><td>'.$row['email'].'</td><td>'.$row['telephone'].'</td><td>'.$row['twitter'].'</td><td>'.getReason( $row['other'] ).'</td><td>'.$row['other_reason'].'</td><td></td><td></td><td></td><td></td><td>'.$row['timestamp'].'</td><td>'.$row['c'].'</td></tr>';
+					$i++;
+				}
+				?>
+				</tbody>
+				</table>
+		<?php
+			}
+			
+		}
+	?>
 	
 	<br />
 	<br />

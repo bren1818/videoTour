@@ -57,8 +57,13 @@
 		$p = str_replace('\\','/',dirname(dirname(__FILE__)));
 		$logMsg=date('Y/m/d H:i:s').": $message\r\n";
 		
-		file_put_contents( $p."/logs/".$filename, $logMsg, FILE_APPEND);
+		if( CUR_OS == 1 ){
 		
+			file_put_contents( $p."/logs/".$filename, $logMsg, FILE_APPEND);
+		}else if( CUR_OS == 2 ){
+		
+			file_put_contents( $p."/logs/".$filename, $logMsg, FILE_APPEND | LOCK_EX);
+		}
 	}
 	
 	function pa( $arr ){

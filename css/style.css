@@ -101,3 +101,15 @@ li.decision_ends{
 	background-image: url('images/expand.png');
 	background-repeat: no-repeat;
 }
+
+.dataTable{
+	width: 100%;
+}
+
+.dataTable *{
+	font-size: 12px;
+}
+
+.dataTables_wrapper{
+	margin-bottom: 20px;
+}

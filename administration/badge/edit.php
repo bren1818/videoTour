@@ -51,6 +51,10 @@
 					
 					//echo "Old Name: "."../.." . $badge->getPath().", New Name: "."../../uploads/deleted/". basename($filename, $fileExt).time().$fileExt;
 					
+					if (!file_exists('../../uploads/deleted')) {
+						mkdir('../../uploads/deleted', 0777, true);
+					}
+					
 					if( rename ( "../.." . $badge->getPath()  , "../../uploads/deleted/". basename($badge->getPath(), $fileExt).time().".".$fileExt ) ){
 						echo $badge->getPath() . " already exists - old badge moved";
 					}

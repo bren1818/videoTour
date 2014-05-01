@@ -21,19 +21,42 @@
 			$ext = end( $ext );
 		
 			$filename = $projectID."_poster.".$ext;
+			$project = new Projects($conn);
+			$project = $project->load( $projectID );
 			
-			echo "Filename: <b>".$filename.'</b></p><br />';
+			if (file_exists("../.." . $project->getPosterFile() ) ){
+				echo "Replacing Poster<br />";
+			
+				$fileExt = explode( "." ,$project->getPosterFile() );
+				$fileExt = end( $fileExt );
+				
+				echo "Old Name: "."../.." . $project->getPosterFile().", New Name: "."../../uploads/deleted/". basename($filename, $fileExt).time().$fileExt.'<br />';
+				
+				if (!file_exists('../../uploads/deleted')) {
+					mkdir('../../uploads/deleted', 0777, true);
+				}
+				
+				
+				if( rename ( "../.." . $project->getPosterFile()  , "../../uploads/deleted/". basename($project->getPosterFile(), $fileExt).time().".".$fileExt ) ){
+					echo $project->getPosterFile() . " already exists - old poster moved";
+				}
+				
+			
+			}
+			
+			
+			
 
-			if (file_exists("../../uploads/" . $_FILES["posterFile"]["name"])){
-				echo $_FILES["posterFile"]["name"] . " already exists. ";
+			if (file_exists("../../uploads/" . $_FILES["posterFile"]["name"]) ){
+				
+				
 			}else{
 			  $moved = ( move_uploaded_file($_FILES["posterFile"]["tmp_name"],"../../uploads/" .$filename) );
 			  if( $moved ){
-				$project = new Projects($conn);
-				$project = $project->load( $projectID );
-				
 				$project->setPosterFile( "/uploads/" .$filename );
 				$project->save();
+			  }else{
+				echo "Could not upload Poster";
 			  }
 			  
 			}
