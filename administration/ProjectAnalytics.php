@@ -539,7 +539,34 @@
 						<tr>
 							<td valign="top">
 								<h4>Completions by Device</h4>
-								<div id="chart_completion_by_device"></div>
+								<!--<div id="chart_completion_by_device"></div>-->
+								<table>
+									<tr>
+										<td>
+											<?php
+												$query = $conn->prepare("SELECT 
+												av.`device_type` as `device`, 
+												count(`device_type`) as `filledEntry`,
+												( SELECT count(`device_type`) FROM `analytics_visitors` WHERE  `device_type` = `device` ) as `totalDevice`
+												FROM `form_entry` fe
+											INNER JOIN 	`analytics_visitors` av ON
+												fe.`entryID` = av.`entryID` 
+											WHERE `projectID` = :projectID
+												GROUP BY av.`device_type`;");
+												$query->bindParam(':projectID', $projID);
+												if( $query->execute() ){
+													$completionsByDevice = $query->fetchAll();
+													//pa( $completionsByDevice );
+													for( $d = 0; $d < sizeof($completionsByDevice); $d++){
+														echo "<p><b>".($completionsByDevice[$d]["device"] == 1 ? "Desktop" : ($completionsByDevice[$d]["device"] == 2 ?  "Tablet" : "Mobile"))." - </b> played: ".$completionsByDevice[$d]["totalDevice"].", filled survey: ".$completionsByDevice[$d]["filledEntry"]." ( ".(round( ($completionsByDevice[$d]["filledEntry"]/$completionsByDevice[$d]["totalDevice"]) ,2) * 100)." %)</p>";
+													}
+												}
+											?>
+										</td>	
+									</tr>
+								</table>
+								
+								
 							</td>
 							<td valign="top">
 								<h4>Entries by Device</h4>
@@ -551,7 +578,7 @@
 					
 					
 						<script>
-						 // Set a callback to run when the Google Visualization API is loaded.
+						 /*// Set a callback to run when the Google Visualization API is loaded.
 						  google.setOnLoadCallback(drawCompletionbyDeviceChart);
 						  // Callback that creates and populates a data table,
 						  // instantiates the pie chart, passes in the data and
@@ -574,7 +601,7 @@
 							// Instantiate and draw our chart, passing in some options.
 							var chart = new google.visualization.PieChart(document.getElementById('chart_completion_by_device'));
 							chart.draw(data, options);
-						  }
+						  }*/
 
 						 // Set a callback to run when the Google Visualization API is loaded.
 						  google.setOnLoadCallback(drawEntriesbyDeviceChart);
@@ -587,9 +614,9 @@
 							data.addColumn('string', 'Entries by Device');
 							data.addColumn('number', 'Entries by Device');
 							data.addRows([
-							  ['Desktop', <?php echo $desktopEntries; ?>],
-							  ['Tablet', <?php echo $tabletEntries; ?>],
-							  ['Mobile', <?php echo $mobileEntries; ?>]
+							  ['Desktop as %', <?php echo $desktopEntries; ?>],
+							  ['Tablet as %', <?php echo $tabletEntries; ?>],
+							  ['Mobile as %', <?php echo $mobileEntries; ?>]
 							]);
 							// Set chart options
 							var options = {'title':'Device Type',

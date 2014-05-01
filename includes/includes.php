@@ -57,6 +57,11 @@
 		$p = str_replace('\\','/',dirname(dirname(__FILE__)));
 		$logMsg=date('Y/m/d H:i:s').": $message\r\n";
 		
+		if (!file_exists($p."/logs")) {
+			mkdir($p."/logs", 0777, true);
+		}
+		
+		
 		if( CUR_OS == 1 ){
 		
 			file_put_contents( $p."/logs/".$filename, $logMsg, FILE_APPEND);
